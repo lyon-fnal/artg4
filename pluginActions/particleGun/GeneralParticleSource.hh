@@ -49,7 +49,7 @@
 #include "SingleParticleSource.hh"
 
 #include "fhiclcpp/ParameterSet.h"
-#include "messagefacility/MesageLogger/MessageLogger.h"
+#include "messagefacility/MessageLogger/MessageLogger.h"
 
 // Put this class in the Art G4 namespace
 namespace artg4 {
@@ -60,21 +60,21 @@ namespace artg4 {
   {
   public:
     // Constructor accepts a parameter set, rather than using a messenger.
-    GeneralParticleSource(fhicl::ParameterSet);
+    GeneralParticleSource(const fhicl::ParameterSet &);
     ~GeneralParticleSource();
   
     // Generate the much-anticipated primary particle(s)!
     void GeneratePrimaryVertex(G4Event*);
   
     // Some setters and getters
-    int GetNumberofSource() { return sourceVector.size(); }
+    int GetNumberofSource() { return _sourceVector.size(); }
     void ListSource();
     void SetCurrentSourceto(int) ;
     void SetCurrentSourceIntensity(double);
     SingleParticleSource* GetCurrentSource() {return _currentSource;}
     int GetCurrentSourceIndex() { return _currentSourceIdx; }
     double GetCurrentSourceIntensity() 
-    { return sourceIntensity[_currentSourceIdx]; }
+    { return _sourceIntensity[_currentSourceIdx]; }
     void ClearAll();
     void AddaSource (double);
     void DeleteaSource(int);
@@ -83,7 +83,7 @@ namespace artg4 {
     void SetVerbosity(int i) {_currentSource->SetVerbosity(i);} ;
 
     // Set if multiple vertex per event.
-    void SetMultipleVertex(bool av) {multiple_vertex = av;} ;
+    void SetMultipleVertex(bool av) {_multiple_vertex = av;} ;
 
     // Set the particle species
     void SetParticleDefinition (G4ParticleDefinition * aParticleDefinition) 

@@ -40,7 +40,7 @@ namespace artg4 {
 
     // This returns the map of registered actions, with a string as a key and 
     // an action object as the corresponding value.
-    std::map<std::string, ActionBase *> const & getActions() const;
+    std::map<std::string, ActionBase *> const & getActionMap() const;
 
     // This returns a pointer to the ActionBase with the given name. If the 
     // specified action was never registered, it throws an exception.

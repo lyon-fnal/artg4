@@ -8,7 +8,9 @@
 
 // Other local includes
 #include "artg4/art/ActionHolder.hh"
+#include "artg4/art/DetectorHolder.hh"
 #include "artg4/Core/ActionBase.hh"
+#include "artg4/Core/DetectorBase.hh"
 
 // Art
 #include "art/Framework/Services/Registry/ServiceHandle.h"
@@ -69,9 +71,9 @@ void artg4::ArtG4EventAction::EndOfEventAction(const G4Event * currentEvent)
   map<string, ActionBase*> actions = actionHolder -> getActionMap();
 
   // Loop over the action objects and call their EndOfEventAction methods.
-  map<string, ActionBase*>::iterator it;
-  for (it = actions.begin(); it != actions.end(); ++it) {
-    ActionBase * action = it -> second;
+  map<string, ActionBase*>::iterator actionIt;
+  for (actionIt = actions.begin(); actionIt != actions.end(); ++actionIt) {
+    ActionBase * action = actionIt -> second;
     action -> EndOfEventAction(currentEvent);
   }
 }

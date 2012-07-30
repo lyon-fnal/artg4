@@ -60,6 +60,8 @@
 #ifndef ACTION_BASE_HH
 #define ACTION_BASE_HH
 
+#include <string>
+
 // Declarations of types we use as input parameters
 class G4Run;
 class G4Step;

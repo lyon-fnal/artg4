@@ -29,4 +29,4 @@ namespace artg4 {
   };
 
 }
-#endif ARTG4_PGA_HH
+#endif // ARTG4_PGA_HH

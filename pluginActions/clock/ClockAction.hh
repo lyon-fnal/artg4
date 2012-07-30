@@ -52,7 +52,7 @@ namespace artg4 {
     clockid_t clockID;
 
     // A message logger for this action
-    mf::LogInfo _logInfo
+    mf::LogInfo _logInfo;
   };
 }
 

@@ -61,7 +61,8 @@ inline std::map<std::string, artg4::DetectorBase*> const &
 artg4::DetectorBase * artg4::DetectorHolder::getDetectorForCategory(std::string 
 							   category) const
 {
-  map<string,DetectorBase*>::iterator categoryDB = _categoryMap.find(category);
+  map<string,DetectorBase*>::const_iterator categoryDB = 
+    _categoryMap.find(category);
   if (categoryDB != _categoryMap.end()) {
     // We have a detector of that category
     return categoryDB -> second;

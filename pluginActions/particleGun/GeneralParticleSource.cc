@@ -118,7 +118,10 @@ void artg4::GeneralParticleSource::GeneratePrimaryVertex(G4Event* evt)
 // Below are many setters and getters, most (all?) of which are unused 
 // currently, but may conceivably be useful at some point in the future.
 
-// Add a new source with the given intensity, and make it current.
+/*
+// Add a new source with the given intensity, and make it current. 
+// Since we don't have a parameter set to pass in, this method isn't used
+// and is thus commented out.
 void artg4::GeneralParticleSource::AddaSource(double intensity)
 {
   _currentSource = new SingleParticleSource();
@@ -127,6 +130,7 @@ void artg4::GeneralParticleSource::AddaSource(double intensity)
   _currentSourceIdx = int(_sourceVector.size() - 1);
   IntensityNormalization();
 }
+*/
 
 // Give some information on the sources.
 void artg4::GeneralParticleSource::ListSource()

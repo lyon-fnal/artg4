@@ -17,7 +17,6 @@
 #include "Randomize.hh"
 
 #include "GeneralParticleSource.hh"
-#include "PreciseValues.hh"
 
 #include <iostream>
 #include <cmath>
@@ -43,7 +42,7 @@ artg4::ParticleGunAction::~ParticleGunAction()
 
 // Create a primary particle for an event!
 // (Standard Art G4 simulation)
-void artg4::ParticleGunAction::GeneratePrimaries(cons G4Event * anEvent)
+void artg4::ParticleGunAction::GeneratePrimaries(G4Event * anEvent)
 {
   // Everything is taken care of by the general particle source!
   GPS -> GeneratePrimaryVertex(anEvent);

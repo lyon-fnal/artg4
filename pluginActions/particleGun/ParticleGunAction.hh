@@ -15,7 +15,7 @@
 // G4 includes
 #include "G4Event.hh"
 #include "G4ParticleGun.hh"
-#include "artg4/Core/GeneralParticleSource.hh"
+#include "artg4/pluginActions/particleGun/GeneralParticleSource.hh"
 
 // Other library includes
 #include "fhiclcpp/ParameterSet.h"
@@ -40,7 +40,7 @@ namespace artg4 {
     GeneralParticleSource * GPS;
 
     // A message logger for this action object
-    mf::LogInfo _logInfo
+    mf::LogInfo _logInfo;
   };
 }
 

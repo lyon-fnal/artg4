@@ -14,7 +14,7 @@
 #include "G4Event.hh"
 
 // Everything goes in the Art G4 namespace
-namepace artg4 {
+namespace artg4 {
 
   // Declare the class
   class ArtG4EventAction : public G4UserEventAction {

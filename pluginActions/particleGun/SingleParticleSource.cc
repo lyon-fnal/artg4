@@ -20,10 +20,13 @@
 
 #include "SingleParticleSource.hh"
 //#include "inflectorConstruction.hh"
-#include "inflectorGeometry.hh"
+//#include "inflectorGeometry.hh"
+
+#include <vector>
 
 using std::string;
 using fhicl::ParameterSet;
+using std::vector;
 
 artg4::SingleParticleSource::
   SingleParticleSource(ParameterSet const & p)
@@ -176,7 +179,7 @@ void artg4::SingleParticleSource::setUpPositionDist(ParameterSet const & p)
   vector<string> psetKeys = p.get_keys();
   vector<string>::const_iterator begin = psetKeys.begin();
   vector<string>::const_iterator end = psetKeys.end();
-  if (std::find(begin, end, "x") && std::find(begin, end, "y")) {
+  if ((std::find(begin, end, "x") != end) && (std::find(begin, end, "y") != end)) {
     // We have an x and y; use them.
     posGenerator -> SetBeamSigmaInX(sigma.get<double>("x")*cm);
     posGenerator -> SetBeamSigmaInY(sigma.get<double>("y")*cm);    
@@ -197,19 +200,19 @@ void artg4::SingleParticleSource::setUpPositionDist(ParameterSet const & p)
 // Set up the angular distribution (angGenerator). This is all just parameter
 // extraction. See the header file for an explanation of what each parameter
 // describes.
-void setUpAngularDist(ParameterSet const & p)
+void artg4::SingleParticleSource::setUpAngularDist(ParameterSet const & p)
 {
   angGenerator -> SetAngDistType(p.get<string>("type"));
 
   ParameterSet rotation = p.get<ParameterSet>("rotation");
   vector<double> rot1 = rotation.get<vector<double> >("rotation1");
   vector<double> rot2 = rotation.get<vector<double> >("rotation2");
-  angGenerator -> SetPosRot1(G4ThreeVector(rot1[0],
-					   rot1[1],
-					   rot1[2]));
-  angGenerator -> SetPosRot2(G4ThreeVector(rot2[0],
-					   rot2[1],
-					   rot2[2]));
+  angGenerator -> DefineAngRefAxes("angref1", G4ThreeVector(rot1[0],
+							    rot1[1],
+							    rot1[2]));
+  angGenerator -> DefineAngRefAxes("angref2", G4ThreeVector(rot2[0],
+							    rot2[1],
+							    rot2[2]));
 
   angGenerator -> SetMinTheta(p.get<double>("min_theta")*deg);
   angGenerator -> SetMaxTheta(p.get<double>("max_theta")*deg);
@@ -219,9 +222,9 @@ void setUpAngularDist(ParameterSet const & p)
   ParameterSet sigma = p.get<ParameterSet>("sigma");
   // Unlike above, all of these sigmas are independent (r is for 1D, x and y for
   // 2D), so we don't have to go through the same thing we did for position.
-  angGenerator -> SetBeamSigmaInR(sigma.get<double>("r")*deg);
-  angGenerator -> SetBeamSigmaInX(sigma.get<double>("x")*deg);
-  angGenerator -> SetBeamSigmaInY(sigma.get<double>("y")*deg);
+  angGenerator -> SetBeamSigmaInAngR(sigma.get<double>("r")*deg);
+  angGenerator -> SetBeamSigmaInAngX(sigma.get<double>("x")*deg);
+  angGenerator -> SetBeamSigmaInAngY(sigma.get<double>("y")*deg);
 
   vector<double> focus = p.get<vector<double> >("focus_point");
   angGenerator -> SetFocusPoint(G4ThreeVector(focus[0]*cm,
@@ -302,13 +305,15 @@ void artg4::SingleParticleSource::GeneratePrimaryVertex(G4Event *evt)
 
   // Generate the vertex using imported or internally generated particles
   if(importFlag && fileSuccessfullyOpened)
-    UseImportedParticles(evt);
+    //    UseImportedParticles(evt);
+    G4cout << "Imported particles aren't supported yet, because of a "
+	   << "yicky dependence on inflector geometry." << G4endl;
   else
     UseInternallyGenerateParticles(evt);
   
 }
 
-
+/*
 void artg4::SingleParticleSource::UseImportedParticles(G4Event *evt)
 {
   // When this function is called, importVector has been loaded with
@@ -428,7 +433,7 @@ void artg4::SingleParticleSource::UseImportedParticles(G4Event *evt)
     G4cout << " Primary Vertex generated !"<< G4endl;   
   
 }
-
+*/
  
 void artg4::SingleParticleSource::UseInternallyGenerateParticles(G4Event *evt)
 {

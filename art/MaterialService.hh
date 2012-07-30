@@ -22,6 +22,7 @@ namespace artg4 {
     G4Material* newSi();
     G4Material* newScint();
     G4Material* newLead();
+    G4Material* newVacuum();
     
   private:
     G4Element *H, *C, *N, *O;

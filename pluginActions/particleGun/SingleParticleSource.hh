@@ -296,17 +296,17 @@ namespace artg4 {
     ~SingleParticleSource ();
 
     // Some setup methods.
-    void setUpPositionDist(ParameterSet const & p);
-    void setUpAngularDist(ParameterSet const & p);
-    void setUpEnergyDist(ParameterSet const & p);
-    void setUpTimeDist(ParameterSet const & p);
-    void setUpFileImport(ParameterSet const & p);
-    void setUpHistos(ParameterSet const & p);
-    void setUpParticleGun(ParameterSet const & p);
+    void setUpPositionDist(fhicl::ParameterSet const & p);
+    void setUpAngularDist(fhicl::ParameterSet const & p);
+    void setUpEnergyDist(fhicl::ParameterSet const & p);
+    void setUpTimeDist(fhicl::ParameterSet const & p);
+    void setUpFileImport(fhicl::ParameterSet const & p);
+    void setUpHistos(fhicl::ParameterSet const & p);
+    void setUpParticleGun(fhicl::ParameterSet const & p);
 
     // The three main SPS functions
     void GeneratePrimaryVertex(G4Event *evt);
-    void UseImportedParticles(G4Event *evt);
+    //    void UseImportedParticles(G4Event *evt);
     void UseInternallyGenerateParticles(G4Event *evt);
 
     // Called from GPS, returns the requested distribution generators
