@@ -13,11 +13,11 @@
 #include "art/Framework/Services/Registry/ServiceHandle.h"
 
 // Include more local files
-#include "gm2g4/pluginActions/particleGun/ParticleGunAction.hh"
-#include "gm2g4/art/ActionHolder.hh"
+#include "artg4/pluginActions/particleGun/ParticleGunAction.hh"
+#include "artg4/art/ActionHolder.hh"
 
-// Put code in the g-2 namespace
-namespace gm2 {
+// Put code in the Art G4 namespace
+namespace artg4 {
   // This class is a producer, so it needs to inherit from @EDProducer@.
   class particleGunAction : public art::EDProducer {
   public:
@@ -43,12 +43,12 @@ namespace gm2 {
 
 // Constructor - we don't produce anything, so there's nothing interesting
 // in the body.
-gm2::particleGunAction::particleGunAction(fhicl::ParameterSet const & p)
+artg4::particleGunAction::particleGunAction(fhicl::ParameterSet const & p)
   : _myAction(new ParticleGunAction(p))
 {}
 
 // Destructor
-gm2::particleGunAction::~particleGunAction()
+artg4::particleGunAction::~particleGunAction()
 {
   // Clean up our only member datum
   delete _myAction;
@@ -58,7 +58,7 @@ gm2::particleGunAction::~particleGunAction()
 // several runs. Setting the action here ensures that when the GEANT run
 // manager is initialized at the beginning of the run, the action objects
 // are all registered.
-void gm2::particleGunAction::beginJob()
+void artg4::particleGunAction::beginJob()
 {
   art::ServiceHandle<ActionHolder> actions;
   actions -> registerAction(_myAction);
@@ -66,9 +66,9 @@ void gm2::particleGunAction::beginJob()
 
 // Definition of the required produce(...) method - we don't produce anything,
 // but it needs to be defined here.
-void gm2::particleGunAction::produce(art::Event & e)
+void artg4::particleGunAction::produce(art::Event & e)
 {}
 
 // Register the producer with Art.
-using gm2::particleGunAction;
+using artg4::particleGunAction;
 DEFINE_ART_MODULE(particleGunAction)

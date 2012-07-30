@@ -5,13 +5,13 @@
 // Date: July 2012
 
 // Include header
-#include "gm2g4/pluginActions/clock/ClockAction.hh"
+#include "artg4/pluginActions/clock/ClockAction.hh"
 
 using std::string;
 
 // Constructor takes a parameter set, calls the base class's constructor, and
 // initializes member data
-gm2::ClockAction::ClockAction(fhicl::ParameterSet const & p)
+artg4::ClockAction::ClockAction(fhicl::ParameterSet const & p)
   : ActionBase(p.get<string>("name", "clock")),
     // Set the clock to use 'real time'.
     clockID(CLOCK_REALTIME),
@@ -21,7 +21,7 @@ gm2::ClockAction::ClockAction(fhicl::ParameterSet const & p)
 
 // Overload BeginOfRunAction, called at the beginning of each run.
 // Here we assign a value to the start clock.
-void gm2::ClockAction::BeginOfRunAction(const G4Run * currentRun)
+void artg4::ClockAction::BeginOfRunAction(const G4Run * currentRun)
 {
   // Find the current time and assign it to our member variable @start@
   clock_gettime(clockID, &start);
@@ -29,7 +29,7 @@ void gm2::ClockAction::BeginOfRunAction(const G4Run * currentRun)
 
 // Overload EndOfRunAction, called at the end of each run.
 // Here we assign a value to the end clock and print how long the run took.
-void gm2::ClockAction::EndOfRunAction(const G4Run * currentRun)
+void artg4::ClockAction::EndOfRunAction(const G4Run * currentRun)
 {
   // Find the current time and assign it to our member variable @end@
   clock_gettime(clockID, &end);
@@ -41,7 +41,7 @@ void gm2::ClockAction::EndOfRunAction(const G4Run * currentRun)
 
 // This private member function finds the time difference between the two
 // provided timespec values, in seconds.
-double gm2::ClockAction::diff(timespec start, timespec end)
+double artg4::ClockAction::diff(timespec start, timespec end)
 {
   timespec temp;
   if ((end.tv_nsec-start.tv_nsec)<0) {

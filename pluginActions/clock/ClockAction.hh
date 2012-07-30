@@ -9,7 +9,7 @@
 #define CLOCK_ACTION_HH
 
 // Include the base class
-#include "gm2g4/Core/ActionBase.hh"
+#include "artg4/Core/ActionBase.hh"
 
 // G4 includes
 #include "G4Run.hh"
@@ -21,8 +21,8 @@
 // C++ includes
 #include <time.h>
 
-// Everything goes in the g-2 namespace
-namespace gm2 {
+// Everything goes in the Art G4 namespace
+namespace artg4 {
   class ClockAction : public ActionBase {
   public:
     // A constructor that takes in a parameter set.

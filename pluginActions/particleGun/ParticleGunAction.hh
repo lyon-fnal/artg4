@@ -10,19 +10,19 @@
 #define PARTICLEGUN_ACTION_HH
 
 // Include the base class
-#include "gm2g4/Core/ActionBase.hh"
+#include "artg4/Core/ActionBase.hh"
 
 // G4 includes
 #include "G4Event.hh"
 #include "G4ParticleGun.hh"
-#include "gm2g4/Core/g2GeneralParticleSource.hh"
+#include "artg4/Core/GeneralParticleSource.hh"
 
 // Other library includes
 #include "fhiclcpp/ParameterSet.h"
 #include "messagefacility/MessageLogger/MessageLogger.h"
 
-// Everything goes in the g-2 namespace
-namespace gm2 {
+// Everything goes in the Art G4 namespace
+namespace artg4 {
   class ParticleGunAction : public ActionBase {
   public:
     // A constructor that takes in a parameter set.
@@ -37,7 +37,7 @@ namespace gm2 {
 
   private:
     // Our particle source
-    g2GeneralParticleSource * g2GPS;
+    GeneralParticleSource * GPS;
 
     // A message logger for this action object
     mf::LogInfo _logInfo

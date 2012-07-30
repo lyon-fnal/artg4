@@ -5,7 +5,7 @@
 // Date: July 2012
 
 // Include header
-#include "gm2g4/pluginActions/particleGun/ParticleGunAction.hh"
+#include "artg4/pluginActions/particleGun/ParticleGunAction.hh"
 
 // Other includes
 // Note: I'm not certain that all of these are necessary.
@@ -16,8 +16,8 @@
 #include "globals.hh"
 #include "Randomize.hh"
 
-#include "g2GeneralParticleSource.hh"
-#include "g2PreciseValues.hh"
+#include "GeneralParticleSource.hh"
+#include "PreciseValues.hh"
 
 #include <iostream>
 #include <cmath>
@@ -26,25 +26,25 @@ using std::string;
 
 // Constructor takes a parameter set, calls the base class's constructor, and
 // initializes member data
-gm2::ParticleGunAction::ParticleGunAction(fhicl::ParameterSet const & p)
+artg4::ParticleGunAction::ParticleGunAction(fhicl::ParameterSet const & p)
   : ActionBase(p.get<string>("name", "particleGun")),
     // Initialize our general particle source using a sub-pset from the passed
     // parameters.
-    g2GPS(new g2GeneralParticleSource(p.get<fhicl::ParameterSet>("g2GPS"))),
+    GPS(new GeneralParticleSource(p.get<fhicl::ParameterSet>("GPS"))),
     // Initialize our message logger
     _logInfo("PARTICLEGUNACTION")
 {}
 
 // Destructor cleans up the general particle source
-gm2::ParticleGunAction::~ParticleGunAction()
+artg4::ParticleGunAction::~ParticleGunAction()
 {
-  delete g2GPS;
+  delete GPS;
 }
 
 // Create a primary particle for an event!
-// (Standard g-2 simulation)
-void gm2::ParticleGunAction::GeneratePrimaries(cons G4Event * anEvent)
+// (Standard Art G4 simulation)
+void artg4::ParticleGunAction::GeneratePrimaries(cons G4Event * anEvent)
 {
   // Everything is taken care of by the general particle source!
-  g2GPS -> GeneratePrimaryVertex(anEvent);
+  GPS -> GeneratePrimaryVertex(anEvent);
 }

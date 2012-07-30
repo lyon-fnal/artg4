@@ -13,11 +13,11 @@
 #include "art/Framework/Services/Registry/ServiceHandle.h"
 
 // Include more local files
-#include "gm2g4/pluginActions/track/TrackAction.hh"
-#include "gm2g4/art/ActionHolder.hh"
+#include "artg4/pluginActions/track/TrackAction.hh"
+#include "artg4/art/ActionHolder.hh"
 
-// Put code in the g-2 namespace
-namespace gm2 {
+// Put code in the Art G4 namespace
+namespace artg4 {
   // This class is a producer, so it needs to inherit from @EDProducer@.
   class trackAction : public art::EDProducer {
   public:
@@ -46,7 +46,7 @@ namespace gm2 {
 }
 
 // Constructor
-gm2::trackAction::trackAction(fhicl::ParameterSet const & p)
+artg4::trackAction::trackAction(fhicl::ParameterSet const & p)
   : _myAction(new TrackAction(p))
 {
   // If you want to eventually add something to the event, you need to tell
@@ -55,7 +55,7 @@ gm2::trackAction::trackAction(fhicl::ParameterSet const & p)
 }
 
 // Destructor
-gm2::trackAction::~trackAction()
+artg4::trackAction::~trackAction()
 {
   // Clean up our only member datum
   delete _myAction;
@@ -65,14 +65,14 @@ gm2::trackAction::~trackAction()
 // several runs. Setting the action here ensures that when the GEANT run
 // manager is initialized at the beginning of the run, the action objects
 // are all registered.
-void gm2::trackAction::beginJob()
+void artg4::trackAction::beginJob()
 {
   art::ServiceHandle<ActionHolder> actions;
   actions -> registerAction(_myAction);
 }
 
 // Definition of the required produce(...) method.
-void gm2::trackAction::produce(art::Event & e)
+void artg4::trackAction::produce(art::Event & e)
 {
   // Get the hit collection from our action
   TrackArtHitCollection myArtHits = _myAction -> getArtHits();
@@ -87,5 +87,5 @@ void gm2::trackAction::produce(art::Event & e)
 }
 
 // Register the producer with Art.
-using gm2::trackAction;
+using artg4::trackAction;
 DEFINE_ART_MODULE(trackAction)

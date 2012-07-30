@@ -21,10 +21,10 @@
 #define MUON_STORAGE_ACTION_HH
 
 // Include the base class
-#include "gm2g4/Core/ActionBase.hh"
+#include "artg4/Core/ActionBase.hh"
 
 // Include our event hit class
-#include "gm2g4/pluginActions/muonStorageStatus/EventHit.hh"
+#include "artg4/pluginActions/muonStorageStatus/EventHit.hh"
 
 // G4 includes
 #include "G4Run.hh"
@@ -35,11 +35,11 @@
 #include "fhiclcpp/ParameterSet.h"
 #include "messagefacility/MessageLogger/MessageLogger.h"
 
-// Everything goes in the g-2 namespace
-namespace gm2 {
+// Everything goes in the Art G4 namespace
+namespace artg4 {
 
   // If anything external wants the muon tracking status, it can get it in
-  // the form of a gm2::muonTrackingStatus::state object.
+  // the form of a artg4::muonTrackingStatus::state object.
   namespace muonTrackingStatus {
     enum state { trackingMuon, storedMuon, lostMuon };
   }

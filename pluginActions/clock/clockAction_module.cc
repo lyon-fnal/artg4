@@ -13,11 +13,11 @@
 #include "art/Framework/Services/Registry/ServiceHandle.h"
 
 // Include more local files
-#include "gm2g4/pluginActions/clock/ClockAction.hh"
-#include "gm2g4/art/ActionHolder.hh"
+#include "artg4/pluginActions/clock/ClockAction.hh"
+#include "artg4/art/ActionHolder.hh"
 
-// Put code in the g-2 namespace
-namespace gm2 {
+// Put code in the Art G4 namespace
+namespace artg4 {
   // This class is a producer, so it needs to inherit from @EDProducer@.
   class clockAction : public art::EDProducer {
   public:
@@ -46,7 +46,7 @@ namespace gm2 {
 }
 
 // Constructor
-gm2::clockAction::clockAction(fhicl::ParameterSet const & p)
+artg4::clockAction::clockAction(fhicl::ParameterSet const & p)
   : _myAction(new ClockAction(p))
 {
   // If you want to eventually add something to the event, you need to tell
@@ -56,7 +56,7 @@ gm2::clockAction::clockAction(fhicl::ParameterSet const & p)
 }
 
 // Destructor
-gm2::clockAction::~clockAction()
+artg4::clockAction::~clockAction()
 {
   // Clean up our only member datum
   delete _myAction;
@@ -66,14 +66,14 @@ gm2::clockAction::~clockAction()
 // several runs. Setting the action here ensures that when the GEANT run
 // manager is initialized at the beginning of the run, the action objects
 // are all registered.
-void gm2::clockAction::beginJob()
+void artg4::clockAction::beginJob()
 {
   art::ServiceHandle<ActionHolder> actions;
   actions -> registerAction(_myAction);
 }
 
 // Definition of the required produce(...) method.
-void gm2::clockAction::produce(art::Event & e)
+void artg4::clockAction::produce(art::Event & e)
 {
   // If you want to get hits out of your action object and put them in the
   // art event, do it here. 
@@ -87,5 +87,5 @@ void gm2::clockAction::produce(art::Event & e)
 }
 
 // Register the producer with Art.
-using gm2::clockAction;
+using artg4::clockAction;
 DEFINE_ART_MODULE(clockAction)

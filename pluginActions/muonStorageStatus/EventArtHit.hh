@@ -12,8 +12,8 @@
 // An include
 #include <vector>
 
-// Everything goes in g-2 namespace
-namespace gm2 {
+// Everything goes in Art G4 namespace
+namespace artg4 {
   // Begin class declaration
   class EventArtHit {
   public: 

@@ -5,15 +5,15 @@
 // Date: July 2012
 
 // Include header
-#include "gm2g4/pluginActions/track/TrackAction.hh"
+#include "artg4/pluginActions/track/TrackAction.hh"
 
-#include "gm2g4/pluginActions/track/TrackArtHit.hh"
+#include "artg4/pluginActions/track/TrackArtHit.hh"
 
 using std::string;
 
 // Constructor takes a parameter set, calls the base class's constructor, and
 // initializes member data
-gm2::TrackAction::TrackAction(fhicl::ParameterSet const & p)
+artg4::TrackAction::TrackAction(fhicl::ParameterSet const & p)
   : ActionBase(p.get<string>("name", "track")),
     // Initialize our message logger
     _logInfo("TRACKACTION")
@@ -21,7 +21,7 @@ gm2::TrackAction::TrackAction(fhicl::ParameterSet const & p)
 
 // Overload the PreUserTrackingAction method to initialize the track and
 // add it to our collection
-void gm2::TrackAction::PreUserTrackingAction(const G4Track * currentTrack)
+void artg4::TrackAction::PreUserTrackingAction(const G4Track * currentTrack)
 {
 
   // Ignore tracks for xtal volumes

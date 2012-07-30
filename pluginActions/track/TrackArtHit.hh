@@ -10,8 +10,8 @@
 #include "G4ThreeVector.hh"
 #include <vector>
 
-// Everything goes in the g-2 namespace
-namespace gm2 {
+// Everything goes in the Art G4 namespace
+namespace artg4 {
   // Begin struct definition
   struct TrackArtHit {
   public: 
