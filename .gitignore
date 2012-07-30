@@ -1,0 +1,6 @@
+# Remove Mac leavings
+._*
+
+# Remove emacs autosave data
+*#
+*~
