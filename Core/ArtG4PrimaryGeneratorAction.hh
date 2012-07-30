@@ -1,5 +1,5 @@
-// Gm2PrimaryGeneratorAction.hh provides declarations for the built-in
-// primary generator action for the g-2 simulation. In its main method, 
+// ArtG4PrimaryGeneratorAction.hh provides declarations for the built-in
+// primary generator action for the Art G4 simulation. In its main method, 
 // GeneratePrimaries, it gets the collection of all action objects registered
 // for the run and calls their GeneratePrimaries method.
 
@@ -7,17 +7,17 @@
 // Date: July 2012
 
 // Include guard
-#ifndef GM2_PGA_HH
-#define GM2_PGA_HH
+#ifndef ARTG4_PGA_HH
+#define ARTG4_PGA_HH
 
 // G4 includes
 #include "G4VUserPrimaryGeneratorAction.hh"
 #include "G4Event.hh"
 
-// Everything goes in the g-2 namespace
-namespace gm2 {
+// Everything goes in the Art G4 namespace
+namespace artg4 {
 
-  class Gm2PrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction {
+  class ArtG4PrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction {
   public: 
     // Compiler-generated c'tor, d'tor, copy c'tor and equality operator are
     // fine - not much to this class!
@@ -29,4 +29,4 @@ namespace gm2 {
   };
 
 }
-#endif GM2_PGA_HH
+#endif ARTG4_PGA_HH

@@ -1,14 +1,14 @@
-// Gm2EventAction.cc provides implementation of g-2's built-in event action.
+// ArtG4EventAction.cc provides implementation of Art G4's built-in event action.
 
 // Authors: Tasha Arvanitis, Adam Lyon
 // Date: July 2012
 
 // Include header
-#include "gm2g4/Core/Gm2EventAction.hh"
+#include "artg4/Core/ArtG4EventAction.hh"
 
 // Other local includes
-#include "gm2g4/art/ActionHolder.hh"
-#include "gm2g4/Core/ActionBase.hh"
+#include "artg4/art/ActionHolder.hh"
+#include "artg4/Core/ActionBase.hh"
 
 // Art
 #include "art/Framework/Services/Registry/ServiceHandle.h"
@@ -20,7 +20,7 @@ using std::map;
 using std::string;
 
 // Called at the beginning of each event. Pass the call on to action objects
-void gm2::Gm2EventAction::BeginOfEventAction(const G4Event * currentEvent)
+void artg4::ArtG4EventAction::BeginOfEventAction(const G4Event * currentEvent)
 {
   // Get a collection (map, actually) of the action objects registered for the
   // run.
@@ -37,7 +37,7 @@ void gm2::Gm2EventAction::BeginOfEventAction(const G4Event * currentEvent)
 
 // Called at the end of each event. Call detectors to convert hits for the 
 // event and pass the call on to the action objects.
-void gm2::Gm2EventAction::EndOfEventAction(const G4Event * currentEvent)
+void artg4::ArtG4EventAction::EndOfEventAction(const G4Event * currentEvent)
 {
   // Convert hits
 
@@ -45,17 +45,17 @@ void gm2::Gm2EventAction::EndOfEventAction(const G4Event * currentEvent)
   G4HCofThisEvent * HCE = currentEvent->GetHCofThisEvent();
 
   // Get a list of all the detectors registered for this run
-  art::ServiceHandle<gm2::DetectorHolder> dh;
-  std::map<std::string, gm2::DetectorBase*> 
+  art::ServiceHandle<artg4::DetectorHolder> dh;
+  std::map<std::string, artg4::DetectorBase*> 
     detectorMap = dh -> getDetectorMap();
 
   // Loop over the detectors and call their convertGeantToArtHits methods
   // to artize the event. 
   G4cout << " There are " << detectorMap.size() << " detectors we can artize "
 	 << "hits for. Here we go..." << G4endl;
-  std::map<std::string,gm2::DetectorBase*>::iterator it;
+  std::map<std::string,artg4::DetectorBase*>::iterator it;
   for (it = detectorMap.begin(); it != detectorMap.end(); ++it) {
-    gm2::DetectorBase * currentDetector = it -> second;
+    artg4::DetectorBase * currentDetector = it -> second;
     G4cout << "Converting hits for detector of category: " 
 	   << currentDetector -> category() << "." << G4endl;
     currentDetector -> convertGeantToArtHits(HCE);

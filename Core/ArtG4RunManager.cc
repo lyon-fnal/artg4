@@ -1,5 +1,5 @@
 //
-// Override the G4RunManager class so that the Gm2 framework can drive
+// Override the G4RunManager class so that the ArtG4 framework can drive
 // the event loop.
 ////
 // Original author Rob Kutschke
@@ -9,11 +9,11 @@
 // 1) In G4RunManager the counter i_event is used as the event number.
 //    In this code it is taken from the event number of the art::event.
 //
-// Implementation file for @Gm2G4RunManager@
+// Implementation file for @ArtG4RunManager@
 
 
-// Gm2 includes.
-#include "gm2g4/Core/Gm2G4RunManager.h"
+// ArtG4 includes.
+#include "artg4/Core/ArtG4RunManager.h"
 
 // Includes from G4.
 #include "G4UImanager.hh"
@@ -23,11 +23,11 @@
 
 using namespace std;
 
-namespace gm2 {
+namespace artg4 {
   
   // If the c'tor is called a second time, the c'tor of base will
   // generate an exception.
-  Gm2G4RunManager::Gm2G4RunManager():
+  ArtG4RunManager::ArtG4RunManager():
   G4RunManager(),
   _macroFile(0),
   _n_select(-1),
@@ -39,11 +39,11 @@ namespace gm2 {
   }
   
   // Destructor of base is called automatically.  No need to do anything.
-  Gm2G4RunManager::~Gm2G4RunManager(){
+  ArtG4RunManager::~ArtG4RunManager(){
   }
   
   // Do the "begin run" parts of BeamOn.
-  void Gm2G4RunManager::BeamOnBeginRun( unsigned int runNumber, const char* macroFile, G4int n_select){
+  void ArtG4RunManager::BeamOnBeginRun( unsigned int runNumber, const char* macroFile, G4int n_select){
     
     SetRunIDCounter(runNumber);
     
@@ -76,7 +76,7 @@ namespace gm2 {
   }
   
   // Do the "per event" part of DoEventLoop.
-  void Gm2G4RunManager::BeamOnDoOneEvent( int eventNumber){
+  void ArtG4RunManager::BeamOnDoOneEvent( int eventNumber){
     
     timer->Start();
     
@@ -118,7 +118,7 @@ namespace gm2 {
     
   }
   
-  void Gm2G4RunManager::BeamOnEndEvent(){
+  void ArtG4RunManager::BeamOnEndEvent(){
     
     StackPreviousEvent(currentEvent);
     currentEvent = 0;
@@ -127,7 +127,7 @@ namespace gm2 {
   }
   
   // Do the "end of run" parts of DoEventLoop and BeamOn.
-  void Gm2G4RunManager::BeamOnEndRun(){
+  void ArtG4RunManager::BeamOnEndRun(){
     
     // From G4RunManager::DoEventLoop
     if(verboseLevel>0){
@@ -161,4 +161,4 @@ namespace gm2 {
     RunTermination();
   }
   
-} // end namespace gm2
+} // end namespace artg4

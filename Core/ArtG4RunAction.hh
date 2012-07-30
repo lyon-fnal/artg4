@@ -1,5 +1,5 @@
-// Gm2RunAction.hh provides declarations for the built-in run action for
-// the g-2 simulation. It gets the collection of all action objects for the
+// ArtG4RunAction.hh provides declarations for the built-in run action for
+// the Art G4 simulation. It gets the collection of all action objects for the
 // run and loops over them for both BeginOfRunAction and EndOfRunAction,
 // calling the respective methods in each action object.
 
@@ -7,17 +7,17 @@
 // Date: July 2012
 
 // Include guard
-#ifndef GM2_RUN_ACTION_HH
-#define GM2_RUN_ACTION_HH
+#ifndef ARTG4_RUN_ACTION_HH
+#define ARTG4_RUN_ACTION_HH
 
 // Some G4 includes
 #include "G4UserRunAction.hh"
 #include "G4Run.hh"
 
-// Everything goes in the g-2 namespace
-namespace gm2 {
+// Everything goes in the Art G4 namespace
+namespace artg4 {
 
-  class Gm2RunAction : public G4UserRunAction {
+  class ArtG4RunAction : public G4UserRunAction {
   public:
     // Compiler-generated default constructor, destructor, copy constructor, 
     // and equality operator are all okay.
@@ -29,4 +29,4 @@ namespace gm2 {
     void EndOfRunAction(const G4Run * currentRun);
   };
 }
-#endif // GM2_RUN_ACTION_HH
+#endif // ARTG4_RUN_ACTION_HH

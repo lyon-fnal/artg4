@@ -1,14 +1,14 @@
-// Gm2RunAction.cc provides definitions for g-2's built-in run action.
+// ArtG4RunAction.cc provides definitions for Art G4's built-in run action.
 
 // Authors: Tasha Arvanitis, Adam Lyon
 // Date: July 2012
 
 // Include header
-#include "gm2g4/Core/Gm2RunAction.hh"
+#include "artg4/Core/ArtG4RunAction.hh"
 
 // Other local includes
-#include "gm2g4/art/ActionHolder.hh"
-#include "gm2g4/Core/ActionBase.hh"
+#include "artg4/art/ActionHolder.hh"
+#include "artg4/Core/ActionBase.hh"
 
 // Art
 #include "art/Framework/Services/Registry/ServiceHandle.h"
@@ -20,7 +20,7 @@ using std::string;
 using std::map;
 
 // Called at the beginning of each run:
-void gm2::Gm2RunAction::BeginOfRunAction(const G4Run * currentRun)
+void artg4::ArtG4RunAction::BeginOfRunAction(const G4Run * currentRun)
 {
   // Get a collection (map, actually) of the action objects registered for the
   // run.
@@ -36,7 +36,7 @@ void gm2::Gm2RunAction::BeginOfRunAction(const G4Run * currentRun)
 }
 
 // Called at the end of each run:
-void gm2::Gm2RunAction::EndOfRunAction(const G4Run * currentRun)
+void artg4::ArtG4RunAction::EndOfRunAction(const G4Run * currentRun)
 {
   // Get a collection (map, actually) of the action objects registered for the
   // run.

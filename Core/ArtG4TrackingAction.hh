@@ -1,5 +1,5 @@
-// Gm2TrackingAction.hh provides declarations for the built-in tracking action
-// for the g-2 simulation. In its two main methods, PreUserTrackingAction
+// ArtG4TrackingAction.hh provides declarations for the built-in tracking action
+// for the Art G4 simulation. In its two main methods, PreUserTrackingAction
 // and PostUserTrackingAction, it gets the collection of all action objects
 // registered for the simulation job and loops over them, calling their
 // respective methods (conveniently called Pre/PostUserTrackingAction).
@@ -8,17 +8,17 @@
 // Date: July 2012
 
 // Include guard
-#ifndef GM2_TRACKING_ACTION
-#define GM2_TRACKING_ACTION
+#ifndef ARTG4_TRACKING_ACTION
+#define ARTG4_TRACKING_ACTION
 
 // G4 includes
 #include "G4UserTrackingAction.hh"
 #include "G4Track.hh"
 
-// Everything goes in the g-2 namespace
-namespace gm2 {
+// Everything goes in the Art G4 namespace
+namespace artg4 {
   
-  class Gm2TrackingAction : public G4UserTrackingAction {
+  class ArtG4TrackingAction : public G4UserTrackingAction {
   public:
     // Compiler-generated constructor, destructor, copy constructor, equality
     // operator are all okay here - there's nothing to keep track of!
@@ -34,4 +34,4 @@ namespace gm2 {
 
 }
 
-#endif // GM2_TRACKING_ACTION
+#endif // ARTG4_TRACKING_ACTION

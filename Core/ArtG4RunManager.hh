@@ -1,7 +1,7 @@
-#ifndef Gm2G4_Gm2G4RunManager_hh
-#define Gm2G4_Gm2G4RunManager_hh
+#ifndef ArtG4_ArtG4RunManager_hh
+#define ArtG4_ArtG4RunManager_hh
 //
-// Override the G4RunManager class so that the Gm2 framework can drive
+// Override the G4RunManager class so that the ArtG4 framework can drive
 // the event loop.
 //
 // Original author Rob Kutschke (Mu2e)
@@ -23,21 +23,21 @@
 //        via the instance pointer in the base will never want to access any of the
 //        methods in this class.  So we do not need an instance pointer to this class.
 //
-//     2) Gm2 does not plan to change G4Run numbers within a single framework job.
+//     2) ArtG4 does not plan to change G4Run numbers within a single framework job.
 //
 //     3) The original G4RunManager had a local variable _i_event
 
 // Included from Geant4
 #include "G4RunManager.hh"
 
-namespace gm2 {
+namespace artg4 {
   
-  class Gm2G4RunManager : public G4RunManager{
+  class ArtG4RunManager : public G4RunManager{
     
   public:
     
-    Gm2G4RunManager();
-    virtual ~Gm2G4RunManager();
+    ArtG4RunManager();
+    virtual ~ArtG4RunManager();
     
     // The four methods that break up BeamOn into 4 pieces.
     virtual void BeamOnBeginRun( unsigned int runNumber, const char* macroFile=0, G4int n_select=-1);
@@ -46,7 +46,7 @@ namespace gm2 {
     virtual void BeamOnEndRun();
     
     
-    // Gm2 specific accessors.
+    // ArtG4 specific accessors.
     G4Event const* getCurrentEvent() const { return currentEvent; }
     G4Timer const*      getG4Timer() const { return timer; }
     
@@ -57,8 +57,8 @@ namespace gm2 {
   private:
     
     // Private and unimplemented to prevent copying.
-    Gm2G4RunManager( Gm2G4RunManager const & );
-    Gm2G4RunManager& operator=( Gm2G4RunManager const & );
+    ArtG4RunManager( ArtG4RunManager const & );
+    ArtG4RunManager& operator=( ArtG4RunManager const & );
     
     // A test to see if this works.
     G4Event * _previousEvent;
@@ -90,6 +90,6 @@ namespace gm2 {
     
   };
   
-} // end namespace gm2.
+} // end namespace artg4.
 
-#endif /* Gm2G4_Gm2G4RunManager_hh */
+#endif /* ArtG4_ArtG4RunManager_hh */

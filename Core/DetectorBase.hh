@@ -2,7 +2,7 @@
 
 // There is no implementation file since it is an abstract base class.
 
-// All @Gm2G4@ detector objects MUST inherit from this @DetectorBase@ class. 
+// All @ArtG4@ detector objects MUST inherit from this @DetectorBase@ class. 
 
 // For your detector to work, you must override the following methods:
 
@@ -38,8 +38,8 @@
 
 // Declare the @DetectorBase@ class
 
-// All offical g-2 specific code goes into the @gm2@ namespace
-namespace gm2 {
+// All offical Art G4 specific code goes into the @artg4@ namespace
+namespace artg4 {
   
   class DetectorBase {
   

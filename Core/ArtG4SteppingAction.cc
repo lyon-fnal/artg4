@@ -1,15 +1,15 @@
-// Gm2SteppingAction.cc provides definitions for g-2's built-in stepping
+// ArtG4SteppingAction.cc provides definitions for Art G4's built-in stepping
 // action.
 
 // Authors: Tasha Arvanitis, Adam Lyon
 // Date: July 2012
 
 // Include header
-#include "gm2g4/Core/Gm2SteppingAction.hh"
+#include "artg4/Core/ArtG4SteppingAction.hh"
 
 // Other local includes
-#include "gm2g4/art/ActionHolder.hh"
-#include "gm2g4/Core/ActionBase.hh"
+#include "artg4/art/ActionHolder.hh"
+#include "artg4/Core/ActionBase.hh"
 
 // Art
 #include "art/Framework/Services/Registry/ServiceHandle.h"
@@ -21,7 +21,7 @@ using std::string;
 using std::map;
 
 // Called at the end of each step
-void gm2::Gm2SteppingAction::UserSteppingAction(const G4Step * currentStep)
+void artg4::ArtG4SteppingAction::UserSteppingAction(const G4Step * currentStep)
 {
   // Get a collection (map, actually) of the action objects registered for the
   // run.

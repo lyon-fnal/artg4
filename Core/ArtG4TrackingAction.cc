@@ -1,14 +1,14 @@
-// Gm2TrackingAction.cc provides definitions for g-2's built-in tracking action
+// ArtG4TrackingAction.cc provides definitions for Art G4's built-in tracking action
 
 // Authors: Tasha Arvanitis, Adam Lyon
 // Date: July 2012
 
 // Include header
-#include "gm2g4/Core/Gm2TrackingAction.hh"
+#include "artg4/Core/ArtG4TrackingAction.hh"
 
 // Other local includes
-#include "gm2g4/art/ActionHolder.hh"
-#include "gm2g4/Core/ActionBase.hh"
+#include "artg4/art/ActionHolder.hh"
+#include "artg4/Core/ActionBase.hh"
 
 // Art
 #include "art/Framework/Services/Registry/ServiceHandle.h"
@@ -20,7 +20,7 @@ using std::string;
 using std::map;
 
 // Called after the creation of a track and before it's actually simulated
-void gm2::Gm2TrackingAction::PreUserTrackingAction(const G4Track * currTrack)
+void artg4::ArtG4TrackingAction::PreUserTrackingAction(const G4Track * currTrack)
 {
   // Get a collection (map, actually) of the action objects registered for the
   // run.
@@ -36,7 +36,7 @@ void gm2::Gm2TrackingAction::PreUserTrackingAction(const G4Track * currTrack)
 }
 
 // Called once a track has been stopped
-void gm2::Gm2TrackingAction::PostUserTrackingAction(const G4Track * currTrack)
+void artg4::ArtG4TrackingAction::PostUserTrackingAction(const G4Track * currTrack)
 {
   // Get a collection (map, actually) of the action objects registered for the
   // run.

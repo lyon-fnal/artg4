@@ -1,23 +1,23 @@
-// Gm2EventAction.hh provides declarations for the built-in event action for
-// the g-2 simulation. In both BeginOfEventAction and EndOfEventAction, it
+// ArtG4EventAction.hh provides declarations for the built-in event action for
+// the Art G4 simulation. In both BeginOfEventAction and EndOfEventAction, it
 // gets the collection of action objects registered for the current job and
 // calls their Begin/EndOfEventAction methods. In EndOfEventAction, it also
 // gets the collection of registered detector components and calls their
 // hit conversion methods. 
 
 // Include guard
-#ifndef GM2_EVENT_ACTION_HH
-#define GM2_EVENT_ACTION_HH
+#ifndef ARTG4_EVENT_ACTION_HH
+#define ARTG4_EVENT_ACTION_HH
 
 // Some G4 includes
 #include "G4UserEventAction.hh"
 #include "G4Event.hh"
 
-// Everything goes in the g-2 namespace
-namepace gm2 {
+// Everything goes in the Art G4 namespace
+namepace artg4 {
 
   // Declare the class
-  class Gm2EventAction : public G4UserEventAction {
+  class ArtG4EventAction : public G4UserEventAction {
   public:
     // Compiler-generated constructor, destructor, copy constructor, and 
     // equality operator are all okay - there's not much to this class!
@@ -35,4 +35,4 @@ namepace gm2 {
 
 }
 
-#endif // GM2_EVENT_ACTION_HH
+#endif // ARTG4_EVENT_ACTION_HH

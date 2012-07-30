@@ -67,8 +67,8 @@ class G4Event;
 class G4Track;
 
 
-// Everything goes in the g-2 namespace
-namespace gm2 {
+// Everything goes in the Art G4 namespace
+namespace artg4 {
 
   class ActionBase {
   public:
