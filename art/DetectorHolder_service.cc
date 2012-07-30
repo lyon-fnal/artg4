@@ -6,7 +6,7 @@
 //Includes
 #include <iostream>
 
-#include "gm2g4/art/DetectorHolder.hh"
+#include "artg4/art/DetectorHolder.hh"
 
 #include "art/Framework/Services/Registry/ServiceMacros.h"
 
@@ -20,14 +20,14 @@ using std::endl;
 // PUBLIC METHODS
 
 // Constructor doesn't do anything with either of its passed components.
-gm2::DetectorHolder::DetectorHolder(fhicl::ParameterSet const&,
+artg4::DetectorHolder::DetectorHolder(fhicl::ParameterSet const&,
 				    art::ActivityRegistry&) :
   _worldPV(0),
   _logInfo("DETECTORHOLDER")
 {}
 
 // Register a detector object with this service
-void gm2::DetectorHolder::registerDetector(DetectorBase *const db)
+void artg4::DetectorHolder::registerDetector(DetectorBase *const db)
 {
   _logInfo << "Registering detector named " << db->myName() << endl;
   addDBtoCategoryMap(db);
@@ -37,7 +37,7 @@ void gm2::DetectorHolder::registerDetector(DetectorBase *const db)
 }
 
 // Get the physical volume for the world/lab in the simulation
-G4VPhysicalVolume * gm2::DetectorHolder::worldPhysicalVolume() const
+G4VPhysicalVolume * artg4::DetectorHolder::worldPhysicalVolume() const
 {
   // Check if we have a world yet.
   if (0 == _worldPV) {
@@ -51,14 +51,14 @@ G4VPhysicalVolume * gm2::DetectorHolder::worldPhysicalVolume() const
 }
 
 // Get a collection of the detectors registered for this run.
-inline std::map<std::string, gm2::DetectorBase*> const &
-      gm2::DetectorHolder::getDetectorMap() const 
+inline std::map<std::string, artg4::DetectorBase*> const &
+      artg4::DetectorHolder::getDetectorMap() const 
 {
   return _categoryMap;
 }
 
 // Get a specific detector, given a category string.
-gm2::DetectorBase * gm2::DetectorHolder::getDetectorForCategory(std::string 
+artg4::DetectorBase * artg4::DetectorHolder::getDetectorForCategory(std::string 
 							   category) const
 {
   map<string,DetectorBase*>::iterator categoryDB = _categoryMap.find(category);
@@ -75,7 +75,7 @@ gm2::DetectorBase * gm2::DetectorHolder::getDetectorForCategory(std::string
 
 // Get the parameter set for a detector given its category string
 fhicl::ParameterSet const 
-      gm2::DetectorHolder::getParametersForCategory(std::string category)
+      artg4::DetectorHolder::getParametersForCategory(std::string category)
 {
   return getDetectorForCategory(category) -> parameters();
 }
@@ -83,7 +83,7 @@ fhicl::ParameterSet const
 // PRIVATE METHODS
 
 // Add a detector base object to our collection of registered detectors
-void gm2::DetectorHolder::addDBtoCategoryMap(DetectorBase * const db)
+void artg4::DetectorHolder::addDBtoCategoryMap(DetectorBase * const db)
 {
   if (0 == _categoryMap.count( db -> category() )) {
     // This DB isn't already in the map - let's add it!
@@ -102,7 +102,7 @@ void gm2::DetectorHolder::addDBtoCategoryMap(DetectorBase * const db)
 
 // Find a detector's mother logical volume and pass it to the detector to 
 // allow it to create its own physical volume.
-bool gm2::DetectorHolder::placeDetector(DetectorBase * const db)
+bool artg4::DetectorHolder::placeDetector(DetectorBase * const db)
 {
   // Check if we're dealing with the world volume first.
   if ( 0 == (db -> category()).compare("world") ) {
@@ -141,5 +141,5 @@ bool gm2::DetectorHolder::placeDetector(DetectorBase * const db)
 }
 
 // Register the service with Art
-using gm2::DetectorHolder;
+using artg4::DetectorHolder;
 DEFINE_ART_SERVICE(DetectorHolder)

@@ -10,7 +10,7 @@
 #include "G4Material.hh"
 #include "G4Element.hh"
 
-namespace gm2 {
+namespace artg4 {
 
   class MaterialService {
   public: 

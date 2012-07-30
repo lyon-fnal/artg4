@@ -14,8 +14,8 @@
 #include "fhiclcpp/ParameterSet.h"
 #include "art/Framework/Services/Registry/ActivityRegistry.h"
 
-// Everything goes in a namespace: gm2
-namespace gm2 {
+// Everything goes in a namespace: artg4
+namespace artg4 {
   // Begin class declaration
   class GlobalParameters {
   public:

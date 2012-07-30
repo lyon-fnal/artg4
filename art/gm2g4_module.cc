@@ -1,4 +1,4 @@
-// gm2g4_module.cc replicates many GEANT programs' @main()@ driver. It
+// artg4_module.cc replicates many GEANT programs' @main()@ driver. It
 // creates and initializes the run manager, controls the beginning and end of 
 // events, and controls visualization.
 
@@ -12,14 +12,14 @@
 #include "art/Framework/Principal/Run.h"
 
 // Local includes (like actions)
-#include "gm2g4/Core/Gm2G4RunManager.h"
-#include "gm2g4/Core/Gm2DetectorConstruction.hh"
-#include "gm2g4/actions/physicsList.hh"
-#include "gm2g4/Core/Gm2EventAction.hh"
-#include "gm2g4/Core/Gm2PrimaryGeneratorAction.hh"
-#include "gm2g4/Core/Gm2RunAction.hh"
-#include "gm2g4/Core/Gm2SteppingAction.hh"
-#include "gm2g4/Core/Gm2TrackingAction.hh"
+#include "artg4/Core/ArtG4RunManager.h"
+#include "artg4/Core/ArtG4DetectorConstruction.hh"
+#include "artg4/actions/physicsList.hh"
+#include "artg4/Core/ArtG4EventAction.hh"
+#include "artg4/Core/ArtG4PrimaryGeneratorAction.hh"
+#include "artg4/Core/ArtG4RunAction.hh"
+#include "artg4/Core/ArtG4SteppingAction.hh"
+#include "artg4/Core/ArtG4TrackingAction.hh"
 
 // G4 includes
 #ifdef G4VIS_USE_OPENGLX
@@ -31,11 +31,11 @@
 
 using namespace std;
 
-namespace gm2 {
-  class gm2g4 : public art::EDProducer {
+namespace artg4 {
+  class artg4 : public art::EDProducer {
   public:
-    explicit gm2g4(fhicl::ParameterSet const & p);
-    virtual ~gm2g4();
+    explicit artg4(fhicl::ParameterSet const & p);
+    virtual ~artg4();
 
     virtual void produce(art::Event & e);
     virtual void beginJob();
@@ -44,7 +44,7 @@ namespace gm2 {
 
   private:
     // Our custom run manager
-    auto_ptr<gm2::Gm2G4RunManager> _runManager;
+    auto_ptr<artg4::ArtG4RunManager> _runManager;
   
     // G4 stuff
     G4UIsession *_session;
@@ -85,7 +85,7 @@ namespace gm2 {
   };
 }
 
-gm2::gm2g4::gm2g4(fhicl::ParameterSet const & p)
+artg4::artg4::artg4(fhicl::ParameterSet const & p)
   : _runManager(0),
     _session(0),
     _UI(0),
@@ -100,35 +100,35 @@ gm2::gm2g4::gm2g4(fhicl::ParameterSet const & p)
   produces<int>();
 }
 
-gm2::gm2g4::~gm2g4()
+artg4::artg4::~artg4()
 {
   // Clean up dynamic memory and other resources here.  
 }
 
-void gm2::gm2g4::beginJob()
+void artg4::artg4::beginJob()
 {
   // Set up run manager
-  _runManager = auto_ptr<gm2::Gm2G4RunManager>(new gm2::Gm2G4RunManager);
+  _runManager = auto_ptr<artg4::ArtG4RunManager>(new artg4::ArtG4RunManager);
 }
 
-void gm2::gm2g4::beginRun(art::Run & r)
+void artg4::artg4::beginRun(art::Run & r)
 {
 
   // User Initialization classes (mandatory)
-  _runManager->SetUserInitialization(new Gm2DetectorConstruction);
+  _runManager->SetUserInitialization(new ArtG4DetectorConstruction);
   _runManager->SetUserInitialization(new physicsList);
-  _runManager->SetUserAction(new Gm2PrimaryGeneratorAction);
+  _runManager->SetUserAction(new ArtG4PrimaryGeneratorAction);
 
   // User actions (optional)
-  // Note that these actions (and Gm2PrimaryGeneratorAction above) are all
+  // Note that these actions (and ArtG4PrimaryGeneratorAction above) are all
   // generic actions that really don't do much on their own. Rather, to 
   // use the power of actions, one must create action objects (derived from
   // @ActionBase@) and register them with the Art @ActionHolder@ service.
   // See @ActionBase@ and/or @ActionHolder@ for more information.
-  runManager -> SetUserAction(new Gm2SteppingAction);
-  runManager -> SetUserAction(new Gm2EventAction);
-  runManager -> SetUserAction(new Gm2TrackingAction);
-  runManager -> SetUserAction(new Gm2RunAction);
+  runManager -> SetUserAction(new ArtG4SteppingAction);
+  runManager -> SetUserAction(new ArtG4EventAction);
+  runManager -> SetUserAction(new ArtG4TrackingAction);
+  runManager -> SetUserAction(new ArtG4RunAction);
 
   /*
   // User actions (optional)
@@ -240,7 +240,7 @@ void gm2::gm2g4::beginRun(art::Run & r)
 // @produce@ is a required method for all producers. This is the module that
 // runs the whole event loop, so here (and in no other module), we run one 
 // event through GEANT.
-void gm2::gm2g4::produce(art::Event & e)
+void artg4::artg4::produce(art::Event & e)
 {
    // Begin event
   _runManager -> BeamOnDoOneEvent(e.id().event());
@@ -275,7 +275,7 @@ void gm2::gm2g4::produce(art::Event & e)
 #endif
 }
 
-void gm2::gm2g4::endRun(art::Run &)
+void artg4::artg4::endRun(art::Run &)
 {
   _runManager -> BeamOnEndRun();
 
@@ -298,5 +298,5 @@ void gm2::gm2g4::endRun(art::Run &)
 #endif
 }
 
-using gm2::gm2g4;
-DEFINE_ART_MODULE(gm2g4)
+using artg4::artg4;
+DEFINE_ART_MODULE(artg4)

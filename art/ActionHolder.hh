@@ -20,12 +20,12 @@
 #include "fhiclcpp/ParameterSet.h"
 #include "art/Framework/Services/Registry/ActivityRegistry.h"
 #include "messagefacility/MessageLogger/MessageLogger.h"
-#include "gm2g4/Core/ActionBase.hh"
+#include "artg4/Core/ActionBase.hh"
 
 #include <map>
 
-// Everything for the g-2 simulation goes in the @gm2@ namespace
-namespace gm2 {
+// Everything for the Art G4 simulation goes in the @artg4@ namespace
+namespace artg4 {
   
   class ActionHolder {
   public:

@@ -8,7 +8,7 @@
 #include "art/Framework/Services/Registry/ServiceMacros.h"
 
 // Constructor
-gm2::MaterialService::MaterialService(fhicl::ParameterSet const &, 
+artg4::MaterialService::MaterialService(fhicl::ParameterSet const &, 
 				      art::ActivityRegistry &)
 {
   // Create the base elements we'll be using later
@@ -21,7 +21,7 @@ gm2::MaterialService::MaterialService(fhicl::ParameterSet const &,
 }
 
 // Destructor
-gm2::MaterialService::~MaterialService()
+artg4::MaterialService::~MaterialService()
 {
   delete H;
   delete C;
@@ -30,7 +30,7 @@ gm2::MaterialService::~MaterialService()
 }
 
 // Create some air
-G4Material* gm2::MaterialService::newAir()
+G4Material* artg4::MaterialService::newAir()
 {
   G4Material * Air = new G4Material("Air", density= 1.29*mg/cm3, nel=2);
   Air->AddElement(N, 70.*perCent);
@@ -40,7 +40,7 @@ G4Material* gm2::MaterialService::newAir()
 }
 
 // Create some argon
-G4Material* gm2::MaterialService::newAr()
+G4Material* artg4::MaterialService::newAr()
 {
   return new G4Material("ArgonGas",
 			z=18., 
@@ -49,7 +49,7 @@ G4Material* gm2::MaterialService::newAr()
 }
 
 // Create some silicon
-G4Material* gm2::MaterialService::newSi()
+G4Material* artg4::MaterialService::newSi()
 {
   return new G4Material("Silicon", 
 			z=14., 
@@ -58,7 +58,7 @@ G4Material* gm2::MaterialService::newSi()
 }
 
 // Create some scintillator material.
-G4Material* gm2::MaterialService::newScint()
+G4Material* artg4::MaterialService::newScint()
 {
   G4Material * Scint = new G4Material("Scintillator", 
 				      density= 1.032*g/cm3, 
@@ -70,13 +70,13 @@ G4Material* gm2::MaterialService::newScint()
 }
 
 // Create a new lead material
-G4Material* gm2::MaterialService::newLead()
+G4Material* artg4::MaterialService::newLead()
 {
   return new G4Material("Lead", z=82., a= 207.19*g/mole, density= 11.35*g/cm3);
 }
 
 // Create a new vacuum material
-G4Material* gm2::MaterialService::newVacuum()
+G4Material* artg4::MaterialService::newVacuum()
 {
   new G4Material("Vacuum", 
 		 1., 
@@ -88,5 +88,5 @@ G4Material* gm2::MaterialService::newVacuum()
 }
 
 
-using gm2::MaterialService;
+using artg4::MaterialService;
 DEFINE_ART_SERVICE(MaterialService)
