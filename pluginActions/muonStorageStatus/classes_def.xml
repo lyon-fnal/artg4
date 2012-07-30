@@ -1,0 +1,13 @@
+<!-- This file is required by Art in order to store EventArtHits and -->
+<!-- collections thereof in ROOT. -->
+
+<!-- Authors: Tasha Arvanitis, Adam Lyon -->
+<!-- Date: July 2012 -->
+
+<lcgdict>
+    <!-- For EventHits - note that using the typedef will not work here-->
+    <class name="gm2::EventArtHit"/>
+    <class name="std::vector< gm2::EventArtHit >"/>
+    <class name="art::Wrapper< std::vector< gm2::EventArtHit > >"/>
+
+</lcgdict>
