@@ -18,6 +18,8 @@ defaultqual a7
 # Add the dependent product and version
 
 product          version
+geant4           v4_9_4_p03
+xerces_c         v3_1_1
 art              v1_00_11
 
 only_for_build  cetbuildtools v2_01_03
@@ -26,7 +28,7 @@ only_for_build  gm2softwaretools v11_1_1
 # We now define allowed qualifiers and the corresponding qualifiers for the depdencies.
 # Make a table by adding columns before "notes". 
 #
-qualifier       art      notes
-a7:debug      a7:debug  
-a7:opt        a7:opt    
-a7:prof       a7:prof   
+qualifier       art     geant4        xerces_c      notes
+a7:debug      a7:debug  gcc46:debug   gcc46:debug
+a7:opt        a7:opt    gcc46:opt     gcc46:opt
+a7:prof       a7:prof   gcc46:prof    gcc46:prof

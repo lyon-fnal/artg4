@@ -1,4 +1,4 @@
-# cmake driver file for main gm2g4 sources
+# cmake driver file for main artg4 sources
 
 # Create a library called "Core"
 cet_make( LIBRARY_NAME Core )

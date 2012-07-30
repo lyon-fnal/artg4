@@ -19,8 +19,8 @@
 
 // Header Guard
 
-#ifndef gm2g4_detectorBase_hh
-#define gm2g4_detectorBase_hh
+#ifndef artg4_detectorBase_hh
+#define artg4_detectorBase_hh
 
 // STL includes
 #include <vector>
