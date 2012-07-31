@@ -66,3 +66,7 @@ artg4::ActionBase const * artg4::ActionHolder::getActionByName(string name) cons
 					 << name << ".\n";
   }
 }
+
+// Register the service with Art
+using artg4::ActionHolder;
+DEFINE_ART_SERVICE(ActionHolder)
