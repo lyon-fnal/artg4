@@ -1,6 +1,6 @@
 # Particle Gun directory CMakeLists.txt
 
-art_make( LIBRARIES "artg4_core" )
+art_make( LIBRARIES "artg4_Core" )
 
 # create library called artg4_pluginactions_clock
 #cet_make( LIBRARY_NAME artg4_pluginactions_clock )

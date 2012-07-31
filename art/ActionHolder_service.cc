@@ -45,17 +45,17 @@ void artg4::ActionHolder::registerAction(ActionBase * const action)
 
 // Return the map of registered actions. Key: name (string). Value: pointer to
 // action object (ActionBase *)
-inline map<string, ActionBase *> const & artg4::ActionHolder::getActions() const
+inline map<string, artg4::ActionBase *> const & artg4::ActionHolder::getActionMap() const
 {
   return _actionMap;
 }
 
 // Return a pointer to the action object described by the given name, or throw
 // an exception if there isn't one.
-artg4::ActionBase * artg4::ActionHolder::getActionByName(string name)
+artg4::ActionBase const * artg4::ActionHolder::getActionByName(string name) const
 {
   // Check if we have an action with the given name
-  map<string, ActionBase*>::iterator actionIter = _actionMap.find(name);
+  map<string, ActionBase*>::const_iterator actionIter = _actionMap.find(name);
   if (actionIter != _actionMap.end()) {
     // We have a detector with that name
     return actionIter -> second;

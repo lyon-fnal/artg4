@@ -1,4 +1,4 @@
-// artg4_module.cc replicates many GEANT programs' @main()@ driver. It
+// artg4Main_module.cc replicates many GEANT programs' @main()@ driver. It
 // creates and initializes the run manager, controls the beginning and end of 
 // events, and controls visualization.
 
@@ -12,9 +12,9 @@
 #include "art/Framework/Principal/Run.h"
 
 // Local includes (like actions)
-#include "artg4/Core/ArtG4RunManager.h"
+#include "artg4/Core/ArtG4RunManager.hh"
 #include "artg4/Core/ArtG4DetectorConstruction.hh"
-#include "artg4/actions/physicsList.hh"
+#include "artg4/Core/physicsList.hh"
 #include "artg4/Core/ArtG4EventAction.hh"
 #include "artg4/Core/ArtG4PrimaryGeneratorAction.hh"
 #include "artg4/Core/ArtG4RunAction.hh"
@@ -32,10 +32,10 @@
 using namespace std;
 
 namespace artg4 {
-  class artg4 : public art::EDProducer {
+  class artg4Main : public art::EDProducer {
   public:
-    explicit artg4(fhicl::ParameterSet const & p);
-    virtual ~artg4();
+    explicit artg4Main(fhicl::ParameterSet const & p);
+    virtual ~artg4Main();
 
     virtual void produce(art::Event & e);
     virtual void beginJob();
@@ -44,7 +44,7 @@ namespace artg4 {
 
   private:
     // Our custom run manager
-    auto_ptr<artg4::ArtG4RunManager> _runManager;
+    auto_ptr<ArtG4RunManager> _runManager;
   
     // G4 stuff
     G4UIsession *_session;
@@ -85,7 +85,7 @@ namespace artg4 {
   };
 }
 
-artg4::artg4::artg4(fhicl::ParameterSet const & p)
+artg4::artg4Main::artg4Main(fhicl::ParameterSet const & p)
   : _runManager(0),
     _session(0),
     _UI(0),
@@ -100,18 +100,18 @@ artg4::artg4::artg4(fhicl::ParameterSet const & p)
   produces<int>();
 }
 
-artg4::artg4::~artg4()
+artg4::artg4Main::~artg4Main()
 {
   // Clean up dynamic memory and other resources here.  
 }
 
-void artg4::artg4::beginJob()
+void artg4::artg4Main::beginJob()
 {
   // Set up run manager
-  _runManager = auto_ptr<artg4::ArtG4RunManager>(new artg4::ArtG4RunManager);
+  _runManager = auto_ptr<ArtG4RunManager>(new ArtG4RunManager);
 }
 
-void artg4::artg4::beginRun(art::Run & r)
+void artg4::artg4Main::beginRun(art::Run & r)
 {
 
   // User Initialization classes (mandatory)
@@ -125,10 +125,10 @@ void artg4::artg4::beginRun(art::Run & r)
   // use the power of actions, one must create action objects (derived from
   // @ActionBase@) and register them with the Art @ActionHolder@ service.
   // See @ActionBase@ and/or @ActionHolder@ for more information.
-  runManager -> SetUserAction(new ArtG4SteppingAction);
-  runManager -> SetUserAction(new ArtG4EventAction);
-  runManager -> SetUserAction(new ArtG4TrackingAction);
-  runManager -> SetUserAction(new ArtG4RunAction);
+  _runManager -> SetUserAction(new ArtG4SteppingAction);
+  _runManager -> SetUserAction(new ArtG4EventAction);
+  _runManager -> SetUserAction(new ArtG4TrackingAction);
+  _runManager -> SetUserAction(new ArtG4RunAction);
 
   /*
   // User actions (optional)
@@ -187,8 +187,17 @@ void artg4::artg4::beginRun(art::Run & r)
 
 #endif // G4VIS_USE_OPENGLX
 
+  /*
+
+  We need a new paradigm for how to get macros/commands passed in, probably
+  another parameter. For now, pretend the problem doesn't exist.
+
+
+  // Get a list of all the macros/commands passed in
+  std::vector<std::string> macros;
+
   // run all the macros given on the command line
-  if( verbosity ) {
+  if( _rmvlevel > 0 ) {
     std::cout << "Are we looking at a macro file or an command?\n";
   }
 
@@ -201,7 +210,7 @@ void artg4::artg4::beginRun(art::Run & r)
     int ret = stat(b->c_str(), &s);
     
     // Print information about any errors we encounter.
-    if( verbosity>0 ){
+    if( _rmvlevel > 0){
       std::cout << *b << '\n';
       if( ret!=0){
 	std::cerr << "Macro file " << *b << " does not exist. "
@@ -232,7 +241,7 @@ void artg4::artg4::beginRun(art::Run & r)
     // Reset the command stream and do it all again!
     command.str("");
   }
-
+  */
   // Start a run!
   _runManager -> BeamOnBeginRun(r.id().run());
 }
@@ -240,7 +249,7 @@ void artg4::artg4::beginRun(art::Run & r)
 // @produce@ is a required method for all producers. This is the module that
 // runs the whole event loop, so here (and in no other module), we run one 
 // event through GEANT.
-void artg4::artg4::produce(art::Event & e)
+void artg4::artg4Main::produce(art::Event & e)
 {
    // Begin event
   _runManager -> BeamOnDoOneEvent(e.id().event());
@@ -275,7 +284,7 @@ void artg4::artg4::produce(art::Event & e)
 #endif
 }
 
-void artg4::artg4::endRun(art::Run &)
+void artg4::artg4Main::endRun(art::Run &)
 {
   _runManager -> BeamOnEndRun();
 
@@ -298,5 +307,5 @@ void artg4::artg4::endRun(art::Run &)
 #endif
 }
 
-using artg4::artg4;
-DEFINE_ART_MODULE(artg4)
+using artg4::artg4Main;
+DEFINE_ART_MODULE(artg4Main)

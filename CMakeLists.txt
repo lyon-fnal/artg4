@@ -100,6 +100,10 @@ find_library( SIGC    NAMES sigc-2.0  PATHS $ENV{LIBSIGCPP_LIB} NO_DEFAULT_PATH 
 
 find_library( CPPUNIT NAMES cppunit   PATHS $ENV{CPPUNIT_LIB}   NO_DEFAULT_PATH )
 
+# We need xerces_c for a geant library
+find_library( XERCESCLIB  NAMES xerces-c PATHS $ENV{XERCESCROOT}/lib NO_DEFAULT_PATH )
+
+
 # Macros for art_make and simple plugins
 include(ArtDictionary)
 include(BuildPlugins)

@@ -44,7 +44,7 @@ namespace artg4 {
 
     // This returns a pointer to the ActionBase with the given name. If the 
     // specified action was never registered, it throws an exception.
-    ActionBase * getActionByName(std::string name) const;
+    ActionBase const * getActionByName(std::string name) const;
 
   private:
     // A collection of all our actions, arranged by name

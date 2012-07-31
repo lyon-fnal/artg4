@@ -1,0 +1,43 @@
+// #include "minimalMessageService.fcl"
+// services.message: @local::default_message
+
+process_name: processB
+
+source: {
+  module_type: EmptyEvent
+  maxEvents: 3
+}
+
+services: {
+  
+  user: {
+    DetectorHolder: {}
+    ActionHolder: {}
+    MaterialService: {}
+  }
+}
+
+outputs: {
+  out1: {
+    module_type: RootOutput
+    fileName: "testing.root"
+  }
+}
+
+physics: {
+  producers: {
+     artg4: {
+      module_type: art
+      enableVisualization: true
+      macroPath: ".:/gm2/app/users/tasha/g-2/artG4/srcs/artg4"
+      visMacro: "vis.mac"
+      pauseAfterEvent: true
+    }
+
+    clock: {
+      module_type: clockAction
+      name: "myClock"
+    }
+  }
+
+}
