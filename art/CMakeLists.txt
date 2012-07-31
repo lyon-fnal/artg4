@@ -1,6 +1,6 @@
 # port/src/services CMakeLists
 
-# This directory contains g-2's Art services
+# This directory contains artg4's Art services
 # For each service in this directory, you need a line like the below
 
 # We apparently need xerces_c for a geant library
@@ -19,7 +19,7 @@ find_library( XERCESC  NAMES xerces-c PATHS $ENV{XERCESCROOT}/lib NO_DEFAULT_PAT
 # For the DetectorHolder service, with which geometry components register, and
 # which takes care of geometry construction...
 set(DetectorHolder_libs ${allG4Libs})
-list(APPEND DetectorHolder_libs ${XERCESC} "Core")
+list(APPEND DetectorHolder_libs ${XERCESC} "artg4_core")
 simple_plugin(DetectorHolder "service" "${DetectorHolder_libs}")
 
 # And for the Materials service, which provides materials when they're needed.

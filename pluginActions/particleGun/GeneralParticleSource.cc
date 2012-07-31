@@ -26,7 +26,7 @@ artg4::GeneralParticleSource::
 
   // Get the parameter sets describing all the sources
   vector<fhicl::ParameterSet> sourceParams = 
-    p.get<fhicl::ParameterSet>("sources");
+    p.get<vector<fhicl::ParameterSet> >("sources");
   
   // Loop over our vector and create a single particle source for each
   // parameter set.

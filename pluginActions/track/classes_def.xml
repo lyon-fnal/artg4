@@ -2,8 +2,8 @@
 
 <lcgdict>
     <!-- No typedefs here! -->
-    <class name="gm2::TrackArtHit"/>
-    <class name="std::vector< gm2::TrackArtHit >"/>
-    <class name="art::Wrapper< std::vector< gm2::TrackArtHit > >"/>
+    <class name="artg4::TrackArtHit"/>
+    <class name="std::vector< artg4::TrackArtHit >"/>
+    <class name="art::Wrapper< std::vector< artg4::TrackArtHit > >"/>
 
 </lcgdict>

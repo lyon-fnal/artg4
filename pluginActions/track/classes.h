@@ -8,7 +8,7 @@
 #include "TrackArtHit.hh"
 
 // Template the vector (no typedef)
-template class std::vector< gm2::TrackArtHit >;
+template class std::vector< artg4::TrackArtHit >;
 
 // Template the wrapper for the vector (typedef okay)
-template class art::Wrapper< gm2::TrackArtHitCollection >;
+template class art::Wrapper< artg4::TrackArtHitCollection >;

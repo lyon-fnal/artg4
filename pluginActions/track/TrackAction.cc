@@ -9,6 +9,8 @@
 
 #include "artg4/pluginActions/track/TrackArtHit.hh"
 
+
+
 using std::string;
 
 // Constructor takes a parameter set, calls the base class's constructor, and
@@ -41,10 +43,15 @@ void artg4::TrackAction::PreUserTrackingAction(const G4Track * currentTrack)
   // Omit turns for now
   //  tr.turn = turnCounter::getInstance().turns();
 
-  tr.volumeUID = get_uid(currentTrack->GetVolume());
+  // We haven't yet set up the 
+  //  tr.volumeUID = get_uid(currentTrack->GetVolume());
 
   G4ThreeVector pos = currentTrack->GetPosition();
-  tr.rhat = std::sqrt(pos.x()*pos.x() + pos.z()*pos.z()) - R_magic();
+  // BUG: TrackAction is g-2 specific because of this 'R_magic' reference.
+  //      This could be eliminated by generalizing this action object, but
+  //      since we want to get the same information in the ROOT file, this
+  //      will just have to be moved out of artg4.
+  tr.rhat = std::sqrt(pos.x()*pos.x() + pos.z()*pos.z());// - R_magic();
   tr.vhat = pos.y();
   tr.theta = std::atan2(pos.z(),pos.x());
   if( tr.theta < 0 )
@@ -62,7 +69,8 @@ void artg4::TrackAction::PreUserTrackingAction(const G4Track * currentTrack)
 }
 
 // Our own method to return our collection of hits.
-inline TrackArtHitCollection & getArtHits() const
+inline const artg4::TrackArtHitCollection & 
+  artg4::TrackAction::getArtHits() const
 {
   return _myArtHits;
 }

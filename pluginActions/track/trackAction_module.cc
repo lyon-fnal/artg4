@@ -11,6 +11,7 @@
 #include "art/Framework/Core/EDProducer.h"
 #include "art/Framework/Core/ModuleMacros.h"
 #include "art/Framework/Services/Registry/ServiceHandle.h"
+#include "art/Framework/Principal/Event.h"
 
 // Include more local files
 #include "artg4/pluginActions/track/TrackAction.hh"

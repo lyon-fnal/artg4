@@ -37,11 +37,11 @@ namespace artg4 {
     virtual void PreUserTrackingAction(const G4Track * currentTrack);
 
     // Our own method to return our collection of hits.
-    TrackArtHitCollection & getArtHits() const;
+    const TrackArtHitCollection & getArtHits() const;
 
   private:
     // A message logger for this action
-    mf::LogInfo _logInfo
+    mf::LogInfo _logInfo;
 
     // Our collection of track hits
     TrackArtHitCollection _myArtHits;
