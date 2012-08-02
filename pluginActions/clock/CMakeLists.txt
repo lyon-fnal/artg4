@@ -1,15 +1,3 @@
 # Particle Gun directory CMakeLists.txt
 
-art_make( LIBRARIES "artg4_Core" )
-
-# create library called artg4_pluginactions_clock
-#cet_make( LIBRARY_NAME artg4_pluginactions_clock )
-
-# install header files into the products area
-#install_headers()
-
-# Set up our producer module, too!
-#set(clock_libs ${allG4Libs})
-#find_library(XERCESC NAMES xerces-c PATHS $ENV{XERCESCROOT}/lib NO_DEFAULT_PATH )
-#list(APPEND clock_libs ${XERCESC} "artg4_core")
-#simple_plugin(clockAction "module" "${clock_libs}")
+art_make( LIBRARIES "artg4_Core" "artg4_pluginActions_clock")

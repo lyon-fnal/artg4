@@ -7,7 +7,7 @@
 #include "artg4/Core/ArtG4TrackingAction.hh"
 
 // Other local includes
-#include "artg4/art/ActionHolder.hh"
+#include "artg4/services/ActionHolder.hh"
 #include "artg4/Core/ActionBase.hh"
 
 // Art
@@ -20,7 +20,7 @@ using std::string;
 using std::map;
 
 // Called after the creation of a track and before it's actually simulated
-void artg4::ArtG4TrackingAction::PreUserTrackingAction(const G4Track * currTrack)
+void artg4::ArtG4TrackingAction::PreUserTrackingAction(const G4Track *currTrack)
 {
   // Get a collection (map, actually) of the action objects registered for the
   // run.
@@ -31,12 +31,12 @@ void artg4::ArtG4TrackingAction::PreUserTrackingAction(const G4Track * currTrack
   map<string, ActionBase*>::iterator it;
   for (it = actions.begin(); it != actions.end(); ++it) {
     ActionBase * action = it -> second;
-    action -> PreUserTrackingAction(currTrack);
+    action -> PreUserTrackingAction(currTrack, this);
   }
 }
 
 // Called once a track has been stopped
-void artg4::ArtG4TrackingAction::PostUserTrackingAction(const G4Track * currTrack)
+void artg4::ArtG4TrackingAction::PostUserTrackingAction(const G4Track*currTrack)
 {
   // Get a collection (map, actually) of the action objects registered for the
   // run.
@@ -47,6 +47,6 @@ void artg4::ArtG4TrackingAction::PostUserTrackingAction(const G4Track * currTrac
   map<string, ActionBase*>::iterator it;
   for (it = actions.begin(); it != actions.end(); ++it) {
     ActionBase * action = it -> second;
-    action -> PostUserTrackingAction(currTrack);
+    action -> PostUserTrackingAction(currTrack, this);
   }
 }

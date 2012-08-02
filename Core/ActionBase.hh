@@ -55,6 +55,10 @@
 // method of the simulation's primary generator action class.
 
 // You may overload any or all of these methods.
+// All of these methods have a second argument, the pointer to the object
+// calling them. This is only to be used when completing an action that needs
+// to be done from that class (using a member function of the base class, for
+// example).
 
 // Include guard
 #ifndef ACTION_BASE_HH
@@ -67,6 +71,12 @@ class G4Run;
 class G4Step;
 class G4Event;
 class G4Track;
+
+class G4UserRunAction;
+class G4UserEventAction;
+class G4UserTrackingAction;
+class G4UserSteppingAction;
+class G4VUserPrimaryGeneratorAction;
 
 
 // Everything goes in the Art G4 namespace
@@ -91,28 +101,36 @@ namespace artg4 {
     // them if desired, and if they're not overloaded, they do nothing.
 
     // Called at the beginning of each run.
-    virtual void BeginOfRunAction(const G4Run * currentRun) {}
+    virtual void BeginOfRunAction(const G4Run * currentRun, 
+				  G4UserRunAction *) {}
 
     // Called at the end of each run.
-    virtual void EndOfRunAction(const G4Run * currentRun) {}
+    virtual void EndOfRunAction(const G4Run * currentRun,
+				G4UserRunAction *) {}
 
     // Called at the beginning of each event (after creation of primaries)
-    virtual void BeginOfEventAction(const G4Event * currentEvent) {}
+    virtual void BeginOfEventAction(const G4Event * currentEvent,
+				    G4UserEventAction *) {}
 
     // Called at the end of each event
-    virtual void EndOfEventAction(const G4Event * currentEvent) {}
+    virtual void EndOfEventAction(const G4Event * currentEvent,
+				  G4UserEventAction *) {}
 
     // Called before a track is simulated
-    virtual void PreUserTrackingAction(const G4Track * currentTrack) {}
+    virtual void PreUserTrackingAction(const G4Track * currentTrack,
+				       G4UserTrackingAction *) {}
     
     // Called when a track is stopped
-    virtual void PostUserTrackingAction(const G4Track * currentTrack) {}
+    virtual void PostUserTrackingAction(const G4Track * currentTrack,
+					G4UserTrackingAction *) {}
 
     // Called at the end of each step
-    virtual void UserSteppingAction(const G4Step * currentStep) {}
+    virtual void UserSteppingAction(const G4Step * currentStep,
+				    G4UserSteppingAction *) {}
 
     // Called for the generation of primaries
-    virtual void GeneratePrimaries(G4Event * anEvent) {}
+    virtual void GeneratePrimaries(G4Event * anEvent,
+				   G4VUserPrimaryGeneratorAction *) {}
     
 
   private:

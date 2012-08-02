@@ -8,7 +8,7 @@
 #include "artg4/Core/ArtG4SteppingAction.hh"
 
 // Other local includes
-#include "artg4/art/ActionHolder.hh"
+#include "artg4/services/ActionHolder.hh"
 #include "artg4/Core/ActionBase.hh"
 
 // Art
@@ -32,6 +32,6 @@ void artg4::ArtG4SteppingAction::UserSteppingAction(const G4Step * currentStep)
   map<string, ActionBase*>::iterator it;
   for (it = actions.begin(); it != actions.end(); ++it) {
     ActionBase * action = it -> second;
-    action -> UserSteppingAction(currentStep);
+    action -> UserSteppingAction(currentStep, this);
   }
 }

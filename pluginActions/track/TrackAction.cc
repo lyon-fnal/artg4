@@ -23,7 +23,8 @@ artg4::TrackAction::TrackAction(fhicl::ParameterSet const & p)
 
 // Overload the PreUserTrackingAction method to initialize the track and
 // add it to our collection
-void artg4::TrackAction::PreUserTrackingAction(const G4Track * currentTrack)
+void artg4::TrackAction::PreUserTrackingAction(const G4Track * currentTrack,
+					       G4UserTrackingAction *)
 {
 
   // Ignore tracks for xtal volumes

@@ -5,7 +5,7 @@
 // Date: July 2012
 
 // Includes
-#include "artg4/art/ActionHolder.hh"
+#include "artg4/services/ActionHolder.hh"
 
 #include "art/Framework/Services/Registry/ServiceMacros.h"
 

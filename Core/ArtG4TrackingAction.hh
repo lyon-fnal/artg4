@@ -17,7 +17,7 @@
 
 // Everything goes in the Art G4 namespace
 namespace artg4 {
-  
+
   class ArtG4TrackingAction : public G4UserTrackingAction {
   public:
     // Compiler-generated constructor, destructor, copy constructor, equality

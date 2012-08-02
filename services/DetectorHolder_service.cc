@@ -6,7 +6,7 @@
 //Includes
 #include <iostream>
 
-#include "artg4/art/DetectorHolder.hh"
+#include "artg4/services/DetectorHolder.hh"
 
 #include "art/Framework/Services/Registry/ServiceMacros.h"
 

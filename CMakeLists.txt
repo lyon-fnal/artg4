@@ -111,7 +111,7 @@ include(ArtMake)
 
 # Build these directories
 add_subdirectory( Core  )
-add_subdirectory( art )
+add_subdirectory( services )
 add_subdirectory( pluginActions )
 # add_subdirectory( test )
 add_subdirectory( fcl )

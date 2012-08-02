@@ -15,7 +15,7 @@
 
 // Include more local files
 #include "artg4/pluginActions/track/TrackAction.hh"
-#include "artg4/art/ActionHolder.hh"
+#include "artg4/services/ActionHolder.hh"
 
 // Put code in the Art G4 namespace
 namespace artg4 {

@@ -38,6 +38,11 @@
 // Everything goes in the Art G4 namespace
 namespace artg4 {
 
+  // Declare some action types that will be passed in
+  class G4UserEventAction;
+  class G4UserRunAction;
+  class G4UserSteppingAction;
+
   // If anything external wants the muon tracking status, it can get it in
   // the form of a artg4::muonTrackingStatus::state object.
   namespace muonTrackingStatus {
@@ -54,21 +59,26 @@ namespace artg4 {
 
     // Use BeginOfEventAction (called at the beginning of each event,
     // after the primaries are generated).
-    void BeginOfEventAction(const G4Event * currEvent);
+    void BeginOfEventAction(const G4Event * currEvent,
+			    G4UserEventAction *);
 
     // Use EndOfEventAction (last chance to extract information from the
     // event).
-    void EndOfEventAction(const G4Event * currEvent);
+    void EndOfEventAction(const G4Event * currEvent,
+			  G4UserEventAction *);
 
     // Use BeginOfRunAction (called at the beginning of each run, funnily 
     // enough).
-    void BeginOfRunAction(const G4Run * currRun);
+    void BeginOfRunAction(const G4Run * currRun,
+			  G4UserRunAction *);
 
     // Use EndOfRunAction (called at the end of each run).
-    void EndOfRunAction(const G4Run * currRun);
+    void EndOfRunAction(const G4Run * currRun,
+			G4UserRunAction *);
 
     // Use UserSteppingAction (called for each step).
-    void UserSteppingAction(const G4Step *currStep);
+    void UserSteppingAction(const G4Step *currStep,
+			    G4UserSteppingAction *);
 
     // Return our art hit for the event.
     EventHit getArtHit();

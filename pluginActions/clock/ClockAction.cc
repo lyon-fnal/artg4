@@ -21,7 +21,8 @@ artg4::ClockAction::ClockAction(fhicl::ParameterSet const & p)
 
 // Overload BeginOfRunAction, called at the beginning of each run.
 // Here we assign a value to the start clock.
-void artg4::ClockAction::BeginOfRunAction(const G4Run * currentRun)
+void artg4::ClockAction::BeginOfRunAction(const G4Run * currentRun,
+					  G4UserRunAction *)
 {
   // Find the current time and assign it to our member variable @start@
   clock_gettime(clockID, &start);
@@ -29,7 +30,8 @@ void artg4::ClockAction::BeginOfRunAction(const G4Run * currentRun)
 
 // Overload EndOfRunAction, called at the end of each run.
 // Here we assign a value to the end clock and print how long the run took.
-void artg4::ClockAction::EndOfRunAction(const G4Run * currentRun)
+void artg4::ClockAction::EndOfRunAction(const G4Run * currentRun,
+					G4UserRunAction *)
 {
   // Find the current time and assign it to our member variable @end@
   clock_gettime(clockID, &end);

@@ -7,8 +7,8 @@
 #include "artg4/Core/ArtG4EventAction.hh"
 
 // Other local includes
-#include "artg4/art/ActionHolder.hh"
-#include "artg4/art/DetectorHolder.hh"
+#include "artg4/services/ActionHolder.hh"
+#include "artg4/services/DetectorHolder.hh"
 #include "artg4/Core/ActionBase.hh"
 #include "artg4/Core/DetectorBase.hh"
 
@@ -33,7 +33,7 @@ void artg4::ArtG4EventAction::BeginOfEventAction(const G4Event * currentEvent)
   map<string, ActionBase*>::iterator it;
   for (it = actions.begin(); it != actions.end(); ++it) {
     ActionBase * action = it -> second;
-    action -> BeginOfEventAction(currentEvent);
+    action -> BeginOfEventAction(currentEvent, this);
   }
 }
 
@@ -74,6 +74,6 @@ void artg4::ArtG4EventAction::EndOfEventAction(const G4Event * currentEvent)
   map<string, ActionBase*>::iterator actionIt;
   for (actionIt = actions.begin(); actionIt != actions.end(); ++actionIt) {
     ActionBase * action = actionIt -> second;
-    action -> EndOfEventAction(currentEvent);
+    action -> EndOfEventAction(currentEvent, this);
   }
 }

@@ -95,7 +95,7 @@ artg4::artg4Main::artg4Main(fhicl::ParameterSet const & p)
     _visMacro( p.get<std::string>("visMacro", "vis.mac")),
     _pauseAfterEvent( p.get<bool>("pauseAfterEvent", false)),
     _rmvlevel( p.get<int>("rmvlevel",0)),
-    _logInfo("GEOM")
+    _logInfo("ArtG4Main")
 {
   produces<int>();
 }

@@ -17,6 +17,7 @@
 
 // Everything goes in the Art G4 namespace
 namespace artg4 {
+
   // Declaration of the class
   class ArtG4SteppingAction : public G4UserSteppingAction {
   public:

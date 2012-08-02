@@ -7,7 +7,7 @@
 #include "artg4/Core/ArtG4RunAction.hh"
 
 // Other local includes
-#include "artg4/art/ActionHolder.hh"
+#include "artg4/services/ActionHolder.hh"
 #include "artg4/Core/ActionBase.hh"
 
 // Art
@@ -31,7 +31,7 @@ void artg4::ArtG4RunAction::BeginOfRunAction(const G4Run * currentRun)
   map<string, ActionBase*>::iterator it;
   for (it = actions.begin(); it != actions.end(); ++it) {
     ActionBase * action = it -> second;
-    action -> BeginOfRunAction(currentRun);
+    action -> BeginOfRunAction(currentRun, this);
   }
 }
 
@@ -47,6 +47,6 @@ void artg4::ArtG4RunAction::EndOfRunAction(const G4Run * currentRun)
   map<string, ActionBase*>::iterator it;
   for (it = actions.begin(); it != actions.end(); ++it) {
     ActionBase * action = it -> second;
-    action -> EndOfRunAction(currentRun);
+    action -> EndOfRunAction(currentRun, this);
   }
 }

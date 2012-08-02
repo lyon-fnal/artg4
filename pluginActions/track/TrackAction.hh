@@ -24,6 +24,10 @@
 
 // Everything goes in the Art G4 namespace
 namespace artg4 {
+
+  // Declare a class that will be passed in but never used
+  class G4UserTrackingAction;
+
   class TrackAction : public ActionBase {
   public:
     // A constructor that takes in a parameter set.
@@ -34,7 +38,8 @@ namespace artg4 {
 
     // Overload the PreUserTrackingAction method to initialize the track and
     // add it to our collection
-    virtual void PreUserTrackingAction(const G4Track * currentTrack);
+    virtual void PreUserTrackingAction(const G4Track * currentTrack,
+				       G4UserTrackingAction *);
 
     // Our own method to return our collection of hits.
     const TrackArtHitCollection & getArtHits() const;

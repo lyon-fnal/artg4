@@ -23,6 +23,9 @@
 
 // Everything goes in the Art G4 namespace
 namespace artg4 {
+  // Declare a class that will be passed in
+  class G4VUserPrimaryGeneratorAction;
+
   class ParticleGunAction : public ActionBase {
   public:
     // A constructor that takes in a parameter set.
@@ -33,7 +36,8 @@ namespace artg4 {
 
     // To generate primaries, we need to overload the GeneratePrimaries
     // method. 
-    virtual void GeneratePrimaries(G4Event * anEvent);
+    virtual void GeneratePrimaries(G4Event * anEvent,
+				   G4VUserPrimaryGeneratorAction *);
 
   private:
     // Our particle source

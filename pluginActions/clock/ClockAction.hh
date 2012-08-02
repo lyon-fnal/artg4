@@ -23,6 +23,9 @@
 
 // Everything goes in the Art G4 namespace
 namespace artg4 {
+
+  class G4UserRunAction;
+
   class ClockAction : public ActionBase {
   public:
     // A constructor that takes in a parameter set.
@@ -32,11 +35,13 @@ namespace artg4 {
     virtual ~ClockAction() {};
 
     // Overload the BeginOfRunAction method to initialize the clock
-    virtual void BeginOfRunAction(const G4Run * currentRun);
+    virtual void BeginOfRunAction(const G4Run * currentRun,
+				  G4UserRunAction *);
 
     // Overload the EndOfRunAction method to finalize the clock and print
     // out the results.
-    virtual void EndOfRunAction(const G4Run * currentRun);
+    virtual void EndOfRunAction(const G4Run * currentRun,
+				G4UserRunAction *);
 
   private:
     // A method to find the difference between two timespec values

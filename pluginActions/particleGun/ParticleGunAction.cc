@@ -42,7 +42,8 @@ artg4::ParticleGunAction::~ParticleGunAction()
 
 // Create a primary particle for an event!
 // (Standard Art G4 simulation)
-void artg4::ParticleGunAction::GeneratePrimaries(G4Event * anEvent)
+void artg4::ParticleGunAction::GeneratePrimaries(G4Event * anEvent,
+        					G4VUserPrimaryGeneratorAction*)
 {
   // Everything is taken care of by the general particle source!
   GPS -> GeneratePrimaryVertex(anEvent);
