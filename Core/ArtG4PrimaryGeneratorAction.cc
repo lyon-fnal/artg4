@@ -32,6 +32,8 @@ void artg4::ArtG4PrimaryGeneratorAction::GeneratePrimaries(G4Event *anEvent)
   map<string, ActionBase*>::iterator it;
   for (it = actions.begin(); it != actions.end(); ++it) {
     ActionBase * action = it -> second;
+    std::cout << "Generating primaries for action object named " 
+	      << action -> myName() << "\n";
     action -> GeneratePrimaries(anEvent, this);
   }
 }

@@ -65,6 +65,7 @@
 #define ACTION_BASE_HH
 
 #include <string>
+#include <iostream>
 
 // Declarations of types we use as input parameters
 class G4Run;
@@ -130,7 +131,8 @@ namespace artg4 {
 
     // Called for the generation of primaries
     virtual void GeneratePrimaries(G4Event * anEvent,
-				   G4VUserPrimaryGeneratorAction *) {}
+				   G4VUserPrimaryGeneratorAction *) {
+      std::cout << "hi there. I'm generating primaries." << std::endl;}
     
 
   private:

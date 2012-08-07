@@ -23,13 +23,13 @@ using std::endl;
 artg4::DetectorHolder::DetectorHolder(fhicl::ParameterSet const&,
 				    art::ActivityRegistry&) :
   _worldPV(0),
-  _logInfo("DETECTORHOLDER")
+  _logInfo("DetectorHolder")
 {}
 
 // Register a detector object with this service
 void artg4::DetectorHolder::registerDetector(DetectorBase *const db)
 {
-  _logInfo << "Registering detector named " << db->myName() << endl;
+  _logInfo << "Registering detector named " << db->myName() << ".\n";
   addDBtoCategoryMap(db);
 
   // See if we have the mother volume for this new detector. If so, place db.
@@ -42,7 +42,7 @@ G4VPhysicalVolume * artg4::DetectorHolder::worldPhysicalVolume() const
   // Check if we have a world yet.
   if (0 == _worldPV) {
     // We don't - this is a problem.
-    throw cet::exception("DETECTORHOLDER") << "No world volume found!\n";
+    throw cet::exception("DetectorHolder") << "No world volume found!\n";
     return NULL;
   }
   // If we reach this point, the world volume exists, so let's return it!
@@ -50,8 +50,8 @@ G4VPhysicalVolume * artg4::DetectorHolder::worldPhysicalVolume() const
   
 }
 
-// Get a collection of the detectors registered for this run.
-inline std::map<std::string, artg4::DetectorBase*> const &
+// Get a collection of the detectors registered for this run
+std::map<std::string, artg4::DetectorBase*> const &
       artg4::DetectorHolder::getDetectorMap() const 
 {
   return _categoryMap;
@@ -69,7 +69,7 @@ artg4::DetectorBase * artg4::DetectorHolder::getDetectorForCategory(std::string
   }
   else {
     // We don't have a detector of that category - problem!
-    throw cet::exception("DETECTORHOLDER") << "No detector found for category "
+    throw cet::exception("DetectorHolder") << "No detector found for category "
 					   << category << ".\n";
   }
 }
@@ -94,7 +94,7 @@ void artg4::DetectorHolder::addDBtoCategoryMap(DetectorBase * const db)
   }
   else {
     // We already have one of these detectors - something serious is wrong.
-    throw cet::exception("DETECTORHOLDER") 
+    throw cet::exception("DetectorHolder") 
       << "Duplicate detector found. "
       << "There are at least two detectors found with category "
       << db -> category() << ".\n";
@@ -110,7 +110,7 @@ bool artg4::DetectorHolder::placeDetector(DetectorBase * const db)
     // The world's mother 'logical volume' is an empty vector.
     _worldPV = (db -> placeToPVs( std::vector<G4LogicalVolume*>() ))[0];
     _logInfo << "Just placed detector with category: " << db->category() 
-	     << endl;
+	     << ".\n";
     return true;
   }
 
@@ -123,13 +123,13 @@ bool artg4::DetectorHolder::placeDetector(DetectorBase * const db)
     db->placeToPVs(motherCategoryDB -> second -> lvs());
     // Success!
     _logInfo << "Just placed detector with category: " << db->category() 
-	     << std::endl;
+	     << ".\n";
     return true;
 
   }
   // If we reach this point, there's a problem with the ordering of detector
   // registration, and we need to throw an exception.
-  throw cet::exception("DETECTORHOLDER") 
+  throw cet::exception("DetectorHolder") 
     << "No mother volume found for detector with category " 
     << db -> category() << ", which wanted a mother of category "
     << db -> motherCategory() << ". This means you are either missing a "

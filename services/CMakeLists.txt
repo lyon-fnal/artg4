@@ -1,4 +1,4 @@
-# port/src/services CMakeLists
+# services CMakeLists
 
 # This directory contains artg4's Art services
 # For each service in this directory, you need a line like the below
@@ -11,8 +11,11 @@
 #     dependencies.
 #   - Set up the service
 
+# Contains the services.
 
-art_make( LIBRARIES "artg4_Core" ${allG4Libs} ${XERCESCLIB} )
+# Depends on the base classes in artg4_base
+
+art_make( LIBRARIES ${allG4Libs} ${XERCESCLIB} )
 
 # Note that to use a service in a simulation run, it must be listed in the
 # FHiCL configuration file: 'services: { user: { <servicename>:{} }}'

@@ -74,6 +74,9 @@ find_ups_boost( v1_49_0 filesystem
                         unit_test_framework
  )
 
+# Enable visualization using OpenGL in x windows
+add_definitions(-DG4VIS_USE_OPENGLX)
+
 
 # Make sure we have gcc
 cet_check_gcc()

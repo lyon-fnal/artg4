@@ -18,7 +18,7 @@ using std::pair;
 // the logger for the service
 artg4::ActionHolder::ActionHolder(fhicl::ParameterSet const&,
 				art::ActivityRegistry&) :
-  _logInfo("ACTIONHOLDER")
+  _logInfo("ActionHolder")
 {}
 
 // Register an action object with the service.
@@ -36,7 +36,7 @@ void artg4::ActionHolder::registerAction(ActionBase * const action)
   }
   else {
     // We already have one of these detectors - something serious is wrong.
-    throw cet::exception("ACTIONHOLDER") 
+    throw cet::exception("ActionHolder") 
       << "Duplicate action found. "
       << "There are at least two actions found named "
       << action -> myName() << ".\n";
@@ -45,7 +45,7 @@ void artg4::ActionHolder::registerAction(ActionBase * const action)
 
 // Return the map of registered actions. Key: name (string). Value: pointer to
 // action object (ActionBase *)
-inline map<string, artg4::ActionBase *> const & artg4::ActionHolder::getActionMap() const
+map<string, artg4::ActionBase *> & artg4::ActionHolder::getActionMap()
 {
   return _actionMap;
 }
@@ -62,7 +62,7 @@ artg4::ActionBase const * artg4::ActionHolder::getActionByName(string name) cons
   }
   else {
     // We don't have a detector with that name - problem!
-    throw cet::exception("ACTIONHOLDER") << "No action found with name "
+    throw cet::exception("ActionHolder") << "No action found with name "
 					 << name << ".\n";
   }
 }
