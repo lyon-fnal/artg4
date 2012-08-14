@@ -3,7 +3,7 @@
 //
 // Created by Tasha Arvanitis on 6 July 2012
 
-#include "MaterialService.hh"
+#include "Material_service.hh"
 
 #include "art/Framework/Services/Registry/ServiceMacros.h"
 
