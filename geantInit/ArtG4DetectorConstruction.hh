@@ -27,7 +27,6 @@
 
 #include <G4VPhysicalVolume.hh>
 #include "G4VUserDetectorConstruction.hh"
-#include "artg4/services/DetectorHolder.hh"
 
 namespace artg4 {
 

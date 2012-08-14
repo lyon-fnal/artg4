@@ -13,7 +13,7 @@
 
 
 // ArtG4 includes.
-#include "artg4/Core/ArtG4RunManager.hh"
+#include "artg4/geantInit/ArtG4RunManager.hh"
 
 // Includes from G4.
 #include "G4UImanager.hh"

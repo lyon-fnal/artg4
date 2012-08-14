@@ -7,10 +7,11 @@
 
 #include "ArtG4DetectorConstruction.hh"
 #include "art/Framework/Services/Registry/ServiceHandle.h"
+#include "artg4/services/DetectorHolder_service.hh"
 
 artg4::ArtG4DetectorConstruction::ArtG4DetectorConstruction()
 {
-  art::ServiceHandle<artg4::DetectorHolder> dh;
+  art::ServiceHandle<artg4::DetectorHolderService> dh;
   _world = dh -> worldPhysicalVolume();
 }
 
