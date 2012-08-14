@@ -113,6 +113,8 @@ include(BuildPlugins)
 include(ArtMake)
 
 # Build these directories
+add_subdirectory( geantInit )
+add_subdirectory( actionBase )
 add_subdirectory( Core  )
 add_subdirectory( services )
 add_subdirectory( pluginActions )
