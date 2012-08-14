@@ -1,72 +1,219 @@
-// Provides the implementation for the @ActionHolder@ service.
-// For more comprehensive documentation, see the header file ActionHolder.hh
+// Provides the implementation for the @ActionHolderService@ service.
+// For more comprehensive documentation, see the header file ActionHolderService.hh
 
 // Authors: Tasha Arvanitis, Adam Lyon
 // Date: July 2012
 
 // Includes
-#include "artg4/services/ActionHolder.hh"
+#include "artg4/services/ActionHolder_service.hh"
 
 #include "art/Framework/Services/Registry/ServiceMacros.h"
+
+#include "messagefacility/MessageLogger/MessageLogger.h"
+
+#include <algorithm>
 
 // Don't type 'std::' all the time...
 using std::string;
 using std::map;
 using std::pair;
 
+// Message category
+static std::string msgctg = "ActionHolderService";
+
 // Constructor doesn't do much with the passed arguments, but does initialize
 // the logger for the service
-artg4::ActionHolder::ActionHolder(fhicl::ParameterSet const&,
+artg4::ActionHolderService::ActionHolderService(fhicl::ParameterSet const&,
 				art::ActivityRegistry&) :
-  _logInfo("ActionHolder")
+  runActionsMap_(),
+  eventActionsMap_(),
+  trackingActionsMap_(),
+  steppingActionsMap_(),
+  stackingActionsMap_(),
+  primaryGeneratorActionsMap_()
 {}
 
-// Register an action object with the service.
-void artg4::ActionHolder::registerAction(ActionBase * const action)
-{
-  // Note that we're registering the action
-  _logInfo << "Registering action named " << action -> myName() << ".\n";
+
+// Register actions
+template <typename A>
+void artg4::ActionHolderService::doRegisterAction(A * const action, std::map<std::string, A *>& actionMap) {
+  LOG_DEBUG(msgctg) << "Registering action " << action->myName() << "\n";
   
-  // Check whether we have an action with the same name already
-  if (0 == _actionMap.count( action -> myName() )) {
-    // This action isn't already in the map - let's add it!
-    pair<string, ActionBase *> itemToAdd(action -> myName(), action);
-    
-    _actionMap.insert(itemToAdd);
+  // Check if the name exists
+  if ( 0 == actionMap.count( action->myName() ) ) {
+    // Add the action!
+    actionMap.insert(
+                     pair<string, A *>( action->myName(), action )
+                     );
   }
   else {
-    // We already have one of these detectors - something serious is wrong.
-    throw cet::exception("ActionHolder") 
-      << "Duplicate action found. "
-      << "There are at least two actions found named "
-      << action -> myName() << ".\n";
+    // We already have this action!
+    throw cet::exception("ActionHolderService")
+    << "Duplicate action named " << action->myName() << ".\n";
+  }
+  
+};
+
+void artg4::ActionHolderService::registerAction(RunActionBase * const action) {
+  doRegisterAction(action, runActionsMap_);
+}
+
+void artg4::ActionHolderService::registerAction(EventActionBase * const action) {
+  doRegisterAction(action, eventActionsMap_);
+}
+
+void artg4::ActionHolderService::registerAction(TrackingActionBase * const action) {
+  doRegisterAction(action, trackingActionsMap_);
+}
+
+void artg4::ActionHolderService::registerAction(SteppingActionBase * const action) {
+  doRegisterAction(action, steppingActionsMap_);
+}
+
+void artg4::ActionHolderService::registerAction(StackingActionBase * const action) {
+  doRegisterAction(action, stackingActionsMap_);
+}
+
+void artg4::ActionHolderService::registerAction(PrimaryGeneratorActionBase * const action) {
+  doRegisterAction(action, primaryGeneratorActionsMap_);
+}
+
+template <typename A>
+A* artg4::ActionHolderService::doGetAction(std::string name, std::map<std::string, A*>& actionMap) {
+  
+  // Make a typedef
+  typedef typename std::map<std::string, A*>::const_iterator map_const_iter;
+  
+  // Find the action corresponding to the passed in name in the map
+  map_const_iter actionIter = actionMap.find(name);
+  if ( actionIter == actionMap.end() ) {
+    throw cet::exception("ActionHolderService") << "No action found with name "
+        << name << ".\n";
+  }
+  return actionIter->second;
+}
+
+void artg4::ActionHolderService::getAction(std::string name, RunActionBase* out) {
+  out = doGetAction(name, runActionsMap_);
+}
+
+void artg4::ActionHolderService::getAction(std::string name, EventActionBase* out) {
+  out = doGetAction(name, eventActionsMap_);
+}
+
+void artg4::ActionHolderService::getAction(std::string name, TrackingActionBase* out) {
+  out = doGetAction(name, trackingActionsMap_);
+}
+
+void artg4::ActionHolderService::getAction(std::string name, SteppingActionBase* out) {
+  out = doGetAction(name, steppingActionsMap_);
+}
+
+void artg4::ActionHolderService::getAction(std::string name, StackingActionBase* out) {
+  out = doGetAction(name, stackingActionsMap_);
+}
+
+void artg4::ActionHolderService::getAction(std::string name, PrimaryGeneratorActionBase* out) {
+  out = doGetAction(name, primaryGeneratorActionsMap_);
+}
+
+// h2. Action methods
+
+// I tried to be good and use @std::for_each@ but it got really messy very quickly. Oh wel. 
+
+// h3. Run action methods
+
+void artg4::ActionHolderService::beginOfRunAction(const G4Run* theRun) {
+
+  for (map<std::string, RunActionBase*>::const_iterator itr = runActionsMap_.begin(); 
+       itr != runActionsMap_.end(); ++itr ) {
+    itr->second->beginOfRunAction(theRun);
+  }
+  
+}
+
+void artg4::ActionHolderService::endOfRunAction(const G4Run* theRun) {
+
+  for (map<std::string, RunActionBase*>::const_iterator itr = runActionsMap_.begin(); 
+       itr != runActionsMap_.end(); ++itr ) {
+    itr->second->endOfRunAction(theRun);
+  }
+}
+// h3. Event action methods
+
+void artg4::ActionHolderService::beginOfEventAction(const G4Event* theEvent) {
+ 
+  for (map<std::string, EventActionBase*>::const_iterator itr = eventActionsMap_.begin(); 
+       itr != eventActionsMap_.end(); ++itr ) {
+    itr->second->beginOfEventAction(theEvent);
   }
 }
 
-// Return the map of registered actions. Key: name (string). Value: pointer to
-// action object (ActionBase *)
-map<string, artg4::ActionBase *> & artg4::ActionHolder::getActionMap()
-{
-  return _actionMap;
+void artg4::ActionHolderService::endOfEventAction(const G4Event* theEvent) {
+  
+  for (map<std::string, EventActionBase*>::const_iterator itr = eventActionsMap_.begin(); 
+       itr != eventActionsMap_.end(); ++itr ) {
+    itr->second->endOfEventAction(theEvent);
+  }
 }
 
-// Return a pointer to the action object described by the given name, or throw
-// an exception if there isn't one.
-artg4::ActionBase const * artg4::ActionHolder::getActionByName(string name) const
-{
-  // Check if we have an action with the given name
-  map<string, ActionBase*>::const_iterator actionIter = _actionMap.find(name);
-  if (actionIter != _actionMap.end()) {
-    // We have a detector with that name
-    return actionIter -> second;
+// h3. Tracking action methods
+
+void artg4::ActionHolderService::preUserTrackingAction(const G4Track* theTrack) {
+  
+  for (map<std::string, TrackingActionBase*>::const_iterator itr = trackingActionsMap_.begin(); 
+       itr != trackingActionsMap_.end(); ++itr ) {
+    itr->second->preUserTrackingAction(theTrack);
   }
-  else {
-    // We don't have a detector with that name - problem!
-    throw cet::exception("ActionHolder") << "No action found with name "
-					 << name << ".\n";
+ 
+}
+
+void artg4::ActionHolderService::postUserTrackingAction(const G4Track* theTrack) {
+
+  for (map<std::string, TrackingActionBase*>::const_iterator itr = trackingActionsMap_.begin(); 
+       itr != trackingActionsMap_.end(); ++itr ) {
+    itr->second->postUserTrackingAction(theTrack);
   }
 }
+
+// h3. Stepping actions
+
+void artg4::ActionHolderService::userSteppingAction(const G4Step* theStep) {
+  for (map<std::string, SteppingActionBase*>::const_iterator itr = steppingActionsMap_.begin(); 
+       itr != steppingActionsMap_.end(); ++itr ) {
+    itr->second->userSteppingAction(theStep);
+  }
+}
+
+
+// h3. Stacking actions
+
+bool artg4::ActionHolderService::killNewTrack(const G4Track* newTrack) {
+  
+  bool killTrack = false;
+  
+  for (map<std::string, StackingActionBase*>::const_iterator itr = stackingActionsMap_.begin(); 
+       itr != stackingActionsMap_.end(); ++itr ) {
+    if ( itr->second->killNewTrack(newTrack) ) {
+      killTrack = true;
+      break;
+    }
+  }
+  
+  return killTrack;
+}
+  
+
+// h3. Primary generator actions
+
+void artg4::ActionHolderService::generatePrimaries(G4Event* theEvent) {
+  for (map<std::string, PrimaryGeneratorActionBase*>::const_iterator itr = primaryGeneratorActionsMap_.begin(); 
+       itr != primaryGeneratorActionsMap_.end(); ++itr ) {
+    itr->second->generatePrimaries(theEvent);
+  }
+}
+
 
 // Register the service with Art
-using artg4::ActionHolder;
-DEFINE_ART_SERVICE(ActionHolder)
+using artg4::ActionHolderService;
+DEFINE_ART_SERVICE(ActionHolderService)

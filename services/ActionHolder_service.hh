@@ -1,11 +1,11 @@
-// Declarations for the @ActionHolder@ Art service.
+// Declarations for the @ActionHolderService@ Art service.
 
-// @ActionHolder@ is a globally-accessible service that manages the action
+// @ActionHolderService@ is a globally-accessible service that manages the action
 // objects for a simulation. An action object has a multitude of hooks into
 // various points during event creation and processing. All action objects
 // must be registered with this service in order to function. 
 
-// Any class can @#include@ and access the @ActionHolder@ service to get either
+// Any class can @#include@ and access the @ActionHolderService@ service to get either
 // a collection of registered action objects or a specific action object given
 // a name.
 
@@ -13,46 +13,99 @@
 // Date: July 2012
 
 // Include guard
-#ifndef ACTION_HOLDER_HH
-#define ACTION_HOLDER_HH
+#ifndef ACTION_HOLDER_SERVICE_HH
+#define ACTION_HOLDER_SERVICE_HH
 
 // Includes
 #include "fhiclcpp/ParameterSet.h"
 #include "art/Framework/Services/Registry/ActivityRegistry.h"
-#include "messagefacility/MessageLogger/MessageLogger.h"
-#include "artg4/Core/ActionBase.hh"
 
 #include <map>
 
+class G4Run;
+class G4Event;
+class G4Track;
+class G4Step;
+
+#include "artg4/actionBase/RunActionBase.hh"
+#include "artg4/actionBase/EventActionBase.hh"
+#include "artg4/actionBase/TrackingActionBase.hh"
+#include "artg4/actionBase/SteppingActionBase.hh"
+#include "artg4/actionBase/StackingActionBase.hh"
+#include "artg4/actionBase/PrimaryGeneratorActionBase.hh"
+
 // Everything for the Art G4 simulation goes in the @artg4@ namespace
 namespace artg4 {
-  
-  class ActionHolder {
+   
+  class ActionHolderService {
   public:
-    // Constructor for ActionHolder
-    ActionHolder(fhicl::ParameterSet const &, art::ActivityRegistry&);
+    // Constructor for ActionHolderService
+    ActionHolderService(fhicl::ParameterSet const &, art::ActivityRegistry&);
 
     // This method registers the passed action object with the service,
     // which solely entails adding it to the map of action objects (and throwing
     // and exception if there's already an action object registered with the
     // same name.
-    void registerAction(ActionBase * const action);
+    void registerAction(RunActionBase * const action);
+    void registerAction(EventActionBase* const action);
+    void registerAction(TrackingActionBase* const action);
+    void registerAction(SteppingActionBase* const action);
+    void registerAction(StackingActionBase* const action);
+    void registerAction(PrimaryGeneratorActionBase* const action);
+    
+    // Get an action
+    void getAction(std::string name, RunActionBase* out);
+    void getAction(std::string name, EventActionBase* out);
+    void getAction(std::string name, TrackingActionBase* out);
+    void getAction(std::string name, SteppingActionBase* out);
+    void getAction(std::string name, StackingActionBase* out);
+    void getAction(std::string name, PrimaryGeneratorActionBase* out);
+    
+    // h3. Action methods
 
-    // This returns the map of registered actions, with a string as a key and 
-    // an action object as the corresponding value.
-    std::map<std::string, ActionBase *> & getActionMap();
-
-    // This returns a pointer to the ActionBase with the given name. If the 
-    // specified action was never registered, it throws an exception.
-    ActionBase const * getActionByName(std::string name) const;
+    // h4. Run Actions
+    void beginOfRunAction(const G4Run* );    
+    void endOfRunAction(const G4Run* );
+    
+    // h4. Event Actions
+    void beginOfEventAction(const G4Event* );
+    void endOfEventAction(const G4Event* );
+    
+    // h4. Tracking actions
+    void preUserTrackingAction(const G4Track* );
+    void postUserTrackingAction(const G4Track* );
+    
+    // h4. Stepping actions
+    void userSteppingAction(const G4Step* );
+    
+    // h4. Stacking actions
+    bool killNewTrack(const G4Track* );
+    
+    // h4. Primary Generator actions
+    void generatePrimaries(G4Event*);
+    
 
   private:
+        
     // A collection of all our actions, arranged by name
-    std::map<std::string, ActionBase*> _actionMap;
-
-    // A message logger
-    mf::LogInfo _logInfo;
+    std::map<std::string, RunActionBase*> runActionsMap_;
+    std::map<std::string, EventActionBase*> eventActionsMap_;
+    std::map<std::string, TrackingActionBase*> trackingActionsMap_;
+    std::map<std::string, SteppingActionBase*> steppingActionsMap_;
+    std::map<std::string, StackingActionBase*> stackingActionsMap_;
+    std::map<std::string, PrimaryGeneratorActionBase*> primaryGeneratorActionsMap_;
+        
+    // Register the action 
+    template <typename A>
+    void doRegisterAction(A * const action, std::map<std::string, A *>& actionMap);
+    
+    // Get an action
+    template <typename A>
+    A* doGetAction(std::string name, std::map<std::string, A*>& actionMap);                            
+                                   
   };
 }
+  
+
 
 #endif // ACTION_HOLDER_HH
