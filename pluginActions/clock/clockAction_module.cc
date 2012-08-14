@@ -14,7 +14,7 @@
 
 // Include more local files
 #include "artg4/pluginActions/clock/ClockAction.hh"
-#include "artg4/services/ActionHolder.hh"
+#include "artg4/services/ActionHolder_service.hh"
 
 // Put code in the Art G4 namespace
 namespace artg4 {
@@ -39,7 +39,7 @@ namespace artg4 {
 
   private:
     // Our action object here
-    ClockAction * _myAction;
+    ClockAction * myAction_;
 
   };
 
@@ -47,7 +47,7 @@ namespace artg4 {
 
 // Constructor
 artg4::clockAction::clockAction(fhicl::ParameterSet const & p)
-  : _myAction(new ClockAction(p))
+  : myAction_(new ClockAction(p))
 {
   // If you want to eventually add something to the event, you need to tell
   // Art now. 
@@ -59,7 +59,7 @@ artg4::clockAction::clockAction(fhicl::ParameterSet const & p)
 artg4::clockAction::~clockAction()
 {
   // Clean up our only member datum
-  delete _myAction;
+  delete myAction_;
 }
 
 // This method is called at the beginning of the Art job, which may encompass
@@ -68,8 +68,8 @@ artg4::clockAction::~clockAction()
 // are all registered.
 void artg4::clockAction::beginJob()
 {
-  art::ServiceHandle<ActionHolder> actions;
-  actions -> registerAction(_myAction);
+  art::ServiceHandle<ActionHolderService> ahs;
+  ahs -> registerAction(myAction_);
 }
 
 // Definition of the required produce(...) method.

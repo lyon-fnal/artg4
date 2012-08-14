@@ -10,7 +10,7 @@
 #define PARTICLEGUN_ACTION_HH
 
 // Include the base class
-#include "artg4/Core/ActionBase.hh"
+#include "artg4/actionBase/PrimaryGeneratorActionBase.hh"
 
 // G4 includes
 #include "G4Event.hh"
@@ -19,14 +19,13 @@
 
 // Other library includes
 #include "fhiclcpp/ParameterSet.h"
-#include "messagefacility/MessageLogger/MessageLogger.h"
 
 // Everything goes in the Art G4 namespace
 namespace artg4 {
   // Declare a class that will be passed in
   class G4VUserPrimaryGeneratorAction;
 
-  class ParticleGunAction : public ActionBase {
+  class ParticleGunAction : public PrimaryGeneratorActionBase {
   public:
     // A constructor that takes in a parameter set.
     ParticleGunAction(fhicl::ParameterSet const & p);
@@ -36,15 +35,13 @@ namespace artg4 {
 
     // To generate primaries, we need to overload the GeneratePrimaries
     // method. 
-    virtual void GeneratePrimaries(G4Event * anEvent,
-				   G4VUserPrimaryGeneratorAction *);
+    virtual void GeneratePrimaries(G4Event * anEvent);
 
   private:
     // Our particle source
-    GeneralParticleSource * GPS;
+    GeneralParticleSource * GPS_;
 
     // A message logger for this action object
-    mf::LogInfo _logInfo;
   };
 }
 

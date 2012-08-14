@@ -7,7 +7,6 @@
 #define TRACK_ART_HIT_HH
 
 // Includes
-#include "G4ThreeVector.hh"
 #include <vector>
 
 // Everything goes in the Art G4 namespace
@@ -17,7 +16,7 @@ namespace artg4 {
   public: 
     // Default constructor sets everything to zero
     TrackArtHit() :
-      trackType(0),
+      trackType(),
       trackID(0),
       parentTrackID(0),
       turn(0),

@@ -4,25 +4,25 @@
 // Authors: Tasha Arvanitis, Adam Lyon
 // Date: July 2012
 
-// Include header
+// Include headers
 #include "artg4/pluginActions/clock/ClockAction.hh"
+#include "G4Run.hh"
 
 using std::string;
 
 // Constructor takes a parameter set, calls the base class's constructor, and
 // initializes member data
 artg4::ClockAction::ClockAction(fhicl::ParameterSet const & p)
-  : ActionBase(p.get<string>("name", "clock")),
+  : RunActionBase(p.get<string>("name", "clock")),
     // Set the clock to use 'real time'.
     clockID(CLOCK_REALTIME),
     // Initialize our message logger
-    _logInfo("CLOCKACTION")
+    logInfo_("CLOCKACTION")
 {}
 
 // Overload BeginOfRunAction, called at the beginning of each run.
 // Here we assign a value to the start clock.
-void artg4::ClockAction::BeginOfRunAction(const G4Run * currentRun,
-					  G4UserRunAction *)
+void artg4::ClockAction::BeginOfRunAction(const G4Run * currentRun)
 {
   // Find the current time and assign it to our member variable @start@
   clock_gettime(clockID, &start);
@@ -30,14 +30,13 @@ void artg4::ClockAction::BeginOfRunAction(const G4Run * currentRun,
 
 // Overload EndOfRunAction, called at the end of each run.
 // Here we assign a value to the end clock and print how long the run took.
-void artg4::ClockAction::EndOfRunAction(const G4Run * currentRun,
-					G4UserRunAction *)
+void artg4::ClockAction::EndOfRunAction(const G4Run * currentRun)
 {
   // Find the current time and assign it to our member variable @end@
   clock_gettime(clockID, &end);
 
   // Print out how long the run took
-  _logInfo << "Elapsed time this run: " 
+  logInfo_ << "Elapsed time this run: " 
 	   << diff(start, end) << " seconds\n";
 }
 

@@ -10,7 +10,7 @@
 #define TRACK_ACTION_HH
 
 // Include the base class
-#include "artg4/Core/ActionBase.hh"
+#include "artg4/actionBase/TrackingActionBase.hh"
 
 // Local includes
 #include "artg4/pluginActions/track/TrackArtHit.hh"
@@ -25,10 +25,7 @@
 // Everything goes in the Art G4 namespace
 namespace artg4 {
 
-  // Declare a class that will be passed in but never used
-  class G4UserTrackingAction;
-
-  class TrackAction : public ActionBase {
+  class TrackAction : public TrackingActionBase {
   public:
     // A constructor that takes in a parameter set.
     TrackAction(fhicl::ParameterSet const & p);
@@ -38,18 +35,17 @@ namespace artg4 {
 
     // Overload the PreUserTrackingAction method to initialize the track and
     // add it to our collection
-    virtual void PreUserTrackingAction(const G4Track * currentTrack,
-				       G4UserTrackingAction *);
+    virtual void PreUserTrackingAction(const G4Track * currentTrack);
 
     // Our own method to return our collection of hits.
     const TrackArtHitCollection & getArtHits() const;
 
   private:
     // A message logger for this action
-    mf::LogInfo _logInfo;
+    mf::LogInfo logInfo_;
 
     // Our collection of track hits
-    TrackArtHitCollection _myArtHits;
+    TrackArtHitCollection myArtHits_;
   };
 }
 

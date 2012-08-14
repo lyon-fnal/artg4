@@ -9,10 +9,10 @@
 #define CLOCK_ACTION_HH
 
 // Include the base class
-#include "artg4/Core/ActionBase.hh"
+#include "artg4/actionBase/RunActionBase.hh"
 
 // G4 includes
-#include "G4Run.hh"
+class G4Run;
 
 // Other library includes
 #include "fhiclcpp/ParameterSet.h"
@@ -26,7 +26,7 @@ namespace artg4 {
 
   class G4UserRunAction;
 
-  class ClockAction : public ActionBase {
+  class ClockAction : public RunActionBase {
   public:
     // A constructor that takes in a parameter set.
     ClockAction(fhicl::ParameterSet const & p);
@@ -35,13 +35,11 @@ namespace artg4 {
     virtual ~ClockAction() {};
 
     // Overload the BeginOfRunAction method to initialize the clock
-    virtual void BeginOfRunAction(const G4Run * currentRun,
-				  G4UserRunAction *);
+    virtual void BeginOfRunAction(const G4Run *);
 
     // Overload the EndOfRunAction method to finalize the clock and print
     // out the results.
-    virtual void EndOfRunAction(const G4Run * currentRun,
-				G4UserRunAction *);
+    virtual void EndOfRunAction(const G4Run *);
 
   private:
     // A method to find the difference between two timespec values
@@ -57,7 +55,7 @@ namespace artg4 {
     clockid_t clockID;
 
     // A message logger for this action
-    mf::LogInfo _logInfo;
+    mf::LogInfo logInfo_;
   };
 }
 

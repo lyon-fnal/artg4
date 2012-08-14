@@ -6,25 +6,21 @@
 
 // Include header
 #include "artg4/pluginActions/track/TrackAction.hh"
-
 #include "artg4/pluginActions/track/TrackArtHit.hh"
-
-
 
 using std::string;
 
 // Constructor takes a parameter set, calls the base class's constructor, and
 // initializes member data
 artg4::TrackAction::TrackAction(fhicl::ParameterSet const & p)
-  : ActionBase(p.get<string>("name", "track")),
-    // Initialize our message logger
-    _logInfo("TRACKACTION")
+  : TrackingActionBase(p.get<string>("name", "track")),
+    myArtHits_(),
+    logInfo_("TRACKACTION")
 {}
 
 // Overload the PreUserTrackingAction method to initialize the track and
 // add it to our collection
-void artg4::TrackAction::PreUserTrackingAction(const G4Track * currentTrack,
-					       G4UserTrackingAction *)
+void artg4::TrackAction::PreUserTrackingAction(const G4Track * currentTrack)
 {
 
   // Ignore tracks for xtal volumes
@@ -66,12 +62,12 @@ void artg4::TrackAction::PreUserTrackingAction(const G4Track * currentTrack,
   tr.pvhat = mom.y()/mom.mag();
 
   // Add the hit to our collection
-  _myArtHits.push_back(tr);
+  myArtHits_.push_back(tr);
 }
 
 // Our own method to return our collection of hits.
 inline const artg4::TrackArtHitCollection & 
   artg4::TrackAction::getArtHits() const
 {
-  return _myArtHits;
+  return myArtHits_;
 }

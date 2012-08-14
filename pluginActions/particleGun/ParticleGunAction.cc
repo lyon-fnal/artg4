@@ -26,25 +26,22 @@ using std::string;
 // Constructor takes a parameter set, calls the base class's constructor, and
 // initializes member data
 artg4::ParticleGunAction::ParticleGunAction(fhicl::ParameterSet const & p)
-  : ActionBase(p.get<string>("name", "particleGun")),
+  : PrimaryGeneratorActionBase(p.get<string>("name", "particleGun")),
     // Initialize our general particle source using a sub-pset from the passed
     // parameters.
-    GPS(new GeneralParticleSource(p.get<fhicl::ParameterSet>("GPS"))),
-    // Initialize our message logger
-    _logInfo("PARTICLEGUNACTION")
-{}
+    GPS_(new GeneralParticleSource(p.get<fhicl::ParameterSet>("GPS")))
+   {}
 
 // Destructor cleans up the general particle source
 artg4::ParticleGunAction::~ParticleGunAction()
 {
-  delete GPS;
+  delete GPS_;
 }
 
 // Create a primary particle for an event!
 // (Standard Art G4 simulation)
-void artg4::ParticleGunAction::GeneratePrimaries(G4Event * anEvent,
-        					G4VUserPrimaryGeneratorAction*)
+void artg4::ParticleGunAction::GeneratePrimaries(G4Event * anEvent)
 {
   // Everything is taken care of by the general particle source!
-  GPS -> GeneratePrimaryVertex(anEvent);
+  GPS_ -> GeneratePrimaryVertex(anEvent);
 }

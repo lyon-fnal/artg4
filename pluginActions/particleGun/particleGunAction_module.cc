@@ -14,7 +14,7 @@
 
 // Include more local files
 #include "artg4/pluginActions/particleGun/ParticleGunAction.hh"
-#include "artg4/services/ActionHolder.hh"
+#include "artg4/services/ActionHolder_service.hh"
 
 // Put code in the Art G4 namespace
 namespace artg4 {
@@ -35,7 +35,7 @@ namespace artg4 {
 
   private:
     // Our action object here
-    ParticleGunAction * _myAction;
+    ParticleGunAction * myAction_;
 
   };
 
@@ -44,14 +44,14 @@ namespace artg4 {
 // Constructor - we don't produce anything, so there's nothing interesting
 // in the body.
 artg4::particleGunAction::particleGunAction(fhicl::ParameterSet const & p)
-  : _myAction(new ParticleGunAction(p))
+  : myAction_(new ParticleGunAction(p))
 {}
 
 // Destructor
 artg4::particleGunAction::~particleGunAction()
 {
   // Clean up our only member datum
-  delete _myAction;
+  delete myAction_;
 }
 
 // This method is called at the beginning of the Art job, which may encompass
@@ -60,8 +60,8 @@ artg4::particleGunAction::~particleGunAction()
 // are all registered.
 void artg4::particleGunAction::beginJob()
 {
-  art::ServiceHandle<ActionHolder> actions;
-  actions -> registerAction(_myAction);
+  art::ServiceHandle<ActionHolderService> actions;
+  actions -> registerAction(myAction_);
 }
 
 // Definition of the required produce(...) method - we don't produce anything,

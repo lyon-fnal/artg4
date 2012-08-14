@@ -15,7 +15,7 @@
 
 // Include more local files
 #include "artg4/pluginActions/track/TrackAction.hh"
-#include "artg4/services/ActionHolder.hh"
+#include "artg4/services/ActionHolder_service.hh"
 
 // Put code in the Art G4 namespace
 namespace artg4 {
@@ -40,7 +40,7 @@ namespace artg4 {
 
   private:
     // Our action object here
-    TrackAction * _myAction;
+    TrackAction * myAction_;
 
   };
 
@@ -48,7 +48,7 @@ namespace artg4 {
 
 // Constructor
 artg4::trackAction::trackAction(fhicl::ParameterSet const & p)
-  : _myAction(new TrackAction(p))
+  : myAction_(new TrackAction(p))
 {
   // If you want to eventually add something to the event, you need to tell
   // Art now. 
@@ -59,7 +59,7 @@ artg4::trackAction::trackAction(fhicl::ParameterSet const & p)
 artg4::trackAction::~trackAction()
 {
   // Clean up our only member datum
-  delete _myAction;
+  delete myAction_;
 }
 
 // This method is called at the beginning of the Art job, which may encompass
@@ -68,20 +68,18 @@ artg4::trackAction::~trackAction()
 // are all registered.
 void artg4::trackAction::beginJob()
 {
-  art::ServiceHandle<ActionHolder> actions;
-  actions -> registerAction(_myAction);
+  art::ServiceHandle<ActionHolderService> ahs;
+  ahs -> registerAction(myAction_);
 }
 
 // Definition of the required produce(...) method.
 void artg4::trackAction::produce(art::Event & e)
 {
   // Get the hit collection from our action
-  TrackArtHitCollection myArtHits = _myAction -> getArtHits();
-
-  // Enclose them in an auto_ptr
-  std::auto_ptr<TrackArtHitCollection> 
-    artHitsForEvent(new TrackArtHitCollection);
-  *(artHitsForEvent.get()) = myArtHits;
+  TrackArtHitCollection myArtHits = myAction_ -> getArtHits();
+  
+  // Put them into the event
+  std::auto_ptr<TrackArtHitCollection> artHitsForEvent( &myArtHits );
 
   // And add them to the event.
   e.put(artHitsForEvent);
