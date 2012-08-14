@@ -12,14 +12,15 @@
 #include "art/Framework/Principal/Run.h"
 
 // Local includes (like actions)
-#include "artg4/Core/ArtG4RunManager.hh"
-#include "artg4/Core/ArtG4DetectorConstruction.hh"
 #include "artg4/Core/physicsList.hh"
-#include "artg4/Core/ArtG4EventAction.hh"
-#include "artg4/Core/ArtG4PrimaryGeneratorAction.hh"
-#include "artg4/Core/ArtG4RunAction.hh"
-#include "artg4/Core/ArtG4SteppingAction.hh"
-#include "artg4/Core/ArtG4TrackingAction.hh"
+#include "artg4/geantInit/ArtG4RunManager.hh"
+#include "artg4/geantInit/ArtG4DetectorConstruction.hh"
+#include "artg4/geantInit/ArtG4EventAction.hh"
+#include "artg4/geantInit/ArtG4PrimaryGeneratorAction.hh"
+#include "artg4/geantInit/ArtG4RunAction.hh"
+#include "artg4/geantInit/ArtG4SteppingAction.hh"
+#include "artg4/geantInit/ArtG4StackingAction.hh"
+#include "artg4/geantInit/ArtG4TrackingAction.hh"
 
 // G4 includes
 #ifdef G4VIS_USE_OPENGLX
@@ -108,6 +109,7 @@ artg4::artg4Main::~artg4Main()
 void artg4::artg4Main::beginJob()
 {
   // Set up run manager
+  LOG_DEBUG("Main_Run_Manager") << "In begin job" << "\n";
   _runManager = auto_ptr<ArtG4RunManager>(new ArtG4RunManager);
 }
 
@@ -124,8 +126,9 @@ void artg4::artg4Main::beginRun(art::Run & r)
   // generic actions that really don't do much on their own. Rather, to 
   // use the power of actions, one must create action objects (derived from
   // @ActionBase@) and register them with the Art @ActionHolder@ service.
-  // See @ActionBase@ and/or @ActionHolder@ for more information.
+  // See @ActionBase@ and/or @ActionHolderService@ for more information.
   _runManager -> SetUserAction(new ArtG4SteppingAction);
+  _runManager -> SetUserAction(new ArtG4StackingAction);
   _runManager -> SetUserAction(new ArtG4EventAction);
   _runManager -> SetUserAction(new ArtG4TrackingAction);
   _runManager -> SetUserAction(new ArtG4RunAction);
