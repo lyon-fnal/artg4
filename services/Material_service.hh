@@ -1,3 +1,5 @@
+// Common materials used throughout the simulation
+
 #ifndef MATERIAL_SERVICE_HH
 #define MATERIAL_SERVICE_HH
 
