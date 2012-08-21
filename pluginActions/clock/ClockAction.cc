@@ -10,6 +10,8 @@
 
 using std::string;
 
+#include <iostream>
+
 // Constructor takes a parameter set, calls the base class's constructor, and
 // initializes member data
 artg4::ClockAction::ClockAction(fhicl::ParameterSet const & p)
@@ -18,7 +20,10 @@ artg4::ClockAction::ClockAction(fhicl::ParameterSet const & p)
     clockID(CLOCK_REALTIME),
     // Initialize our message logger
     logInfo_("CLOCKACTION")
-{}
+{
+
+  
+}
 
 // Overload BeginOfRunAction, called at the beginning of each run.
 // Here we assign a value to the start clock.

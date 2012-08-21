@@ -28,6 +28,7 @@ services: {
   }
   
   user: {
+    Dummy: {}
     DetectorHolder: {}
     ActionHolder: {}
   }
@@ -42,26 +43,14 @@ outputs: {
 
 physics: {
   producers: {
-     artg4main: {
-      module_type: artg4Main
-      enableVisualization: true
-      macroPath: ".:/gm2/app/users/tasha/g-2/artG4/srcs/artg4"
-      visMacro: "vis.mac"
-      pauseAfterEvent: true
-    }
 
     clock: {
       module_type: clockAction
       name: "myClock"
     }
-    
-    track: {
-      module_type: trackAction
-      name: "myTrack"
-    }
   }
 
-  path1: [ artg4main, clock, track ]
+  path1: [clock ]
   stream1:  [ out1 ]
 
   trigger_paths: [ path1 ]

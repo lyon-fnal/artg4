@@ -11,10 +11,13 @@
 #include "art/Framework/Core/EDProducer.h"
 #include "art/Framework/Core/ModuleMacros.h"
 #include "art/Framework/Services/Registry/ServiceHandle.h"
+#include "art/Framework/Principal/Event.h"
 
 // Include more local files
 #include "artg4/pluginActions/clock/ClockAction.hh"
 #include "artg4/services/ActionHolder_service.hh"
+//#include "artg4/services/Dummy_service.hh"
+
 
 // Put code in the Art G4 namespace
 namespace artg4 {
@@ -53,6 +56,12 @@ artg4::clockAction::clockAction(fhicl::ParameterSet const & p)
   // Art now. 
   // If you're adding in something of type @T@, the appropriate command is:
   // produces<T>();
+
+  // To demonstrate that a service can call produces<T> for a producer,
+  // uncomment the following two lines.
+  //art::ServiceHandle<DummyService> myDummyService;
+  //myDummyService -> notifyArtOfProduction(this);
+
 }
 
 // Destructor
@@ -84,6 +93,12 @@ void artg4::clockAction::produce(art::Event & e)
   
   // MyHitClass hits = _myAction -> someMethodToGetHits();
   // e.put(hits);
+
+  // If you're testing whether a service can call produces<T> for a producer,
+  // uncomment the following three lines.
+  //std::auto_ptr<int> myInt(new int);
+  //*(myInt.get()) = 42;
+  //e.put(myInt);
 }
 
 // Register the producer with Art.

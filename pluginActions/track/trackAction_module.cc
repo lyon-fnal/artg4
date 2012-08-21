@@ -76,13 +76,10 @@ void artg4::trackAction::beginJob()
 void artg4::trackAction::produce(art::Event & e)
 {
   // Get the hit collection from our action
-  TrackArtHitCollection myArtHits = myAction_ -> getArtHits();
-  
-  // Put them into the event
-  std::auto_ptr<TrackArtHitCollection> artHitsForEvent( &myArtHits );
+  std::auto_ptr<TrackArtHitCollection> myArtHits = myAction_ -> getArtHitsAndLoseOwnership();
 
   // And add them to the event.
-  e.put(artHitsForEvent);
+  e.put(myArtHits);
 }
 
 // Register the producer with Art.

@@ -39,15 +39,16 @@ namespace artg4 {
 
     // Our own method to return our collection of hits.
     // Note that once this method is called, this object will no longer
-    // own the hits
-    auto_ptr<TrackArtHitsCollection> getArtHitsAndLoseOwnership() const;
+    // own the hits. Because we lose our collection of hits, this method
+    // cannot be const.
+    std::auto_ptr<TrackArtHitCollection> getArtHitsAndLoseOwnership();
 
   private:
     // A message logger for this action
     mf::LogInfo logInfo_;
 
     // Our collection of track hits
-    TrackArtHitCollection* myArtHits_;
+    std::auto_ptr<TrackArtHitCollection> myArtHits_;
   };
 }
 

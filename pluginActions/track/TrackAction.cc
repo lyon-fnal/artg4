@@ -62,12 +62,19 @@ void artg4::TrackAction::PreUserTrackingAction(const G4Track * currentTrack)
   tr.pvhat = mom.y()/mom.mag();
 
   // Add the hit to our collection
-  myArtHits_.push_back(tr);
+  (myArtHits_.get())->push_back(tr);
 }
 
-// Our own method to return our collection of hits.
-inline const artg4::TrackArtHitCollection & 
-  artg4::TrackAction::getArtHits() const
+std::auto_ptr<artg4::TrackArtHitCollection> 
+artg4::TrackAction::getArtHitsAndLoseOwnership()
 {
   return myArtHits_;
 }
+
+/*// Our own method to return our collection of hits.
+  inline const artg4::TrackArtHitCollection & 
+  artg4::TrackAction::getArtHits() const
+  {
+  return myArtHits_;
+  }
+*/

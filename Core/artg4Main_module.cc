@@ -12,7 +12,7 @@
 #include "art/Framework/Principal/Run.h"
 
 // Local includes (like actions)
-#include "artg4/Core/physicsList.hh"
+#include "artg4/geantInit/physicsList.hh"
 #include "artg4/geantInit/ArtG4RunManager.hh"
 #include "artg4/geantInit/ArtG4DetectorConstruction.hh"
 #include "artg4/geantInit/ArtG4EventAction.hh"
