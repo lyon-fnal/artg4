@@ -1,33 +1,39 @@
-// ClockAction.cc provides the implementation for an action object that 
-// records how long runs take and outputs its results.
+// This file provides the implementation for an action object that records how
+// long runs take and outputs its results.
 
 // Authors: Tasha Arvanitis, Adam Lyon
-// Date: July 2012
+// Date: August 2012
 
-// Include headers
-#include "artg4/pluginActions/clock/ClockAction.hh"
-#include "G4Run.hh"
-
-using std::string;
+#include "artg4/pluginActions/clock/ClockAction_service.hh"
+#include "art/Framework/Services/Registry/ServiceHandle.h"
+#include "artg4/services/ActionHolder_service.hh"
 
 #include <iostream>
 
-// Constructor takes a parameter set, calls the base class's constructor, and
-// initializes member data
-artg4::ClockAction::ClockAction(fhicl::ParameterSet const & p)
-  : RunActionBase(p.get<string>("name", "clock")),
+using std::string;
+
+artg4::ClockActionService::ClockActionService(fhicl::ParameterSet const & p, 
+					      art::ActivityRegistry &)
+  : RunActionBase(p.get<string>("name","clock")),
     // Set the clock to use 'real time'.
     clockID(CLOCK_REALTIME),
     // Initialize our message logger
     logInfo_("CLOCKACTION")
 {
+  // Register ourselves with the ActionHolder
+  art::ServiceHandle<ActionHolderService> actionHolder;
 
-  
+  actionHolder -> registerAction(this);
 }
+
+// Destructor
+artg4::ClockActionService::~ClockActionService()
+{}
+
 
 // Overload BeginOfRunAction, called at the beginning of each run.
 // Here we assign a value to the start clock.
-void artg4::ClockAction::BeginOfRunAction(const G4Run * currentRun)
+void artg4::ClockActionService::BeginOfRunAction(const G4Run * currentRun)
 {
   // Find the current time and assign it to our member variable @start@
   clock_gettime(clockID, &start);
@@ -35,7 +41,7 @@ void artg4::ClockAction::BeginOfRunAction(const G4Run * currentRun)
 
 // Overload EndOfRunAction, called at the end of each run.
 // Here we assign a value to the end clock and print how long the run took.
-void artg4::ClockAction::EndOfRunAction(const G4Run * currentRun)
+void artg4::ClockActionService::EndOfRunAction(const G4Run * currentRun)
 {
   // Find the current time and assign it to our member variable @end@
   clock_gettime(clockID, &end);
@@ -47,7 +53,7 @@ void artg4::ClockAction::EndOfRunAction(const G4Run * currentRun)
 
 // This private member function finds the time difference between the two
 // provided timespec values, in seconds.
-double artg4::ClockAction::diff(timespec start, timespec end)
+double artg4::ClockActionService::diff(timespec start, timespec end)
 {
   timespec temp;
   if ((end.tv_nsec-start.tv_nsec)<0) {
@@ -59,3 +65,7 @@ double artg4::ClockAction::diff(timespec start, timespec end)
   }
   return temp.tv_sec + temp.tv_nsec/1e9;
 }
+
+
+using artg4::ClockActionService;
+DEFINE_ART_SERVICE(ClockActionService)
