@@ -19,6 +19,8 @@
 // Includes
 #include "fhiclcpp/ParameterSet.h"
 #include "art/Framework/Services/Registry/ActivityRegistry.h"
+#include "art/Framework/Core/EDProducer.h"
+#include "art/Framework/Principal/Event.h"
 
 #include <map>
 
@@ -61,6 +63,18 @@ namespace artg4 {
     void getAction(std::string name, StackingActionBase* out);
     void getAction(std::string name, PrimaryGeneratorActionBase* out);
     
+
+    // h3. Art-specific methods
+    // Tell each action to notify Art of what it will be producing.
+    void callArtProduces(art::EDProducer * prod);
+
+    // Tell each action to dump anything it likes into the Art event
+    void fillEventWithArtHits();
+
+    // Set/get the current Art event
+    void setCurrArtEvent(art::Event & e) { currentArtEvent_ = &e; }
+    art::Event & getCurrArtEvent() { return (*currentArtEvent_); }
+
     // h3. Action methods
 
     // h4. Run Actions
@@ -94,6 +108,9 @@ namespace artg4 {
     std::map<std::string, SteppingActionBase*> steppingActionsMap_;
     std::map<std::string, StackingActionBase*> stackingActionsMap_;
     std::map<std::string, PrimaryGeneratorActionBase*> primaryGeneratorActionsMap_;
+
+    // An uber-collection of all registered actions, arranged by name
+    std::map<std::string, ActionBase*> allActionsMap_;
         
     // Register the action 
     template <typename A>
@@ -101,11 +118,11 @@ namespace artg4 {
     
     // Get an action
     template <typename A>
-    A* doGetAction(std::string name, std::map<std::string, A*>& actionMap);                            
-                                   
+    A* doGetAction(std::string name, std::map<std::string, A*>& actionMap);
+
+    // Hold on to the current Art event
+    art::Event * currentArtEvent_;
   };
 }
-  
-
 
 #endif // ACTION_HOLDER_HH

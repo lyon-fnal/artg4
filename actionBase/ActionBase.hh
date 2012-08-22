@@ -10,6 +10,7 @@
 
 #include <string>
 #include <iostream>
+#include "art/Framework/Core/EDProducer.h"
 
 // Declarations of types we use as input parameters
 
@@ -30,6 +31,17 @@ namespace artg4 {
     // Accessor
     std::string myName() const {return myName_;}
 
+    // h3. Optional methods
+    
+    // Call produces<T> to notify Art what you'll be adding to the Art event.
+    void callArtProduces(art::EDProducer * producer){}
+
+    // Fill the Art event with whatever you said you would, if you haven't
+    // already. This is called by ActionHolder at the very end of the Art
+    // event, after all the GEANT stuff is finished.
+    // Note that if you need the Art event, you can get it from the 
+    // ActionHolder using its @getCurrArtEvent()@ method.
+    void fillEventWithArtHits(){}
 
   private:
     // A string containing this action object's name

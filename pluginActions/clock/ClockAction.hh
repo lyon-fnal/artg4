@@ -24,8 +24,6 @@ class G4Run;
 // Everything goes in the Art G4 namespace
 namespace artg4 {
 
-  class G4UserRunAction;
-
   class ClockAction : public RunActionBase {
   public:
     // A constructor that takes in a parameter set.

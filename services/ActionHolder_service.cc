@@ -24,7 +24,7 @@ static std::string msgctg = "ActionHolderService";
 // Constructor doesn't do much with the passed arguments, but does initialize
 // the logger for the service
 artg4::ActionHolderService::ActionHolderService(fhicl::ParameterSet const&,
-				art::ActivityRegistry&) :
+						art::ActivityRegistry&) :
   runActionsMap_(),
   eventActionsMap_(),
   trackingActionsMap_(),
@@ -36,23 +36,37 @@ artg4::ActionHolderService::ActionHolderService(fhicl::ParameterSet const&,
 
 // Register actions
 template <typename A>
-void artg4::ActionHolderService::doRegisterAction(A * const action, std::map<std::string, A *>& actionMap) {
+void artg4::ActionHolderService::doRegisterAction(A * const action, 
+						  std::map<std::string, A *>& 
+						      actionMap) 
+{
   LOG_DEBUG(msgctg) << "Registering action " << action->myName() << "\n";
   
-  // Check if the name exists
+  // Check if the name exists in the specific action map
   if ( 0 == actionMap.count( action->myName() ) ) {
     // Add the action!
     actionMap.insert(
                      pair<string, A *>( action->myName(), action )
                      );
+
+    // Now, check whether the name exists in the overall map of all the actions
+    // If so, move on (don't throw an exception, since a single action may need
+    // to register in multiple maps). Otherwise, add it.
+    if ( 0 == allActionsMap_.count( action->myName() ) ) {
+      allActionsMap_.insert( pair<string, ActionBase*>
+			     (  action->myName(), 
+				dynamic_cast<ActionBase*>(action)
+				));
+    }
   }
+ 
   else {
-    // We already have this action!
+    // We already have this action in the specific action map - this is bad!
     throw cet::exception("ActionHolderService")
     << "Duplicate action named " << action->myName() << ".\n";
   }
-  
-};
+
+}
 
 void artg4::ActionHolderService::registerAction(RunActionBase * const action) {
   doRegisterAction(action, runActionsMap_);
@@ -113,13 +127,43 @@ void artg4::ActionHolderService::getAction(std::string name, StackingActionBase*
   out = doGetAction(name, stackingActionsMap_);
 }
 
-void artg4::ActionHolderService::getAction(std::string name, PrimaryGeneratorActionBase* out) {
+void artg4::ActionHolderService::getAction(std::string name, 
+					   PrimaryGeneratorActionBase* out) {
   out = doGetAction(name, primaryGeneratorActionsMap_);
+}
+
+// h3. Art-specific methods
+
+void artg4::ActionHolderService::callArtProduces(art::EDProducer * prod)
+{
+  map<string, ActionBase*>::const_iterator 
+    iter = allActionsMap_.begin(),
+    endIter = allActionsMap_.end();
+  
+  // Loop over all the registered actions and call their callArtProduces method
+  for ( ; iter != endIter; ++iter) {
+    ActionBase* currAction = iter -> second;
+    currAction -> callArtProduces(prod);
+  }
+}
+
+void artg4::ActionHolderService::fillEventWithArtHits()
+{
+  map<string, ActionBase*>::const_iterator 
+    iter = allActionsMap_.begin(),
+    endIter = allActionsMap_.end();
+  
+  // Loop over all the registered actions and call their fill method
+  for ( ; iter != endIter; ++iter) {
+    ActionBase* currAction = iter -> second;
+    currAction -> fillEventWithArtHits();
+  }
 }
 
 // h2. Action methods
 
-// I tried to be good and use @std::for_each@ but it got really messy very quickly. Oh wel. 
+// I tried to be good and use @std::for_each@ but it got really messy very 
+// quickly. Oh well. 
 
 // h3. Run action methods
 
