@@ -47,7 +47,7 @@ namespace artg4 {
     virtual void EndOfRunAction(const G4Run *);
 
     // We don't add anything to the event, so we don't need callArtProduces
-    // or FillEventWithArtHits.
+    // or FillEventWithArtStuff.
 
   private:
     // A method to find the difference between two timespec values

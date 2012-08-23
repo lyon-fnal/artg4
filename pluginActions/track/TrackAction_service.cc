@@ -87,7 +87,7 @@ void artg4::TrackActionService::callArtProduces(art::EDProducer * producer)
 // I believe that when we do this, we lose possession of the collection, which
 // is a distinctly good thing.
 // ???
-void artg4::TrackActionService::fillEventWithArtHits(art::Event & e)
+void artg4::TrackActionService::fillEventWithArtStuff(art::Event & e)
 {
   e.put(myArtHits_);
 }

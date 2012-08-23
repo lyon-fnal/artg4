@@ -47,13 +47,13 @@ namespace artg4 {
     virtual void PreUserTrackingAction(const G4Track * currentTrack);
 
     // We want to add something to the event, so we need callArtProduces
-    // and fillEventWithArtHits.
+    // and fillEventWithArtStuff.
 
     // Tell Art what we'll be adding to the event
     virtual void callArtProduces(art::EDProducer * producer);
 
     // Actually add the collection to the Art event.
-    virtual void fillEventWithArtHits(art::Event & e);
+    virtual void fillEventWithArtStuff(art::Event & e);
 
   private:
     // Our collection of track hits

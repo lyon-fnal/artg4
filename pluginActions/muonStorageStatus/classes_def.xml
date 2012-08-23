@@ -6,8 +6,8 @@
 
 <lcgdict>
     <!-- For EventHits - note that using the typedef will not work here-->
-    <class name="gm2::EventArtHit"/>
-    <class name="std::vector< gm2::EventArtHit >"/>
-    <class name="art::Wrapper< std::vector< gm2::EventArtHit > >"/>
+    <class name="artg4::EventArtHit"/>
+    <class name="std::vector< artg4::EventArtHit >"/>
+    <class name="art::Wrapper< std::vector< artg4::EventArtHit > >"/>
 
 </lcgdict>

@@ -47,7 +47,7 @@ namespace artg4 {
     virtual void GeneratePrimaries(G4Event * anEvent);    
 
     // We don't add anything to the event, so we don't need callArtProduces
-    // or FillEventWithArtHits.
+    // or FillEventWithArtStuff.
 
   private:
     // Our particle source

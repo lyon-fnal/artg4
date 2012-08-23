@@ -147,7 +147,7 @@ void artg4::ActionHolderService::callArtProduces(art::EDProducer * prod)
   }
 }
 
-void artg4::ActionHolderService::fillEventWithArtHits()
+void artg4::ActionHolderService::fillEventWithArtStuff()
 {
   map<string, ActionBase*>::const_iterator 
     iter = allActionsMap_.begin(),
@@ -156,7 +156,7 @@ void artg4::ActionHolderService::fillEventWithArtHits()
   // Loop over all the registered actions and call their fill method
   for ( ; iter != endIter; ++iter) {
     ActionBase* currAction = iter -> second;
-    currAction -> fillEventWithArtHits(getCurrArtEvent());
+    currAction -> fillEventWithArtStuff(getCurrArtEvent());
   }
 }
 

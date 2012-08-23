@@ -69,7 +69,7 @@ namespace artg4 {
     void callArtProduces(art::EDProducer * prod);
 
     // Tell each action to dump anything it likes into the Art event
-    void fillEventWithArtHits();
+    void fillEventWithArtStuff();
 
     // Set/get the current Art event
     void setCurrArtEvent(art::Event & e) { currentArtEvent_ = &e; }

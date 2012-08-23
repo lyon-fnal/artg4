@@ -10,10 +10,10 @@
 
 #include "art/Persistency/Common/Wrapper.h"
 
-#include "gm2g4detectors/muonStorageStatus/EventArtHit.hh"
+#include "artg4/pluginActions/muonStorageStatus/EventArtHit.hh"
 
 // Template the vector (don't use typedef)
-template class std::vector< gm2::EventArtHit >;
+template class std::vector< artg4::EventArtHit >;
 
 // Template the wrapper for the vector (typedef okay)
-template class art::Wrapper< gm2::EventArtHitCollection >;
+template class art::Wrapper< artg4::EventArtHitCollection >;
