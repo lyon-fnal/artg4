@@ -61,10 +61,21 @@ namespace artg4 {
     // If the category was never registered, it throws an exception.
     fhicl::ParameterSet const getParametersForCategory(std::string category);
     
-    // Convert geant hits to art hits
-    void convertGeantToArtHits( G4HCofThisEvent* hc );
+    // Convert GEANT4 hits to Art hits and put them in the event.
+    void fillEventWithArtHits(G4HCofThisEvent* hc);
+
+    // Set/get the current Art event
+    void setCurrArtEvent(art::Event & e) { currentArtEvent_ = &e; }
+    art::Event & getCurrArtEvent() { return (*currentArtEvent_); }
+
+    // Construct all the logical volumes.
+    void constructAllLVs();
 
   private:
+
+    // Construct all the physical volumes and assign the world physical volume
+    // to worldPV_.
+    void constructAllPVs();
 
     // Add the passed DetectorBase to our category map (a complete list
     // of the detector services we have so far). The key is the DB's category

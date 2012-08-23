@@ -12,9 +12,11 @@
 
 // * @doPlaceToPVs@ - This private method takes the mother logical volumes as an argument and performs the functions necessary to place this detector within it. This method then returns a pointer to the resulting physical volume. The system takes over ownership of this pointer. 
 
-// * @doConvertGeantHitsToArtHits@ - This private method is optional, but is necessary if your detector produces hits. Its argument is the G4 Hit collection for this event. You then write code (or perhaps use a script that writes the code for you) to convert the Geant hits into corresponding Art hits. Your class must hold on to these generated Art hits for retrieval later on by the system. 
+// There are also some optional methods you can override.:
 
-// * @doPutArtHitsInEvent@ - This private method is optional, but is necessary if your detector produces hits. It is not declared in this header of @DetectorBase@ because it is specific to the Art module corresponding to this detector. It should return the Art hit vector of the appropriate type. 
+// * @doCallArtProduces@ - This private method is optional, but is necessary if your detector produces hits. Its argument is a producer, for which you should call produces<T>("name"), where T is the type you will add to the event (typically a hit collection) and name is an identifier to distinguish your hits from those of any other detector.
+
+// * @doFillEventWithArtHits@ - This private method is optional, but is necessary if your detector produces hits that will end up in the Art event. The argument is the GEANT hit collection for the event in question. To add a collection of Art hits to the Art event, you must convert the GEANT hits into Art hits, and then put your collection into the Art event. 
 
 // See below for information about each method. Note that many of them you never
 // call yourself. 
@@ -32,6 +34,7 @@
 // Art includes
 #include "fhiclcpp/ParameterSet.h"
 #include "art/Framework/Principal/Event.h"
+#include "art/Framework/Core/EDProducer.h"
 
 // Forward referencing
 class G4LogicalVolume;
@@ -53,8 +56,8 @@ namespace artg4 {
     // constructor. This base class constructor takes,
     // * The parameter set for the corresponding Art producer module
     // * The name of this detector
-    // * The category of this detector
-    // * The category of the mother volume that this detector is placed within ("world" if world)
+    // * The category of this detector ("world" if this is the world)
+    // * The category of the mother volume that this detector is placed within ("" if world)
     DetectorBase(
                  fhicl::ParameterSet const& p,
                  std::string myName, std::string category, 
@@ -76,26 +79,26 @@ namespace artg4 {
       _myLVs = doBuildLVs();
     }
     
-    // Place the detector in the mother volumen and store and return the 
-    // physical volume (calls your @doPlaceToPVs@ method). You do not need to call
-    // this method yourself.   
+    // Place the detector in the mother volume and store and return the 
+    // physical volume (calls your @doPlaceToPVs@ method). You do not need to 
+    // call this method yourself.   
     std::vector<G4VPhysicalVolume*> placeToPVs( 
                                     std::vector<G4LogicalVolume*> motherLVs ) {
       _myPVs = doPlaceToPVs( motherLVs );
       return _myPVs;
     }
   
-
-    // Convert geant hits into Art hits. Calls your @doConvertGeantToArtHits@
-    void convertGeantToArtHits(G4HCofThisEvent * hc) {
-      doConvertGeantToArtHits(hc);
-    }
-    
-    // Put the Art hits into the event. Calls your @doPutArtHitsInEvent@
-    void putArtHitsIntoEvent( art::Event& e) {
-      doPutArtHitsIntoEvent( e );
+    // Tell Art what this detector will put into the event. You do not need to
+    // call this yourself.
+    void callArtProduces(art::EDProducer * producer) {
+      doCallArtProduces(producer);
     }
 
+    // Put anything you need to into the event. You do not need to call this
+    // method yourself.
+    void fillEventWithArtHits(G4HCofThisEvent * hc) {
+      doFillEventWithArtHits(hc);
+    }
 
     // h3. Accessors
 
@@ -130,12 +133,13 @@ namespace artg4 {
                                 std::vector<G4LogicalVolume*> motherLV ) = 0;
     
     // h3. Optional private methods you can override (see list above)
+
+    // Tell Art what you will put into the event.
+    virtual void doCallArtProduces(art::EDProducer * producer) {}
     
-    // Convert the Geant4 hits into Art hits. You store the Art hits in your class
-    virtual void doConvertGeantToArtHits(G4HCofThisEvent* hc) {}
-    
-    // Put the Art hits into the Event
-    virtual void doPutArtHitsIntoEvent( art::Event& e ) {}
+    // Convert G4 hits into Art hits. Put them in the event (which you can get
+    // from the DetectorHolder service).
+    virtual void doFillEventWithArtHits(G4HCofThisEvent* hc) {}
   
     
     // h3. Private data
