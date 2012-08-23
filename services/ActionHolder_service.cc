@@ -156,7 +156,7 @@ void artg4::ActionHolderService::fillEventWithArtHits()
   // Loop over all the registered actions and call their fill method
   for ( ; iter != endIter; ++iter) {
     ActionBase* currAction = iter -> second;
-    currAction -> fillEventWithArtHits();
+    currAction -> fillEventWithArtHits(getCurrArtEvent());
   }
 }
 

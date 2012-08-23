@@ -11,6 +11,7 @@
 #include <string>
 #include <iostream>
 #include "art/Framework/Core/EDProducer.h"
+#include "art/Framework/Principal/Event.h"
 
 // Declarations of types we use as input parameters
 
@@ -41,7 +42,7 @@ namespace artg4 {
     // event, after all the GEANT stuff is finished.
     // Note that if you need the Art event, you can get it from the 
     // ActionHolder using its @getCurrArtEvent()@ method.
-    void fillEventWithArtHits(){}
+    void fillEventWithArtHits(art::Event & e){}
 
   private:
     // A string containing this action object's name
