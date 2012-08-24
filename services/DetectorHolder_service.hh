@@ -47,7 +47,10 @@ namespace artg4 {
 
     // This returns the world physical volume, if it has been fully 
     // constructed, and throws an exception otherwise
-    G4VPhysicalVolume * worldPhysicalVolume() const;
+    // This can't be const because, if the world hasn't already been set up,
+    // it constructs all the physical volumes, and thus changes its member
+    // data.
+    G4VPhysicalVolume * worldPhysicalVolume();
 
     // This returns the map of detectors we have been passed so far.
     //std::map<std::string, DetectorBase *> const & getDetectorMap() const;
@@ -94,6 +97,9 @@ namespace artg4 {
     
     // Hold on to the world physical volume so we can return it later.
     G4VPhysicalVolume * worldPV_;
+
+    // Hold on to the current Art event
+    art::Event * currentArtEvent_;
 
   };
 

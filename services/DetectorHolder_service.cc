@@ -38,7 +38,7 @@ void artg4::DetectorHolderService::registerDetector(DetectorBase *const db)
 }
 
 // Get the physical volume for the world/lab in the simulation
-G4VPhysicalVolume * artg4::DetectorHolderService::worldPhysicalVolume() const
+G4VPhysicalVolume * artg4::DetectorHolderService::worldPhysicalVolume()
 {
   // Check if we have a world yet.
   if (0 == worldPV_) {

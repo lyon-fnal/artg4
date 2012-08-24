@@ -37,7 +37,7 @@ void artg4::ArtG4EventAction::EndOfEventAction(const G4Event * currentEvent)
 {
   // Convert geant hits to art
   art::ServiceHandle<artg4::DetectorHolderService> dhs;
-  dhs -> convertGeantToArtHits( currentEvent->GetHCofThisEvent() );
+  dhs -> fillEventWithArtHits( currentEvent->GetHCofThisEvent() );
  
   // Run EndOfEventAction
   art::ServiceHandle<ActionHolderService> ahs;
