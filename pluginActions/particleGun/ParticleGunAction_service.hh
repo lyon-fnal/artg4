@@ -32,7 +32,7 @@
 #include "artg4/pluginActions/particleGun/GeneralParticleSource.hh"
 
 // Get the base class
-#include "actionBase/PrimaryGeneratorActionBase.hh"
+#include "artg4/actionBase/PrimaryGeneratorActionBase.hh"
 
 namespace artg4 {
 

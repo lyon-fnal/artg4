@@ -21,6 +21,7 @@
 // Includes
 #include "fhiclcpp/ParameterSet.h"
 #include "art/Framework/Services/Registry/ActivityRegistry.h"
+#include "art/Framework/Services/Registry/ServiceHandle.h"
 
 #include "art/Framework/Services/Registry/ServiceMacros.h"
 #include "art/Framework/Core/EDProducer.h"
@@ -30,7 +31,7 @@
 #include <time.h>
 
 // Get the base class
-#include "actionBase/RunActionBase.hh"
+#include "artg4/actionBase/RunActionBase.hh"
 
 namespace artg4 {
 

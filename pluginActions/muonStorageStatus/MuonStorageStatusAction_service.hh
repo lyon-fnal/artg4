@@ -28,9 +28,9 @@
 #include "art/Framework/Principal/Event.h"
 
 // Get the base class
-#include "actionBase/EventActionBase.hh"
-#include "actionBase/RunActionBase.hh"
-#include "actionBase/SteppingActionBase.hh"
+#include "artg4/actionBase/EventActionBase.hh"
+#include "artg4/actionBase/RunActionBase.hh"
+#include "artg4/actionBase/SteppingActionBase.hh"
 
 // Other includes
 #include "artg4/pluginActions/muonStorageStatus/EventArtHit.hh"

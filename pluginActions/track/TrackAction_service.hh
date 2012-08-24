@@ -28,7 +28,7 @@
 #include "art/Framework/Principal/Event.h"
 
 // Get the base class
-#include "actionBase/TrackingActionBase.hh"
+#include "artg4/actionBase/TrackingActionBase.hh"
 
 // Other includes
 #include "artg4/pluginActions/track/TrackArtHit.hh"
