@@ -11,6 +11,11 @@
 //   }
 // }
 
+// Expected parameters:
+
+// - name (string): A name describing the action.
+//       Default is 'clock'.
+
 // Authors: Tasha Arvanitis, Adam Lyon
 // Date: August 2012
 

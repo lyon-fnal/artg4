@@ -44,6 +44,12 @@ G4VPhysicalVolume * artg4::DetectorHolderService::worldPhysicalVolume()
   if (0 == worldPV_) {
     // We don't - let's construct all the physical volumes.
     constructAllPVs();
+
+    // Check whether we have a world at this point. If not, we have a problem.
+    if (0 == worldPV_) {
+      throw cet::exception("DetectorHolderService") << "No world volume "
+						    << "constructed!\n";
+    }
   }
   // If we reach this point, the world volume exists, so let's return it!
   return worldPV_;

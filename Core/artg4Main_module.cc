@@ -305,9 +305,10 @@ void artg4::artg4Main::endRun(art::Run &)
 	 << "Hit ENTER to finish job." << std::endl;
     std::cin.ignore();
   }
-
-  // Delete ui
-  delete _visManager;
+  if ( _enableVisualization ) {
+    // Delete ui
+    delete _visManager;
+  }
 #endif
 }
 

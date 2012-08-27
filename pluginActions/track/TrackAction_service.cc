@@ -49,7 +49,7 @@ preUserTrackingAction(const G4Track * currentTrack)
   // Omit turns for now
   //  tr.turn = turnCounter::getInstance().turns();
 
-  // We haven't yet set up the 
+  // We haven't yet set up the uid manager.
   //  tr.volumeUID = get_uid(currentTrack->GetVolume());
 
   G4ThreeVector pos = currentTrack->GetPosition();
