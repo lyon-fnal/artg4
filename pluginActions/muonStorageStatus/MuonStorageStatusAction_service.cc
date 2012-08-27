@@ -76,7 +76,7 @@ artg4::MuonStorageStatusActionService::~MuonStorageStatusActionService()
 // Use BeginOfEventAction (called at the beginning of each event,
 // after the primaries are generated).
 void artg4::MuonStorageStatusActionService::
-BeginOfEventAction(const G4Event * currEvent)
+beginOfEventAction(const G4Event * currEvent)
 {
   // Initialization per event
   currMuStorageStatus_ = muonTrackingStatus::trackingMuon;
@@ -89,7 +89,7 @@ BeginOfEventAction(const G4Event * currEvent)
 // Use EndOfEventAction (last chance to extract information from the
 // event).
 void artg4::MuonStorageStatusActionService::
-EndOfEventAction(const G4Event * currEvent)
+endOfEventAction(const G4Event * currEvent)
 {
   bool muWasStored = (currMuStorageStatus_ == muonTrackingStatus::storedMuon ? 
 		      true :
@@ -108,7 +108,7 @@ EndOfEventAction(const G4Event * currEvent)
 // Use BeginOfRunAction (called at the beginning of each run, funnily 
 // enough).
 void artg4::MuonStorageStatusActionService::
-BeginOfRunAction(const G4Run * currRun)
+beginOfRunAction(const G4Run * currRun)
 {
   // Initialization per run
   nStoredMuons_ = 0;
@@ -116,7 +116,7 @@ BeginOfRunAction(const G4Run * currRun)
 
 // Use EndOfRunAction (called at the end of each run).
 void artg4::MuonStorageStatusActionService::
-EndOfRunAction(const G4Run * currRun)
+endOfRunAction(const G4Run * currRun)
 {
   // Calculate some information about the run
   double totalEvents = currRun -> GetNumberOfEvent();
@@ -138,7 +138,7 @@ EndOfRunAction(const G4Run * currRun)
 // * Kills a track and ends the event if the muon survives for a sufficient number of turns.
 // * Kills a track if it wanders too far outside the storage volume
 void artg4::MuonStorageStatusActionService::
-UserSteppingAction(const G4Step *currStep)
+userSteppingAction(const G4Step *currStep)
 {
   // Get the current track
   G4Track * currTrack = currStep -> GetTrack();

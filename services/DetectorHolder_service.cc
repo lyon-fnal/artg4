@@ -105,6 +105,20 @@ artg4::DetectorHolderService::getParametersForCategory(std::string category)
   return getDetectorForCategory(category) -> parameters();
 }
 
+// Tell the detectors to tell Art what they produce
+void artg4::DetectorHolderService::callArtProduces(art::EDProducer * prod)
+{
+  // Let's loop over the detectors in the map
+  for (std::map<std::string, DetectorBase*>::iterator itr = 
+	 categoryMap_.begin();
+       itr != categoryMap_.end(); 
+       ++itr ) {
+    LOG_DEBUG(msgctg) << "Calling art produces for category " 
+		      << itr->second->category();
+    itr -> second -> callArtProduces(prod);
+  }
+}
+
 // Convert geant hits to art hits for all detectors
 void artg4::DetectorHolderService::fillEventWithArtHits(G4HCofThisEvent* hc) 
 {

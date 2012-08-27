@@ -8,8 +8,6 @@
 #include "art/Framework/Services/Registry/ServiceHandle.h"
 #include "artg4/services/ActionHolder_service.hh"
 
-#include <iostream>
-
 using std::string;
 
 artg4::ClockActionService::ClockActionService(fhicl::ParameterSet const & p, 
@@ -18,7 +16,7 @@ artg4::ClockActionService::ClockActionService(fhicl::ParameterSet const & p,
     // Set the clock to use 'real time'.
     clockID(CLOCK_REALTIME),
     // Initialize our message logger
-    logInfo_("CLOCKACTION")
+    logInfo_("ClockAction")
 {
   // Register ourselves with the ActionHolder
   art::ServiceHandle<ActionHolderService> actionHolder;
@@ -31,9 +29,9 @@ artg4::ClockActionService::~ClockActionService()
 {}
 
 
-// Overload BeginOfRunAction, called at the beginning of each run.
+// Overload beginOfRunAction, called at the beginning of each run.
 // Here we assign a value to the start clock.
-void artg4::ClockActionService::BeginOfRunAction(const G4Run * currentRun)
+void artg4::ClockActionService::beginOfRunAction(const G4Run * currentRun)
 {
   // Find the current time and assign it to our member variable @start@
   clock_gettime(clockID, &start);
@@ -41,7 +39,7 @@ void artg4::ClockActionService::BeginOfRunAction(const G4Run * currentRun)
 
 // Overload EndOfRunAction, called at the end of each run.
 // Here we assign a value to the end clock and print how long the run took.
-void artg4::ClockActionService::EndOfRunAction(const G4Run * currentRun)
+void artg4::ClockActionService::endOfRunAction(const G4Run * currentRun)
 {
   // Find the current time and assign it to our member variable @end@
   clock_gettime(clockID, &end);

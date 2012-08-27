@@ -22,6 +22,11 @@
 #include "artg4/geantInit/ArtG4StackingAction.hh"
 #include "artg4/geantInit/ArtG4TrackingAction.hh"
 
+// Allow access to the holder services
+#include "art/Framework/Services/Registry/ServiceHandle.h"
+#include "artg4/services/ActionHolder_service.hh"
+#include "artg4/services/DetectorHolder_service.hh"
+
 // G4 includes
 #ifdef G4VIS_USE_OPENGLX
 #include "G4VisExecutive.hh"
@@ -98,7 +103,11 @@ artg4::artg4Main::artg4Main(fhicl::ParameterSet const & p)
     _rmvlevel( p.get<int>("rmvlevel",0)),
     _logInfo("ArtG4Main")
 {
-  produces<int>();
+  art::ServiceHandle<ActionHolderService> actionHolder;
+  art::ServiceHandle<DetectorHolderService> detectorHolder;
+  
+  actionHolder -> callArtProduces(this);
+  detectorHolder -> callArtProduces(this);
 }
 
 artg4::artg4Main::~artg4Main()
@@ -111,6 +120,10 @@ void artg4::artg4Main::beginJob()
   // Set up run manager
   LOG_DEBUG("Main_Run_Manager") << "In begin job" << "\n";
   _runManager = auto_ptr<ArtG4RunManager>(new ArtG4RunManager);
+
+  // Build the detectors' logical volumes
+  art::ServiceHandle<DetectorHolderService> detectorHolder;
+  detectorHolder -> constructAllLVs();
 }
 
 void artg4::artg4Main::beginRun(art::Run & r)
@@ -133,18 +146,6 @@ void artg4::artg4Main::beginRun(art::Run & r)
   _runManager -> SetUserAction(new ArtG4TrackingAction);
   _runManager -> SetUserAction(new ArtG4RunAction);
 
-  /*
-  // User actions (optional)
-    runAction *RunAction = new runAction;
-  eventAction *EventAction = new eventAction(RunAction);
-  steppingAction *SteppingAction = new steppingAction(EventAction);
-  trackingAction *TrackingAction = new trackingAction;
-  
-  runManager -> SetUserAction(SteppingAction);
-  runManager -> SetUserAction(EventAction);
-  runManager -> SetUserAction(TrackingAction);
-  runManager -> SetUserAction(RunAction);
-  */
   _runManager->Initialize();
 
   //get the pointer to the User Interface manager   
@@ -254,18 +255,18 @@ void artg4::artg4Main::beginRun(art::Run & r)
 // event through GEANT.
 void artg4::artg4Main::produce(art::Event & e)
 {
-   // Begin event
+  // Give the holders a reference to the event
+  art::ServiceHandle<ActionHolderService> actionHolder;
+  art::ServiceHandle<DetectorHolderService> detectorHolder;
+  
+  actionHolder -> setCurrArtEvent(e);
+  detectorHolder -> setCurrArtEvent(e);
+
+  // Begin event
   _runManager -> BeamOnDoOneEvent(e.id().event());
   
   // Write home about it
   _logInfo << "Producing event " << e.id().event() << "\n" << endl;
-  
-  // Create an auto-ptr to an int
-  auto_ptr<int> myVal(new int);
-  *(myVal.get()) = 42;
-  
-  // Add this int to the event!
-  e.put(myVal);
 
   // Done with the event
   _runManager -> BeamOnEndEvent();

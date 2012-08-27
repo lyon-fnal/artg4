@@ -60,21 +60,21 @@ namespace artg4 {
 
     // Use BeginOfEventAction (called at the beginning of each event,
     // after the primaries are generated).
-    virtual void BeginOfEventAction(const G4Event * currEvent);
+    virtual void beginOfEventAction(const G4Event * currEvent);
 
     // Use EndOfEventAction (last chance to extract information from the
     // event).
-    virtual void EndOfEventAction(const G4Event * currEvent);
+    virtual void endOfEventAction(const G4Event * currEvent);
 
     // Use BeginOfRunAction (called at the beginning of each run, funnily 
     // enough).
-    virtual void BeginOfRunAction(const G4Run * currRun);
+    virtual void beginOfRunAction(const G4Run * currRun);
 
     // Use EndOfRunAction (called at the end of each run).
-    virtual void EndOfRunAction(const G4Run * currRun);
+    virtual void endOfRunAction(const G4Run * currRun);
 
     // Use UserSteppingAction (called for each step).
-    virtual void UserSteppingAction(const G4Step *currStep);
+    virtual void userSteppingAction(const G4Step *currStep);
 
     // We want to add something to the event, so we need callArtProduces
     // and fillEventWithArtStuff.

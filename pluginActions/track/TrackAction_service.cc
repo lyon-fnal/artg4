@@ -30,7 +30,7 @@ artg4::TrackActionService::~TrackActionService()
 // Overload the PreUserTrackingAction method to initialize the track and
 // add it to our collection
 void artg4::TrackActionService::
-PreUserTrackingAction(const G4Track * currentTrack)
+preUserTrackingAction(const G4Track * currentTrack)
 {
   // Ignore tracks for xtal volumes
   if( currentTrack->GetVolume()->GetName().find( "xtal" ) !=

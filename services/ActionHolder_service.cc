@@ -187,7 +187,7 @@ void artg4::ActionHolderService::endOfRunAction(const G4Run* theRun) {
 
 void artg4::ActionHolderService::beginOfEventAction(const G4Event* theEvent) {
  
-  for (map<std::string, EventActionBase*>::const_iterator itr = eventActionsMap_.begin(); 
+  for (map<std::string, EventActionBase*>::const_iterator itr = eventActionsMap_.begin();
        itr != eventActionsMap_.end(); ++itr ) {
     itr->second->beginOfEventAction(theEvent);
   }
@@ -195,7 +195,7 @@ void artg4::ActionHolderService::beginOfEventAction(const G4Event* theEvent) {
 
 void artg4::ActionHolderService::endOfEventAction(const G4Event* theEvent) {
   
-  for (map<std::string, EventActionBase*>::const_iterator itr = eventActionsMap_.begin(); 
+  for (map<std::string, EventActionBase*>::const_iterator itr = eventActionsMap_.begin();
        itr != eventActionsMap_.end(); ++itr ) {
     itr->second->endOfEventAction(theEvent);
   }

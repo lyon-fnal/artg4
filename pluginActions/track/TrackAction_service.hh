@@ -44,7 +44,7 @@ namespace artg4 {
 
     // Overload the PreUserTrackingAction method to initialize the track and
     // add it to our collection
-    virtual void PreUserTrackingAction(const G4Track * currentTrack);
+    virtual void preUserTrackingAction(const G4Track * currentTrack);
 
     // We want to add something to the event, so we need callArtProduces
     // and fillEventWithArtStuff.

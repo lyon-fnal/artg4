@@ -41,11 +41,11 @@ namespace artg4 {
     virtual ~ClockActionService();
 
     // Overload the BeginOfRunAction method to initialize the clock
-    virtual void BeginOfRunAction(const G4Run *);
+    virtual void beginOfRunAction(const G4Run *);
 
     // Overload the EndOfRunAction method to finalize the clock and print out
     // how long the run took.
-    virtual void EndOfRunAction(const G4Run *);
+    virtual void endOfRunAction(const G4Run *);
 
     // We don't add anything to the event, so we don't need callArtProduces
     // or FillEventWithArtStuff.

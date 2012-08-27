@@ -25,6 +25,8 @@
 // Includes
 #include "fhiclcpp/ParameterSet.h"
 #include "art/Framework/Services/Registry/ActivityRegistry.h"
+#include "art/Framework/Core/EDProducer.h"
+
 
 #include "artg4/Core/DetectorBase.hh"
 
@@ -63,6 +65,9 @@ namespace artg4 {
     // Returns the FHiCL parameter set for the given category, if it exists.
     // If the category was never registered, it throws an exception.
     fhicl::ParameterSet const getParametersForCategory(std::string category);
+
+    // Tell Art what the detectors produce
+    void callArtProduces(art::EDProducer * prod);
     
     // Convert GEANT4 hits to Art hits and put them in the event.
     void fillEventWithArtHits(G4HCofThisEvent* hc);

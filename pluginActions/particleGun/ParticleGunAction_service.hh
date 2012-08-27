@@ -44,7 +44,7 @@ namespace artg4 {
 
     // To generate primaries, we need to overload the GeneratePrimaries
     // method. 
-    virtual void GeneratePrimaries(G4Event * anEvent);    
+    virtual void generatePrimaries(G4Event * anEvent);    
 
     // We don't add anything to the event, so we don't need callArtProduces
     // or FillEventWithArtStuff.
