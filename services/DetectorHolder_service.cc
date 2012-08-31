@@ -10,6 +10,8 @@
 #include "art/Framework/Services/Registry/ServiceMacros.h"
 #include "messagefacility/MessageLogger/MessageLogger.h" 
 
+#include "artg4/Core/DetectorBase.hh"
+
 #include "G4HCofThisEvent.hh"
 
 // Save ourselves the trouble of typing 'std::' all the time
@@ -25,7 +27,7 @@ static std::string msgctg = "DetectorHolderService";
 
 // Constructor doesn't do anything with either of its passed components.
 artg4::DetectorHolderService::DetectorHolderService(fhicl::ParameterSet const&,
-				    art::ActivityRegistry&) :
+						    art::ActivityRegistry&) :
   categoryMap_(),
   worldPV_(0)
 {}

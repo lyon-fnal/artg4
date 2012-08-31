@@ -36,6 +36,9 @@
 #include "art/Framework/Principal/Event.h"
 #include "art/Framework/Core/EDProducer.h"
 
+#include "art/Framework/Services/Registry/ServiceHandle.h"
+#include "artg4/services/DetectorHolder_service.hh"
+
 // Forward referencing
 class G4LogicalVolume;
 class G4VPhysicalVolume;
@@ -68,7 +71,11 @@ namespace artg4 {
         _motherCategory( motherCategory),
         _myLVs(0),
         _myPVs(0)
-    {}
+    {
+      // Register ourselves
+      art::ServiceHandle<DetectorHolderService> detectorHolder;
+      detectorHolder -> registerDetector(this);
+    }
   
     // Destructor
     virtual ~DetectorBase(){}

@@ -28,15 +28,18 @@
 #include "art/Framework/Core/EDProducer.h"
 
 
-#include "artg4/Core/DetectorBase.hh"
+//#include "artg4/Core/DetectorBase.hh"
 
 #include <map>
 #include <vector>
 
 class G4HCofThisEvent;
+class G4VPhysicalVolume;
 
 // Everything for the Art G4 simulation goes in the @artg4@ namespace
 namespace artg4 {
+
+  class DetectorBase;
 
   class DetectorHolderService {
   public:
