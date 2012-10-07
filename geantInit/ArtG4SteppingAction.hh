@@ -12,8 +12,8 @@
 #define ARTG4_STEPPING_ACTION_HH
 
 // A couple of G4 includes
-#include "G4UserSteppingAction.hh"
-#include "G4Step.hh"
+#include "Geant4/G4UserSteppingAction.hh"
+#include "Geant4/G4Step.hh"
 
 // Everything goes in the Art G4 namespace
 namespace artg4 {

@@ -11,8 +11,8 @@
 #define ARTG4_PGA_HH
 
 // G4 includes
-#include "G4VUserPrimaryGeneratorAction.hh"
-#include "G4Event.hh"
+#include "Geant4/G4VUserPrimaryGeneratorAction.hh"
+#include "Geant4/G4Event.hh"
 
 // Everything goes in the Art G4 namespace
 namespace artg4 {

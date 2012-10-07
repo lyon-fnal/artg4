@@ -5,8 +5,8 @@
 //  - Zach Hartwig 2005
 //  - Tasha Arvanitis, Adam Lyon 2012
 
-#include "G4Event.hh"
-#include "Randomize.hh"
+#include "Geant4/G4Event.hh"
+#include "Geant4/Randomize.hh"
 #include "GeneralParticleSource.hh"
 
 using std::endl;

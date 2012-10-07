@@ -22,9 +22,9 @@
     - Kevin Lynch 2009
  */
 
-#include "globals.hh"
-#include "G4VModularPhysicsList.hh"
-#include "G4VPhysicsConstructor.hh"
+#include "Geant4/globals.hh"
+#include "Geant4/G4VModularPhysicsList.hh"
+#include "Geant4/G4VPhysicsConstructor.hh"
 // #include "physicsListMessenger.hh"
 
 /** Provides the required physics lists. 

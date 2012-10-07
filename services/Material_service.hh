@@ -8,9 +8,9 @@
 #include "art/Framework/Services/Registry/ActivityRegistry.h"
 
 // GEANT
-#include "globals.hh"
-#include "G4Material.hh"
-#include "G4Element.hh"
+#include "Geant4/globals.hh"
+#include "Geant4/G4Material.hh"
+#include "Geant4/G4Element.hh"
 
 namespace artg4 {
 

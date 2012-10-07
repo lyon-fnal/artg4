@@ -1,6 +1,7 @@
 // ArtG4EventAction.cc provides implementation of Art G4's built-in event action.
 
 // Authors: Tasha Arvanitis, Adam Lyon
+
 // Date: July 2012
 
 // Include header

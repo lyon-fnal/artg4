@@ -10,8 +10,8 @@
 #define ARTG4_EVENT_ACTION_HH
 
 // Some G4 includes
-#include "G4UserEventAction.hh"
-#include "G4Event.hh"
+#include "Geant4/G4UserEventAction.hh"
+#include "Geant4/G4Event.hh"
 
 // Everything goes in the Art G4 namespace
 namespace artg4 {

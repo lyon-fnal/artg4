@@ -12,16 +12,16 @@
 artg4::ArtG4DetectorConstruction::ArtG4DetectorConstruction()
 {
   art::ServiceHandle<artg4::DetectorHolderService> dh;
-  _world = dh -> worldPhysicalVolume();
+  world_ = dh -> worldPhysicalVolume();
 }
 
 artg4::ArtG4DetectorConstruction::ArtG4DetectorConstruction(G4VPhysicalVolume * world)
-  : _world(world)
+  : world_(world)
 {
   // nothing else to do!
 }
 
 G4VPhysicalVolume * artg4::ArtG4DetectorConstruction::Construct()
 {
-  return _world;
+  return world_;
 }

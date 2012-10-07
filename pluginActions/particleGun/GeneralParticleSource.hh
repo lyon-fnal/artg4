@@ -42,10 +42,10 @@
 //       - approximatly a gazillion (technical term) parameters, some with
 //             nested parameter sets, described in SingleParticleSource.hh.
 
-#include "globals.hh"
+#include "Geant4/globals.hh"
 #include <vector>
 
-#include "G4Event.hh"
+#include "Geant4/G4Event.hh"
 #include "SingleParticleSource.hh"
 
 #include "fhiclcpp/ParameterSet.h"

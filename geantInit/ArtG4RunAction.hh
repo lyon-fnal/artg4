@@ -11,8 +11,8 @@
 #define ARTG4_RUN_ACTION_HH
 
 // Some G4 includes
-#include "G4UserRunAction.hh"
-#include "G4Run.hh"
+#include "Geant4/G4UserRunAction.hh"
+#include "Geant4/G4Run.hh"
 
 // Everything goes in the Art G4 namespace
 namespace artg4 {

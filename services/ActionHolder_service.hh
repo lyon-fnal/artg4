@@ -44,10 +44,7 @@ namespace artg4 {
     // Constructor for ActionHolderService
     ActionHolderService(fhicl::ParameterSet const &, art::ActivityRegistry&);
 
-    // This method registers the passed action object with the service,
-    // which solely entails adding it to the map of action objects (and throwing
-    // and exception if there's already an action object registered with the
-    // same name.
+    // This method registers the passed action object with the service
     void registerAction(RunActionBase * const action);
     void registerAction(EventActionBase* const action);
     void registerAction(TrackingActionBase* const action);
@@ -63,7 +60,6 @@ namespace artg4 {
     void getAction(std::string name, StackingActionBase* out);
     void getAction(std::string name, PrimaryGeneratorActionBase* out);
     
-
     // h3. Art-specific methods
     // Tell each action to notify Art of what it will be producing.
     void callArtProduces(art::EDProducer * prod);
@@ -109,6 +105,9 @@ namespace artg4 {
     std::map<std::string, StackingActionBase*> stackingActionsMap_;
     std::map<std::string, PrimaryGeneratorActionBase*> primaryGeneratorActionsMap_;
 
+    // Hold on to the current Art event
+    art::Event * currentArtEvent_;
+
     // An uber-collection of all registered actions, arranged by name
     std::map<std::string, ActionBase*> allActionsMap_;
         
@@ -120,8 +119,6 @@ namespace artg4 {
     template <typename A>
     A* doGetAction(std::string name, std::map<std::string, A*>& actionMap);
 
-    // Hold on to the current Art event
-    art::Event * currentArtEvent_;
   };
 }
 

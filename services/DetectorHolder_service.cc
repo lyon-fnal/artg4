@@ -12,7 +12,7 @@
 
 #include "artg4/Core/DetectorBase.hh"
 
-#include "G4HCofThisEvent.hh"
+#include "Geant4/G4HCofThisEvent.hh"
 
 // Save ourselves the trouble of typing 'std::' all the time
 using std::string;
@@ -29,7 +29,7 @@ static std::string msgctg = "DetectorHolderService";
 artg4::DetectorHolderService::DetectorHolderService(fhicl::ParameterSet const&,
 						    art::ActivityRegistry&) :
   categoryMap_(),
-  worldPV_(0)
+  worldPV_(nullptr)
 {}
 
 // Register a detector object with this service
@@ -62,14 +62,11 @@ G4VPhysicalVolume * artg4::DetectorHolderService::worldPhysicalVolume()
 void artg4::DetectorHolderService::constructAllLVs()
 {
   // Let's loop over the detectors in the map
-  for (std::map<std::string, DetectorBase*>::iterator itr = 
-	 categoryMap_.begin();
-       itr != categoryMap_.end(); 
-       ++itr ) {
+  for( auto entry : categoryMap_ ) {
     LOG_DEBUG(msgctg) << "Constructing logical volumes for detector of "
-		      << "category " << itr->second->category();
+          << "category " << (entry.second)->category();
 
-    itr -> second -> buildLVs();
+      (entry.second)->buildLVs();
   }
 }
 
@@ -77,14 +74,11 @@ void artg4::DetectorHolderService::constructAllLVs()
 void artg4::DetectorHolderService::constructAllPVs()
 {
   // Let's loop over the detectors in the map
-  for (std::map<std::string, DetectorBase*>::iterator itr = 
-	 categoryMap_.begin();
-       itr != categoryMap_.end(); 
-       ++itr ) {
-    LOG_DEBUG(msgctg) << "Constructing physical volumes for detector of "
-		      << "category " << itr->second->category();
+  for ( auto entry : categoryMap_) {
+   LOG_DEBUG(msgctg) << "Constructing physical volumes for detector of "
+	 	      << "category " << (entry.second)->category();
 
-    placeDetector(itr -> second);
+    placeDetector(entry.second);
   } 
 }
 
@@ -92,8 +86,9 @@ void artg4::DetectorHolderService::constructAllPVs()
 artg4::DetectorBase * artg4::DetectorHolderService::
 getDetectorForCategory(std::string category) const
 {
-  map<string,DetectorBase*>::const_iterator categoryDB = 
-    categoryMap_.find(category);
+
+  auto categoryDB = categoryMap_.find(category);
+
   if (categoryDB != categoryMap_.end()) {
     // We have a detector of that category
     return categoryDB -> second;
@@ -117,13 +112,11 @@ artg4::DetectorHolderService::getParametersForCategory(std::string category)
 void artg4::DetectorHolderService::callArtProduces(art::EDProducer * prod)
 {
   // Let's loop over the detectors in the map
-  for (std::map<std::string, DetectorBase*>::iterator itr = 
-	 categoryMap_.begin();
-       itr != categoryMap_.end(); 
-       ++itr ) {
+  for ( auto entry : categoryMap_ ) {
+
     LOG_DEBUG(msgctg) << "Calling art produces for category " 
-		      << itr->second->category();
-    itr -> second -> callArtProduces(prod);
+		      << (entry.second)->category();
+    (entry.second)->callArtProduces(prod);
   }
 }
 
@@ -131,13 +124,10 @@ void artg4::DetectorHolderService::callArtProduces(art::EDProducer * prod)
 void artg4::DetectorHolderService::fillEventWithArtHits(G4HCofThisEvent* hc) 
 {
   // Let's loop over the detectors in the map
-  for (std::map<std::string, DetectorBase*>::iterator itr = 
-	 categoryMap_.begin();
-       itr != categoryMap_.end(); 
-       ++itr ) {
+  for ( auto entry : categoryMap_ ) {
     LOG_DEBUG(msgctg) << "Converting hits for category " 
-		      << itr->second->category();
-    itr -> second -> fillEventWithArtHits(hc);
+		      << (entry.second)->category();
+    (entry.second)->fillEventWithArtHits(hc);
   }
 }
 
@@ -148,12 +138,16 @@ void artg4::DetectorHolderService::addDBtoCategoryMap(DetectorBase * const db)
 {
   if (0 == categoryMap_.count( db -> category() )) {
     // This DB isn't already in the map - let's add it!
-    pair<string, DetectorBase *> itemToAdd(db -> category(), db);
+
+    // Create the pair to add
+    pair<string, DetectorBase *> itemToAdd(db->category(), db);
+
+    // Add it
     categoryMap_.insert(itemToAdd);
     LOG_DEBUG(msgctg) << "Registered detectory with category: " << db->category() << ".\n";
   }
   else {
-    // We already have one of these detectors - something serious is wrong.
+    // We already have one of these detectors
     throw cet::exception("DetectorHolderService") 
       << "Duplicate detector found. "
       << "There are at least two detectors found with category "
@@ -167,6 +161,7 @@ void artg4::DetectorHolderService::placeDetector(DetectorBase * const db)
 {
   // Check if we're dealing with the world volume first.
   if ( 0 == (db -> category()).compare("world") ) {
+
     // The world's mother 'logical volume' is an empty vector.
     worldPV_ = (db -> placeToPVs( std::vector<G4LogicalVolume*>() ))[0];
     LOG_DEBUG(msgctg) << "Just placed detector with category: " 
@@ -176,8 +171,7 @@ void artg4::DetectorHolderService::placeDetector(DetectorBase * const db)
   }
 
   // Deal with non-world detectors
-  map<string, DetectorBase *>::iterator motherCategoryDB = 
-    categoryMap_.find(db -> motherCategory());
+  auto motherCategoryDB = categoryMap_.find(db -> motherCategory());
 
   if (motherCategoryDB != categoryMap_.end()) {
     // We have a parent volume - pass the DB its mother volume and call place.

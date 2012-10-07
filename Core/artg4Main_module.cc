@@ -1,8 +1,11 @@
+// artg4Main is the main producer module for Geant.
+
 // artg4Main_module.cc replicates many GEANT programs' @main()@ driver. It
 // creates and initializes the run manager, controls the beginning and end of 
 // events, and controls visualization.
 
 // Authors: Tasha Arvanitis, Adam Lyon
+
 // Date: July 2012
 
 // Art includes
@@ -15,6 +18,8 @@
 #include "artg4/geantInit/physicsList.hh"
 #include "artg4/geantInit/ArtG4RunManager.hh"
 #include "artg4/geantInit/ArtG4DetectorConstruction.hh"
+
+// The actions
 #include "artg4/geantInit/ArtG4EventAction.hh"
 #include "artg4/geantInit/ArtG4PrimaryGeneratorAction.hh"
 #include "artg4/geantInit/ArtG4RunAction.hh"
@@ -22,168 +27,187 @@
 #include "artg4/geantInit/ArtG4StackingAction.hh"
 #include "artg4/geantInit/ArtG4TrackingAction.hh"
 
-// Allow access to the holder services
+// Services
 #include "art/Framework/Services/Registry/ServiceHandle.h"
 #include "artg4/services/ActionHolder_service.hh"
 #include "artg4/services/DetectorHolder_service.hh"
 
 // G4 includes
 #ifdef G4VIS_USE_OPENGLX
-#include "G4VisExecutive.hh"
+#include "Geant4/G4VisExecutive.hh"
 #endif
 
-#include "G4UImanager.hh"
-#include "G4UIExecutive.hh"
+#include "Geant4/G4UImanager.hh"
+#include "Geant4/G4UIExecutive.hh"
 
 using namespace std;
 
 namespace artg4 {
+
+  // Define the producer
   class artg4Main : public art::EDProducer {
+  
   public:
+
+    // Constructor
     explicit artg4Main(fhicl::ParameterSet const & p);
+
+    // Destructor
     virtual ~artg4Main();
 
-    virtual void produce(art::Event & e);
-    virtual void beginJob();
-    virtual void beginRun(art::Run &r);
-    virtual void endRun(art::Run &);
+    // Overriding producer members
+    virtual void produce(art::Event & e) override;
+    virtual void beginJob() override;
+    virtual void beginRun(art::Run &r) override;
+    virtual void endRun(art::Run &) override;
 
   private:
     // Our custom run manager
-    auto_ptr<ArtG4RunManager> _runManager;
+    unique_ptr<ArtG4RunManager> runManager_;
   
-    // G4 stuff
-    G4UIsession *_session;
-    G4UImanager *_UI;
+    // G4 session and managers
+    G4UIsession* session_;
+    G4UImanager* UI_;
+
+    // Visualization manager if necessary
 #ifdef G4VIS_USE_OPENGLX
-    G4VisManager *_visManager;
+    G4VisManager* visManager_;
 #endif
 
     // Determine whether we should use visualization
     // False by default, can be set by config file
-    bool _enableVisualization;
+    bool enableVisualization_;
 
     // Directory path(s), in colon-delimited list, in which we should look for
     // macros, or the name of an environment variable containing that path.
     // Contains only the current directory ('.') by default, but can be
     // set by config file
-    string _macroPath;
+    string macroPath_;
+
     // And a tool to find files along that path
-    // Initialized based on _macroPath.
-    cet::search_path _pathFinder;
+    // Initialized based on macroPath_.
+    cet::search_path pathFinder_;
   
     // Name of a macro file for visualization
     // 'vis.mac' by default, and can be customized by config file.
-    string _visMacro;
+    string visMacro_;
 
     // Boolean to determine whether we pause execution after each event
     // If it's true, then we do. Otherwise, we pause only after all events
     // have been produced.
     // False by default, can be changed by config file.
-    bool _pauseAfterEvent;
+    bool pauseAfterEvent_;
   
 
     // Run diagnostic level (verbosity)
-    int _rmvlevel;
+    int rmvlevel_;
 
     // Message logger
-    mf::LogInfo _logInfo;
+    mf::LogInfo logInfo_;
   };
 }
 
+// Constructor - set parameters
 artg4::artg4Main::artg4Main(fhicl::ParameterSet const & p)
-  : _runManager(0),
-    _session(0),
-    _UI(0),
-    _enableVisualization( p.get<bool>("enableVisualization",false)),
-    _macroPath( p.get<std::string>("macroPath",".")),
-    _pathFinder( _macroPath),
-    _visMacro( p.get<std::string>("visMacro", "vis.mac")),
-    _pauseAfterEvent( p.get<bool>("pauseAfterEvent", false)),
-    _rmvlevel( p.get<int>("rmvlevel",0)),
-    _logInfo("ArtG4Main")
+  : runManager_(),
+    session_(0),
+    UI_(0),
+    enableVisualization_( p.get<bool>("enableVisualization",false)),
+    macroPath_( p.get<std::string>("macroPath",".")),
+    pathFinder_( macroPath_),
+    visMacro_( p.get<std::string>("visMacro", "vis.mac")),
+    pauseAfterEvent_( p.get<bool>("pauseAfterEvent", false)),
+    rmvlevel_( p.get<int>("rmvlevel",0)),
+    logInfo_("ArtG4Main")
 {
+  // We need all of the services to run @produces@ on the data they will store. We do this
+  // by retrieving the holder services.
   art::ServiceHandle<ActionHolderService> actionHolder;
   art::ServiceHandle<DetectorHolderService> detectorHolder;
   
+  // And running @callArtProduces@ on each
   actionHolder -> callArtProduces(this);
   detectorHolder -> callArtProduces(this);
 }
 
+// Destructor
 artg4::artg4Main::~artg4Main()
-{
-  // Clean up dynamic memory and other resources here.  
-}
+{}
 
+// At begin job
 void artg4::artg4Main::beginJob()
 {
   // Set up run manager
   LOG_DEBUG("Main_Run_Manager") << "In begin job" << "\n";
-  _runManager = auto_ptr<ArtG4RunManager>(new ArtG4RunManager);
+  runManager_.reset( new ArtG4RunManager );
 
   // Build the detectors' logical volumes
   art::ServiceHandle<DetectorHolderService> detectorHolder;
   detectorHolder -> constructAllLVs();
 }
 
+// At begin run
 void artg4::artg4Main::beginRun(art::Run & r)
 {
 
-  // User Initialization classes (mandatory)
-  _runManager->SetUserInitialization(new ArtG4DetectorConstruction);
-  _runManager->SetUserInitialization(new physicsList);
-  _runManager->SetUserAction(new ArtG4PrimaryGeneratorAction);
+  // Declare the detector construction to Geant
+  runManager_->SetUserInitialization(new ArtG4DetectorConstruction);
 
-  // User actions (optional)
+  // Declare the physics list to Geant
+  runManager_->SetUserInitialization(new physicsList);
+
+  // Declare the primary generator action to Geant
+  runManager_->SetUserAction(new ArtG4PrimaryGeneratorAction);
+
   // Note that these actions (and ArtG4PrimaryGeneratorAction above) are all
   // generic actions that really don't do much on their own. Rather, to 
   // use the power of actions, one must create action objects (derived from
   // @ActionBase@) and register them with the Art @ActionHolder@ service.
   // See @ActionBase@ and/or @ActionHolderService@ for more information.
-  _runManager -> SetUserAction(new ArtG4SteppingAction);
-  _runManager -> SetUserAction(new ArtG4StackingAction);
-  _runManager -> SetUserAction(new ArtG4EventAction);
-  _runManager -> SetUserAction(new ArtG4TrackingAction);
-  _runManager -> SetUserAction(new ArtG4RunAction);
+  runManager_ -> SetUserAction(new ArtG4SteppingAction);
+  runManager_ -> SetUserAction(new ArtG4StackingAction);
+  runManager_ -> SetUserAction(new ArtG4EventAction);
+  runManager_ -> SetUserAction(new ArtG4TrackingAction);
+  runManager_ -> SetUserAction(new ArtG4RunAction);
 
-  _runManager->Initialize();
+  runManager_->Initialize();
 
   //get the pointer to the User Interface manager   
-  _UI = G4UImanager::GetUIpointer();  
+  UI_ = G4UImanager::GetUIpointer();  
 
   // Set up visualization if it's allowed by current values of env. variables
 #ifdef G4VIS_USE_OPENGLX
 
   // Turn on visualization if necessary
-  if (_enableVisualization) {
-    _logInfo << "Initializing visualization\n" << endl;
+  if (enableVisualization_) {
+    logInfo_ << "Initializing visualization\n" << endl;
 
     // Create and initialize the visualization manager
-    _visManager = new G4VisExecutive;
-    _visManager->Initialize();
+    visManager_ = new G4VisExecutive;
+    visManager_->Initialize();
 
     // Find the macro (or try to) along the directory path.
     string macroLocation = "";
-    bool macroWasFound = _pathFinder.find_file(_visMacro, macroLocation);
-    _logInfo << "Finding path for " << _visMacro << "...\nSearch " 
+    bool macroWasFound = pathFinder_.find_file(visMacro_, macroLocation);
+    logInfo_ << "Finding path for " << visMacro_ << "...\nSearch " 
 	     << (macroWasFound ? "successful " : "unsuccessful ")
 	     << "and path is: \n" << macroLocation << "\n" << endl;
 
     // Execute the macro if we were able to find it
     if (macroWasFound) {
       // Create the string containing the execution command
-      _logInfo << "Executing macro: " << _visMacro << "\n" << endl;
+      logInfo_ << "Executing macro: " << visMacro_ << "\n" << endl;
       string commandToExecute = "/control/execute ";
       commandToExecute.append(macroLocation);
-      _UI->ApplyCommand(commandToExecute); 
+      UI_->ApplyCommand(commandToExecute); 
 
     } else {
       // If it wasn't found...
       // Leave a message for the user ... 
-      _logInfo << "Unable to find " << _visMacro << " in the path(s) "
-	       << _macroPath << endl;
+      logInfo_ << "Unable to find " << visMacro_ << " in the path(s) "
+	       << macroPath_ << endl;
       // ... and disable visualization for the future
-      _enableVisualization = false;
+      enableVisualization_ = false;
 
     } // if the macro was found
 
@@ -191,71 +215,14 @@ void artg4::artg4Main::beginRun(art::Run & r)
 
 #endif // G4VIS_USE_OPENGLX
 
-  /*
-
-  We need a new paradigm for how to get macros/commands passed in, probably
-  another parameter. For now, pretend the problem doesn't exist.
-
-
-  // Get a list of all the macros/commands passed in
-  std::vector<std::string> macros;
-
-  // run all the macros given on the command line
-  if( _rmvlevel > 0 ) {
-    std::cout << "Are we looking at a macro file or an command?\n";
-  }
-
-  std::ostringstream command;
-
-  // Iterate over the macros/commands given on the command line
-  std::vector<std::string>::const_iterator  b = macros.begin();
-  std::vector<std::string>::const_iterator  e = macros.end();
-  for(; b!=e; ++b){
-    int ret = stat(b->c_str(), &s);
-    
-    // Print information about any errors we encounter.
-    if( _rmvlevel > 0){
-      std::cout << *b << '\n';
-      if( ret!=0){
-	std::cerr << "Macro file " << *b << " does not exist. "
-		  << "Assume a command.\n";
-	continue;
-      } else if ( !S_ISREG(s.st_mode) ){
-	std::cerr << "Macro file " << *b << " is not a regular file. "
-		  << "Assume a command.\n";
-	continue;
-      }
-    }
-    
-    // Construct the command to run the macro/command we're working on now
-    // Is this argument a macro file?
-    if( ret==0 && S_ISREG(s.st_mode) ) {
-      // If so, we need to prepend the string '/control/execute ' to run it
-      // in the UI manager.
-      command << "/control/execute ";
-    }
-
-    // Whether it's a macro or a command, we need the string passed in as a
-    // command-line argument in the command to execute
-    command << *b;
-
-    // Apply the command
-    UI -> ApplyCommand(command.str());
-
-    // Reset the command stream and do it all again!
-    command.str("");
-  }
-  */
-  // Start a run!
-  _runManager -> BeamOnBeginRun(r.id().run());
+  // Start the Geant run!
+  runManager_ -> BeamOnBeginRun(r.id().run());
 }
 
-// @produce@ is a required method for all producers. This is the module that
-// runs the whole event loop, so here (and in no other module), we run one 
-// event through GEANT.
+// Produce the Geant event
 void artg4::artg4Main::produce(art::Event & e)
 {
-  // Give the holders a reference to the event
+  // The holder services need the event
   art::ServiceHandle<ActionHolderService> actionHolder;
   art::ServiceHandle<DetectorHolderService> detectorHolder;
   
@@ -263,51 +230,51 @@ void artg4::artg4Main::produce(art::Event & e)
   detectorHolder -> setCurrArtEvent(e);
 
   // Begin event
-  _runManager -> BeamOnDoOneEvent(e.id().event());
+  runManager_ -> BeamOnDoOneEvent(e.id().event());
   
-  // Write home about it
-  _logInfo << "Producing event " << e.id().event() << "\n" << endl;
+  logInfo_ << "Producing event " << e.id().event() << "\n" << endl;
 
   // Done with the event
-  _runManager -> BeamOnEndEvent();
-
+  runManager_ -> BeamOnEndEvent();
 
 #ifdef G4VIS_USE_OPENGLX
   // If visualization is enabled, and we want to pause after each event, do
   // the pausing.
-  if (_enableVisualization && _pauseAfterEvent) {
+  if (enableVisualization_ && pauseAfterEvent_) {
     // Use cout so that it is printed to console immediately. 
-    // _logInfo prints everything at once, so if we used that, we would
+    // logInfo_ prints everything at once, so if we used that, we would
     // find out that we should press ENTER to continue only *after* we'd 
     // actually done so!
-    _UI->ApplyCommand("/tracking/storeTrajectory 1");
+    UI_->ApplyCommand("/tracking/storeTrajectory 1");
     cout << "Pausing so you can appreciate visualization. " 
 	 << "Hit ENTER to continue." << std::endl;
     std::cin.ignore();    
   }
 #endif
+
 }
 
+// At end run
 void artg4::artg4Main::endRun(art::Run &)
 {
-  _runManager -> BeamOnEndRun();
+  runManager_ -> BeamOnEndRun();
 
   //  visualization stuff
 #ifdef G4VIS_USE_OPENGLX
   // If visualization is enabled and we didn't already pause after each event,
   // pause now, with all the events visible.
-  if ( _enableVisualization && (! _pauseAfterEvent) ) {
+  if ( enableVisualization_ && (! pauseAfterEvent_) ) {
     // Use cout so that it is printed to console immediately. 
-    // _logInfo prints everything at once, so if we used that, we would
+    // logInfo_ prints everything at once, so if we used that, we would
     // find out that we should press ENTER to finish only *after* we'd 
     // actually done so!
     cout << "Pausing so you can appreciate visualization. " 
 	 << "Hit ENTER to finish job." << std::endl;
     std::cin.ignore();
   }
-  if ( _enableVisualization ) {
+  if ( enableVisualization_ ) {
     // Delete ui
-    delete _visManager;
+    delete visManager_;
   }
 #endif
 }

@@ -4,6 +4,7 @@
 // To use this action, all you need to do is put it in the services section
 // of the configuration file, like this:
 // 
+// <pre>
 // services: { 
 //   ...
 //   user: {
@@ -11,6 +12,7 @@
 //     ...
 //   }
 // }
+// </pre>
 
 // Authors: Tasha Arvanitis, Adam Lyon
 // Date: August 2012
@@ -34,9 +36,9 @@
 
 // Other includes
 #include "artg4/pluginActions/muonStorageStatus/EventArtHit.hh"
-#include "G4Event.hh"
-#include "G4Run.hh"
-#include "G4Step.hh"
+#include "Geant4/G4Event.hh"
+#include "Geant4/G4Run.hh"
+#include "Geant4/G4Step.hh"
 
 namespace artg4 {
 
@@ -60,30 +62,30 @@ namespace artg4 {
 
     // Use BeginOfEventAction (called at the beginning of each event,
     // after the primaries are generated).
-    virtual void beginOfEventAction(const G4Event * currEvent);
+    virtual void beginOfEventAction(const G4Event * currEvent) override;
 
     // Use EndOfEventAction (last chance to extract information from the
     // event).
-    virtual void endOfEventAction(const G4Event * currEvent);
+    virtual void endOfEventAction(const G4Event * currEvent) override;
 
     // Use BeginOfRunAction (called at the beginning of each run, funnily 
     // enough).
-    virtual void beginOfRunAction(const G4Run * currRun);
+    virtual void beginOfRunAction(const G4Run * currRun) override;
 
     // Use EndOfRunAction (called at the end of each run).
-    virtual void endOfRunAction(const G4Run * currRun);
+    virtual void endOfRunAction(const G4Run * currRun) override;
 
     // Use UserSteppingAction (called for each step).
-    virtual void userSteppingAction(const G4Step *currStep);
+    virtual void userSteppingAction(const G4Step *currStep) override;
 
     // We want to add something to the event, so we need callArtProduces
     // and fillEventWithArtStuff.
 
     // Tell Art what we'll be adding to the event
-    virtual void callArtProduces(art::EDProducer * producer);
+    virtual void callArtProduces(art::EDProducer * producer) override;
 
     // Actually add the collection to the Art event.
-    virtual void fillEventWithArtStuff(art::Event & e);
+    virtual void fillEventWithArtStuff(art::Event & e) override;
 
     // Increment the turn count (should only be called by turn counter SD)
     virtual void incrementTurnCount() {turns_++;}
@@ -108,7 +110,7 @@ namespace artg4 {
 
     // Create an EventHit at the end of each event, to log whether the muon
     // in question was stored, and how many turns it took around the ring
-    std::auto_ptr<EventArtHit> myArtHit_;
+    std::unique_ptr<EventArtHit> myArtHit_;
 
     // A message logger for this action
     mf::LogInfo logInfo_;

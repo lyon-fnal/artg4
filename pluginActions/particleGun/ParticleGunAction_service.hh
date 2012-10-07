@@ -27,8 +27,8 @@
 
 #include "messagefacility/MessageLogger/MessageLogger.h"
 
-#include "G4Event.hh"
-#include "G4ParticleGun.hh"
+#include "Geant4/G4Event.hh"
+#include "Geant4/G4ParticleGun.hh"
 #include "artg4/pluginActions/particleGun/GeneralParticleSource.hh"
 
 // Get the base class

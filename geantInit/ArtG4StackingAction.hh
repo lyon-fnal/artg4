@@ -12,8 +12,8 @@
 #define ARTG4_STACKING_ACTION_HH
 
 // A couple of G4 includes
-#include "G4UserStackingAction.hh"
-#include "G4Track.hh"
+#include "Geant4/G4UserStackingAction.hh"
+#include "Geant4/G4Track.hh"
 
 // Everything goes in the Art G4 namespace
 namespace artg4 {

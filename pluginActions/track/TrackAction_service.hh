@@ -32,7 +32,7 @@
 
 // Other includes
 #include "artg4/pluginActions/track/TrackArtHit.hh"
-#include "G4Track.hh"
+#include "Geant4/G4Track.hh"
 
 namespace artg4 {
 
@@ -57,7 +57,7 @@ namespace artg4 {
 
   private:
     // Our collection of track hits
-    std::auto_ptr<TrackArtHitCollection> myArtHits_;
+    std::unique_ptr<TrackArtHitCollection> myArtHits_;
 
     // A message logger for this action
     mf::LogInfo logInfo_;

@@ -6,17 +6,17 @@
     - Zach Hartwig 2005
 */
 
-#include "G4PrimaryParticle.hh"
-#include "G4Event.hh"
-#include "Randomize.hh"
+#include "Geant4/G4PrimaryParticle.hh"
+#include "Geant4/G4Event.hh"
+#include "Geant4/Randomize.hh"
 #include <math.h>
-#include "G4ParticleTable.hh"
-#include "G4Geantino.hh"
-#include "G4ParticleDefinition.hh"
-#include "G4IonTable.hh"
-#include "G4Ions.hh"
-#include "G4TrackingManager.hh"
-#include "G4Track.hh"
+#include "Geant4/G4ParticleTable.hh"
+#include "Geant4/G4Geantino.hh"
+#include "Geant4/G4ParticleDefinition.hh"
+#include "Geant4/G4IonTable.hh"
+#include "Geant4/G4Ions.hh"
+#include "Geant4/G4TrackingManager.hh"
+#include "Geant4/G4Track.hh"
 
 #include "SingleParticleSource.hh"
 //#include "inflectorConstruction.hh"

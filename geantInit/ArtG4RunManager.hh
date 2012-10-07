@@ -28,7 +28,7 @@
 //     3) The original G4RunManager had a local variable _i_event
 
 // Included from Geant4
-#include "G4RunManager.hh"
+#include "Geant4/G4RunManager.hh"
 
 namespace artg4 {
   
@@ -50,9 +50,9 @@ namespace artg4 {
     G4Event const* getCurrentEvent() const { return currentEvent; }
     G4Timer const*      getG4Timer() const { return timer; }
     
-    G4double   realElapsedTime() const { return _realElapsed;   }
-    G4double systemElapsedTime() const { return _systemElapsed; }
-    G4double   userElapsedTime() const { return _userElapsed;   }
+    G4double   realElapsedTime() const { return realElapsed_;   }
+    G4double systemElapsedTime() const { return systemElapsed_; }
+    G4double   userElapsedTime() const { return userElapsed_;   }
     
   private:
     
@@ -61,7 +61,7 @@ namespace artg4 {
     ArtG4RunManager& operator=( ArtG4RunManager const & );
     
     // A test to see if this works.
-    G4Event * _previousEvent;
+    G4Event * previousEvent_;
     
     // The variables below correspond to local variables in G4RunManager::BeamOn.
     // or G4RunManager::DoEventLoop.   They need to be member data here because
@@ -70,23 +70,23 @@ namespace artg4 {
     // end of the run; this emulates the behaviour in the base.
     
     // Name of the macro file to be run after the first n_select events.
-    char const * _macroFile;
+    char const * macroFile_;
     
     // Number of events after which to run the macro file.  If negative
     // then never run the macro.
-    G4int  _n_select;
+    G4int  n_select_;
     
     // The number of events completed so far.
     // This was called i_event in G4RunManager but I did not like the name.
-    G4int  _nProcessed;
+    G4int  nProcessed_;
     
     // Counters for cumulative time spent processing events.
-    G4double _realElapsed;
-    G4double _systemElapsed;
-    G4double _userElapsed;
+    G4double realElapsed_;
+    G4double systemElapsed_;
+    G4double userElapsed_;
     
     // The command that executes the macro file.
-    G4String _msg;
+    G4String msg_;
     
   };
   

@@ -10,13 +10,13 @@
     - Zach Hartwig 2005
 */
 
-#include "G4PhysicsOrderedFreeVector.hh"
-#include "G4ParticleMomentum.hh"
-#include "G4ParticleDefinition.hh"
-#include "G4DataInterpolation.hh"
+#include "Geant4/G4PhysicsOrderedFreeVector.hh"
+#include "Geant4/G4ParticleMomentum.hh"
+#include "Geant4/G4ParticleDefinition.hh"
+#include "Geant4/G4DataInterpolation.hh"
 
 
-#include "G4SPSRandomGenerator.hh"
+#include "Geant4/G4SPSRandomGenerator.hh"
 
 /** Provides a time distribution to the General Particle Source gun. 
 

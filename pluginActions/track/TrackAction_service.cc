@@ -13,7 +13,7 @@ using std::string;
 artg4::TrackActionService::TrackActionService(fhicl::ParameterSet const & p, 
 					      art::ActivityRegistry &)
   : TrackingActionBase(p.get<string>("name","track")),
-    myArtHits_(),
+    myArtHits_(new TrackArtHitCollection),
     logInfo_("TrackAction")
 {
   // Register ourselves with the ActionHolder
@@ -73,7 +73,7 @@ preUserTrackingAction(const G4Track * currentTrack)
   tr.pvhat = mom.y()/mom.mag();
 
   // Add the hit to our collection
-  (myArtHits_.get())->push_back(tr);
+  myArtHits_->push_back(tr);
 }
 
 // Tell Art what we produce
@@ -89,7 +89,10 @@ void artg4::TrackActionService::callArtProduces(art::EDProducer * producer)
 // ???
 void artg4::TrackActionService::fillEventWithArtStuff(art::Event & e)
 {
-  e.put(myArtHits_);
+
+  // Make a unique pointer for the tracking object
+
+  e.put(std::move(myArtHits_));
 }
 
 using artg4::TrackActionService;

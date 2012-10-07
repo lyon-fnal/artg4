@@ -271,15 +271,15 @@
 //   ...
 // }
 
-#include "G4VPrimaryGenerator.hh"
-#include "G4ParticleMomentum.hh"
-#include "G4ParticleDefinition.hh"
-#include "G4Event.hh"
-#include "G4SPSPosDistribution.hh"
-#include "G4SPSAngDistribution.hh"
-#include "G4SPSEneDistribution.hh"
+#include "Geant4/G4VPrimaryGenerator.hh"
+#include "Geant4/G4ParticleMomentum.hh"
+#include "Geant4/G4ParticleDefinition.hh"
+#include "Geant4/G4Event.hh"
+#include "Geant4/G4SPSPosDistribution.hh"
+#include "Geant4/G4SPSAngDistribution.hh"
+#include "Geant4/G4SPSEneDistribution.hh"
 #include "SPSTimeDistribution.hh"
-#include "G4SPSRandomGenerator.hh"
+#include "Geant4/G4SPSRandomGenerator.hh"
 
 #include "fhiclcpp/ParameterSet.h"
 

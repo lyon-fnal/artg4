@@ -1,9 +1,6 @@
+#  This file is the main CMakeLists.txt file for the @artg4@ package. It is used by the g-2 build system.
 
 # h2. Introduction 
-
-#  Before running cmake, you must ensure that all external
-#  packages are set up already (e.g. source all necessary setup
-#  files, including the appropriate @setup_for_development@ script).
 
 #  If you are copying this project to use as a template for a new project, you will need to make some minor changes. The 
 #  areas where you would have to do so are marked with -->
@@ -53,21 +50,21 @@ cet_report_compiler_flags()
 
 # Locate some UPS areas (the versions are just minimum required) and setup include paths
 # These are needed for Art stuff
-find_ups_product(gm2softwaretools v11_1_1)
-find_ups_product(cetbuildtools v2_01_03)
+find_ups_product(gm2softwaretools v201209_01)
+find_ups_product(cetbuildtools v2_03_03)
 find_ups_product(xerces_c v3_1_1)
-find_ups_geant4( v4_9_4_p03)
-find_ups_product(cpp0x v1_03_07)
+find_ups_geant4( v4_9_5_p01)
+find_ups_product(cpp0x v1_03_14)
 find_ups_product(libsigcpp v2_2_10)
 find_ups_product(cppunit v1_12_1)
-find_ups_product(clhep v2_1_2_2)
-find_ups_product(cetlib v1_03_07)
-find_ups_product(gccxml v0_9)
-find_ups_product(art v1_00_11)
-find_ups_product(fhiclcpp v2_16_00)
-find_ups_product(messagefacility v1_10_00)
-find_ups_root( v5_30_06 )
-find_ups_boost( v1_49_0 filesystem
+find_ups_product(clhep v2_1_2_4)
+find_ups_product(cetlib v1_03_14)
+find_ups_product(gccxml v0_9_20120702)
+find_ups_product(art v1_02_02)
+find_ups_product(fhiclcpp v2_17_01)
+find_ups_product(messagefacility v1_10_15)
+find_ups_root( v5_34_01 )
+find_ups_boost( v1_50_0 filesystem
                         program_options
                         regex
                         thread
@@ -76,7 +73,6 @@ find_ups_boost( v1_49_0 filesystem
 
 # Enable visualization using OpenGL in x windows
 add_definitions(-DG4VIS_USE_OPENGLX)
-
 
 # Make sure we have gcc
 cet_check_gcc()
@@ -105,7 +101,6 @@ find_library( CPPUNIT NAMES cppunit   PATHS $ENV{CPPUNIT_LIB}   NO_DEFAULT_PATH 
 
 # We need xerces_c for a geant library
 find_library( XERCESCLIB  NAMES xerces-c PATHS $ENV{XERCESCROOT}/lib NO_DEFAULT_PATH )
-
 
 # Macros for art_make and simple plugins
 include(ArtDictionary)

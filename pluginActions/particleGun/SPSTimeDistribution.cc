@@ -6,7 +6,7 @@
     - Zach Hartwig 2005
 */
 
-#include "Randomize.hh"
+#include "Geant4/Randomize.hh"
 
 #include "SPSTimeDistribution.hh"
 

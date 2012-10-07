@@ -1,4 +1,4 @@
-
+// ArtG4DetectorConstruction
 
 //  ArtG4DetectorConstruction serves as the user-created Detector Construction
 //  class in the Artized Art G4 simulation. 
@@ -20,13 +20,14 @@
 //  ArtG4DetectorConstruction object's construction. 
 
 //  Author: Tasha Arvanitis, Adam Lyon
+
 //  Date: July 2012
 
 #ifndef ARTG4_DETECTOR_CONSTRUCTION_HH
 #define ARTG4_DETECTOR_CONSTRUCTION_HH
 
-#include <G4VPhysicalVolume.hh>
-#include "G4VUserDetectorConstruction.hh"
+#include "Geant4/G4VPhysicalVolume.hh"
+#include "Geant4/G4VUserDetectorConstruction.hh"
 
 namespace artg4 {
 
@@ -46,7 +47,7 @@ namespace artg4 {
     G4VPhysicalVolume * Construct();
 
   private:
-    G4VPhysicalVolume * _world;
+    G4VPhysicalVolume * world_;
   };
 
 }
