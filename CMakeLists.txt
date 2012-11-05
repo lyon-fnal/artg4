@@ -44,7 +44,7 @@ cet_cmake_env()
 cet_set_compiler_flags(DIAGS VIGILANT WERROR EXTRA_FLAGS -pedantic)
 cet_have_qual( e2 )
 if ( ${CET_HAVE_QUAL} )
-  cet_add_compiler_flags(CXX -std=c++0x;-Wno-deprecated-declarations)
+  cet_add_compiler_flags(CXX -std=c++0x;-Wno-deprecated-declarations;-undefined dynamic_lookup)
 endif()
 cet_report_compiler_flags()
 
@@ -53,7 +53,7 @@ cet_report_compiler_flags()
 find_ups_product(gm2softwaretools v201209_01)
 find_ups_product(cetbuildtools v2_03_03)
 find_ups_product(xerces_c v3_1_1)
-find_ups_geant4( v4_9_5_p01)
+find_ups_geant4( v4_9_5_p01 )
 find_ups_product(cpp0x v1_03_14)
 find_ups_product(libsigcpp v2_2_10)
 find_ups_product(cppunit v1_12_1)
@@ -106,6 +106,8 @@ find_library( XERCESCLIB  NAMES xerces-c PATHS $ENV{XERCESCROOT}/lib NO_DEFAULT_
 include(ArtDictionary)
 include(BuildPlugins)
 include(ArtMake)
+
+message(STATUS "-----> All Geant4 is ${allG4Libs}")
 
 # Build these directories
 add_subdirectory( geantInit )

@@ -1,5 +1,5 @@
 # services CMakeLists
 
-art_make( LIBRARIES ${allG4Libs} ${XERCESCLIB} )
+art_make( LIBRARIES "${XERCESCLIB}" "${allG4Libs}" )
 
 install_headers()
