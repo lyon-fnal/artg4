@@ -80,7 +80,10 @@ namespace artg4 {
     // Destructor
     virtual ~DetectorBase(){}
   
-    // Build and store the logical volume (calls your @doBuild@ method). You 
+    // Intialize after the particle list is set up
+    virtual void initialize() {};
+    
+    // Build and store the logical volume (calls your @doBuild@ method). You
     // do not need to call this method yourself. 
     void buildLVs() {
       _myLVs = doBuildLVs();
@@ -130,7 +133,7 @@ namespace artg4 {
   private:
     
     // h3. Private abstract methods you must override (see list above)
-
+    
     // Build the detector logical volume and return it
     virtual std::vector<G4LogicalVolume*> doBuildLVs() = 0;
 

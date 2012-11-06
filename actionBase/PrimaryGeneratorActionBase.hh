@@ -39,7 +39,7 @@ namespace artg4 {
     // h3. The interesting methods. 
     // All of these are defined to do nothing by default. Users can override 
     // them if desired, and if they're not overloaded, they do nothing.
-
+    
     // Called for the generation of primaries
     virtual void generatePrimaries(G4Event * anEvent) {}
   };

@@ -34,6 +34,11 @@ namespace artg4 {
 
     // h3. Optional methods
     
+    // Intialize - Instead of putting initialization code into your constructor, put
+    // such code in this initialize method. This method will get called at the correct
+    // time, after particle lists are already constructed and known to geant.
+    virtual void initialize() {}
+
     // Call produces<T> to notify Art what you'll be adding to the Art event.
     virtual void callArtProduces(art::EDProducer * producer){}
 

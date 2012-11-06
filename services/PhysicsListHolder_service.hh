@@ -2,6 +2,11 @@
 
 // Hang on to a physics list to be given to Geant
 
+// Note that this is a little different than the other holder services.
+// Instead of "forwarding" member functons from the Geant class, we need
+// to initialize Geant with the *real* physics list class (because it will
+// change things internally). 
+
 // Include guard
 #ifndef PHYSICSLIST_HOLDER_SERVICE_HH
 #define PHYSICSLIST_HOLDER_SERVICE_HH
@@ -9,93 +14,36 @@
 // Includes
 #include "fhiclcpp/ParameterSet.h"
 #include "art/Framework/Services/Registry/ActivityRegistry.h"
-#include "art/Framework/Core/EDProducer.h"
 
+class G4VUserPhysicsList;
 
-//#include "artg4/Core/DetectorBase.hh"
-
-#include <map>
-#include <vector>
-
-class G4HCofThisEvent;
-class G4VPhysicalVolume;
 
 // Everything for the Art G4 simulation goes in the @artg4@ namespace
 namespace artg4 {
   
-  class DetectorBase;
-  
-  class DetectorHolderService {
+  class PhysicsListHolderService {
   public:
     
-    // Constructor for GeometryHolder
-    DetectorHolderService(fhicl::ParameterSet const&, art::ActivityRegistry&);
+    // Constructor for Physics List holder
+    PhysicsListHolderService(fhicl::ParameterSet const&, art::ActivityRegistry&) :
+      physicsList_(0)
+    {}
+    
+    // Destructor - don't do anything
+    virtual ~PhysicsListHolderService() {}
     
     // This registers the passed detector with the service.
-    void registerDetector(DetectorBase * const db);
+    void registerPhysicsList(G4VUserPhysicsList *);
     
-    // This returns the world physical volume, if it has been fully
-    // constructed, and throws an exception otherwise
-    // This can't be const because, if the world hasn't already been set up,
-    // it constructs all the physical volumes, and thus changes its member
-    // data.
-    G4VPhysicalVolume * worldPhysicalVolume();
-    
-    // This returns the map of detectors we have been passed so far.
-    //std::map<std::string, DetectorBase *> const & getDetectorMap() const;
-    
-    // Returns a pointer to the DetectorBase for the given category, if it
-    // exists. If the category was never registered, it throws an
-    // exception.
-    DetectorBase * getDetectorForCategory(std::string category) const;
-    
-    // Returns the FHiCL parameter set for the given category, if it exists.
-    // If the category was never registered, it throws an exception.
-    fhicl::ParameterSet const getParametersForCategory(std::string category);
-    
-    // Tell Art what the detectors produce
-    void callArtProduces(art::EDProducer * prod);
-    
-    // Convert GEANT4 hits to Art hits and put them in the event.
-    void fillEventWithArtHits(G4HCofThisEvent* hc);
-    
-    // Set/get the current Art event
-    void setCurrArtEvent(art::Event & e) { currentArtEvent_ = &e; }
-    art::Event & getCurrArtEvent() { return (*currentArtEvent_); }
-    
-    // Construct all the logical volumes.
-    void constructAllLVs();
-    
+    // Get Physics list
+    G4VUserPhysicsList* getPhysicsList();
+
   private:
     
-    // Construct all the physical volumes and assign the world physical volume
-    // to worldPV_.
-    void constructAllPVs();
-    
-    // Add the passed DetectorBase to our category map (a complete list
-    // of the detector services we have so far). The key is the DB's category
-    // (without repeats), and the value is a pointer to the DB.
-    void addDBtoCategoryMap(DetectorBase * const db);
-    
-    // Find the given detector's mother logical volume and pass it on to the
-    // given detector.
-    void placeDetector(DetectorBase * const db);
-    
-    // A complete map containing all of the detectors that
-    // have registered with us so far. Key: DB's category (a string).
-    // Value: pointer to the DetectorBase object.
-    // Repeated keys not permitted!
-    std::map<std::string, DetectorBase *> categoryMap_;
-    
-    // Hold on to the world physical volume so we can return it later.
-    G4VPhysicalVolume * worldPV_;
-    
-    // Hold on to the current Art event
-    art::Event * currentArtEvent_;
-    
+    G4VUserPhysicsList* physicsList_;
   };
   
 } // end namespace artg4
 
 
-#endif // DETECTOR_HOLDER_HH
+#endif // PHYSICSLIST_HOLDER_SERVICE

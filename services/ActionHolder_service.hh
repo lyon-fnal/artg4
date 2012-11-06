@@ -61,6 +61,10 @@ namespace artg4 {
     void getAction(std::string name, PrimaryGeneratorActionBase* out);
     
     // h3. Art-specific methods
+
+    // Call ActionBase::initialize for each action
+    void initialize();
+
     // Tell each action to notify Art of what it will be producing.
     void callArtProduces(art::EDProducer * prod);
 

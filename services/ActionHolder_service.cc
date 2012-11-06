@@ -141,6 +141,12 @@ void artg4::ActionHolderService::callArtProduces(art::EDProducer * prod)
   }
 }
 
+void artg4::ActionHolderService::initialize() {
+  for ( auto entry : allActionsMap_ ) {
+    (entry.second)->initialize();
+  }
+}
+
 void artg4::ActionHolderService::fillEventWithArtStuff()
 {
 

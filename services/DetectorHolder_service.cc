@@ -70,6 +70,15 @@ void artg4::DetectorHolderService::constructAllLVs()
   }
 }
 
+// Initialize all detectors
+void artg4::DetectorHolderService::initialize() {
+  for ( auto entry : categoryMap_ ) {
+    LOG_DEBUG(msgctg) << "Initializing detector with category " << (entry.second)->category();
+    
+    (entry.second)->initialize();
+  }
+}
+
 // Set up all the detectors' PVs
 void artg4::DetectorHolderService::constructAllPVs()
 {
