@@ -40,8 +40,6 @@
 #include "Geant4/G4UImanager.hh"
 #include "Geant4/G4UIExecutive.hh"
 
-#include <csignal>  // For breakpoints
-
 using namespace std;
 
 namespace artg4 {
@@ -103,10 +101,6 @@ namespace artg4 {
     // Run diagnostic level (verbosity)
     int rmvlevel_;
     
-    bool breakAtBeginJob_;
-    bool breakAtBeginRun_;
-    bool breakAtProduce_;
-
     // Message logger
     mf::LogInfo logInfo_;
   };
@@ -123,9 +117,6 @@ artg4::artg4Main::artg4Main(fhicl::ParameterSet const & p)
     visMacro_( p.get<std::string>("visMacro", "vis.mac")),
     pauseAfterEvent_( p.get<bool>("pauseAfterEvent", false)),
     rmvlevel_( p.get<int>("rmvlevel",0)),
-    breakAtBeginJob_( p.get<bool>("breakAtBeginJob", false)),
-    breakAtBeginRun_( p.get<bool>("breakAtBeginRun", false)),
-    breakAtProduce_( p.get<bool>("breakAtBeginProduce", false)),
     logInfo_("ArtG4Main")
 {
   // We need all of the services to run @produces@ on the data they will store. We do this
@@ -145,8 +136,6 @@ artg4::artg4Main::~artg4Main()
 // At begin job
 void artg4::artg4Main::beginJob()
 {
-  if ( breakAtBeginJob_ ) raise(SIGINT);
-
   // Set up run manager
   LOG_DEBUG("Main_Run_Manager") << "In begin job" << "\n";
   runManager_.reset( new ArtG4RunManager );
@@ -158,9 +147,7 @@ void artg4::artg4Main::beginJob()
 
 // At begin run
 void artg4::artg4Main::beginRun(art::Run & r)
-{
-  if ( breakAtBeginRun_ ) raise(SIGINT);
-  
+{  
   // Get the physics list
   art::ServiceHandle<PhysicsListHolderService> physicsListHolder;
 
@@ -241,8 +228,6 @@ void artg4::artg4Main::beginRun(art::Run & r)
 // Produce the Geant event
 void artg4::artg4Main::produce(art::Event & e)
 {
-  if ( breakAtProduce_ ) raise(SIGINT);
-
   // The holder services need the event
   art::ServiceHandle<ActionHolderService> actionHolder;
   art::ServiceHandle<DetectorHolderService> detectorHolder;

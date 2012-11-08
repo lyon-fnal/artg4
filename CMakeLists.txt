@@ -47,7 +47,7 @@ if ( ${CET_HAVE_QUAL} )
   cet_add_compiler_flags(CXX -std=c++0x;-Wno-deprecated-declarations)
 endif()
 if ( ${APPLE} )
-  cet_add_compiler_flags(CXX -undefined dynamic_lookup)
+  cet_add_compiler_flags(CXX -g;-O0;-undefined dynamic_lookup)
 endif()
 cet_report_compiler_flags()
 
