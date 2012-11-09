@@ -21,7 +21,6 @@
 // Declarations of types we use as input parameters
 class G4Event;
 
-
 // Everything goes in the Art G4 namespace
 namespace artg4 {
 
@@ -41,7 +40,7 @@ namespace artg4 {
     // them if desired, and if they're not overloaded, they do nothing.
     
     // Called for the generation of primaries
-    virtual void generatePrimaries(G4Event * anEvent) {}
+    virtual void generatePrimaries(G4Event *) {}
   };
 }
 

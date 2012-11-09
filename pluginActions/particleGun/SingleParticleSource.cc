@@ -279,7 +279,7 @@ void artg4::SingleParticleSource::setUpFileImport(ParameterSet const & p)
   }
 }
 
-void artg4::SingleParticleSource::setUpHistos(ParameterSet const & p)
+void artg4::SingleParticleSource::setUpHistos(ParameterSet const &)
 {
   G4cout << "setUpHistos not implemented." << G4endl;
 }

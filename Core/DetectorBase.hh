@@ -145,11 +145,11 @@ namespace artg4 {
     // h3. Optional private methods you can override (see list above)
 
     // Tell Art what you will put into the event.
-    virtual void doCallArtProduces(art::EDProducer * producer) {}
+    virtual void doCallArtProduces(art::EDProducer *) {}
     
     // Convert G4 hits into Art hits. Put them in the event (which you can get
     // from the DetectorHolder service).
-    virtual void doFillEventWithArtHits(G4HCofThisEvent* hc) {}
+    virtual void doFillEventWithArtHits(G4HCofThisEvent*) {}
   
     
     // h3. Private data

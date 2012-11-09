@@ -40,12 +40,12 @@ namespace artg4 {
     virtual void initialize() {}
 
     // Call produces<T> to notify Art what you'll be adding to the Art event.
-    virtual void callArtProduces(art::EDProducer * producer){}
+    virtual void callArtProduces(art::EDProducer *){}
 
     // Fill the Art event with whatever you said you would, if you haven't
     // already. This is called by ActionHolder at the very end of the Art
     // event, after all the GEANT stuff is finished.
-    virtual void fillEventWithArtStuff(art::Event & e){}
+    virtual void fillEventWithArtStuff(art::Event &){}
 
   private:
     // A string containing this action object's name
