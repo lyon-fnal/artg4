@@ -15,7 +15,6 @@
 #include "art/Framework/Principal/Run.h"
 
 // Local includes (like actions)
-#include "artg4/geantInit/physicsList.hh"
 #include "artg4/geantInit/ArtG4RunManager.hh"
 #include "artg4/geantInit/ArtG4DetectorConstruction.hh"
 
@@ -31,6 +30,7 @@
 #include "art/Framework/Services/Registry/ServiceHandle.h"
 #include "artg4/services/ActionHolder_service.hh"
 #include "artg4/services/DetectorHolder_service.hh"
+#include "artg4/services/PhysicsListHolder_service.hh"
 
 // G4 includes
 #ifdef G4VIS_USE_OPENGLX
@@ -38,7 +38,7 @@
 #endif
 
 #include "Geant4/G4UImanager.hh"
-#include "Geant4/G4UIExecutive.hh"
+#include "Geant4/G4UIterminal.hh"
 
 using namespace std;
 
@@ -97,11 +97,14 @@ namespace artg4 {
     // have been produced.
     // False by default, can be changed by config file.
     bool pauseAfterEvent_;
-  
-
+    
     // Run diagnostic level (verbosity)
     int rmvlevel_;
-
+    
+    // When to pop up user interface
+    bool uiAtBeginRun_;
+    bool uiAtEndEvent_;
+    
     // Message logger
     mf::LogInfo logInfo_;
   };
@@ -118,6 +121,8 @@ artg4::artg4Main::artg4Main(fhicl::ParameterSet const & p)
     visMacro_( p.get<std::string>("visMacro", "vis.mac")),
     pauseAfterEvent_( p.get<bool>("pauseAfterEvent", false)),
     rmvlevel_( p.get<int>("rmvlevel",0)),
+    uiAtBeginRun_( p.get<bool>("uiAtBeginRun", false)),
+    uiAtEndEvent_( p.get<bool>("uiAtEndEvent", false)),
     logInfo_("ArtG4Main")
 {
   // We need all of the services to run @produces@ on the data they will store. We do this
@@ -138,7 +143,7 @@ artg4::artg4Main::~artg4Main()
 void artg4::artg4Main::beginJob()
 {
   // Set up run manager
-  LOG_DEBUG("Main_Run_Manager") << "In begin job" << "\n";
+  LOG_DEBUG("Main_Run_Manager") << "In begin job";
   runManager_.reset( new ArtG4RunManager );
 
   // Build the detectors' logical volumes
@@ -148,14 +153,21 @@ void artg4::artg4Main::beginJob()
 
 // At begin run
 void artg4::artg4Main::beginRun(art::Run & r)
-{
+{  
+  // Get the physics list
+  art::ServiceHandle<PhysicsListHolderService> physicsListHolder;
+
+  // Declare the physics list to Geant
+  runManager_->SetUserInitialization( physicsListHolder->getPhysicsList() );
+  
+  // Get all of the actions and initialize them (do this after the physics list has been
+  // loaded [above])
+  art::ServiceHandle<ActionHolderService> actionHolder;
+  actionHolder->initialize();
 
   // Declare the detector construction to Geant
   runManager_->SetUserInitialization(new ArtG4DetectorConstruction);
-
-  // Declare the physics list to Geant
-  runManager_->SetUserInitialization(new physicsList);
-
+  
   // Declare the primary generator action to Geant
   runManager_->SetUserAction(new ArtG4PrimaryGeneratorAction);
 
@@ -214,6 +226,13 @@ void artg4::artg4Main::beginRun(art::Run & r)
   } // if visualization was enabled
 
 #endif // G4VIS_USE_OPENGLX
+  
+  // Open a UI if asked
+  if ( uiAtBeginRun_ ) {
+    session_ = new G4UIterminal;
+    session_->SessionStart();
+    delete session_;
+  }
 
   // Start the Geant run!
   runManager_ -> BeamOnBeginRun(r.id().run());
@@ -240,15 +259,28 @@ void artg4::artg4Main::produce(art::Event & e)
 #ifdef G4VIS_USE_OPENGLX
   // If visualization is enabled, and we want to pause after each event, do
   // the pausing.
-  if (enableVisualization_ && pauseAfterEvent_) {
-    // Use cout so that it is printed to console immediately. 
-    // logInfo_ prints everything at once, so if we used that, we would
-    // find out that we should press ENTER to continue only *after* we'd 
-    // actually done so!
-    UI_->ApplyCommand("/tracking/storeTrajectory 1");
-    cout << "Pausing so you can appreciate visualization. " 
-	 << "Hit ENTER to continue." << std::endl;
-    std::cin.ignore();    
+  if (enableVisualization_) {
+    
+    if ( uiAtEndEvent_ ) {
+      UI_->ApplyCommand("/tracking/storeTrajectory 1");
+      UI_->ApplyCommand("/vis/viewer/flush");
+      session_ = new G4UIterminal;
+      session_->SessionStart();
+      delete session_;
+    }
+    
+    if ( pauseAfterEvent_ ) {
+      // Use cout so that it is printed to console immediately.
+      // logInfo_ prints everything at once, so if we used that, we would
+      // find out that we should press ENTER to continue only *after* we'd
+      // actually done so!
+      UI_->ApplyCommand("/tracking/storeTrajectory 1");
+      UI_->ApplyCommand("/vis/viewer/flush");
+      cout << "Pausing so you can appreciate visualization. "
+      << "Hit ENTER to continue." << std::endl;
+      std::cin.ignore();
+    }
+    
   }
 #endif
 

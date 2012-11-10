@@ -78,7 +78,7 @@ G4Material* artg4::MaterialService::newLead()
 // Create a new vacuum material
 G4Material* artg4::MaterialService::newVacuum()
 {
-  new G4Material("Vacuum", 
+  return new G4Material("Vacuum",
 		 1., 
 		 1.01*g/mole,
 		 universe_mean_density,

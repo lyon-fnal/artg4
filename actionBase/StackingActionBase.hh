@@ -41,7 +41,7 @@ namespace artg4 {
     virtual ~StackingActionBase(){}
 
     // killNewTrack (see above)
-    virtual bool killNewTrack( const G4Track* ) {}
+    virtual bool killNewTrack( const G4Track* ) { return false; }
 
   };
 }
