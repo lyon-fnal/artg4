@@ -35,7 +35,7 @@ artg4::DetectorHolderService::DetectorHolderService(fhicl::ParameterSet const&,
 // Register a detector object with this service
 void artg4::DetectorHolderService::registerDetector(DetectorBase *const db)
 {
-  LOG_DEBUG(msgctg) << "Registering detector named " << db->myName() << ".\n";
+  LOG_DEBUG(msgctg) << "Registering detector named " << db->myName();
   addDBtoCategoryMap(db);
 }
 
@@ -70,6 +70,15 @@ void artg4::DetectorHolderService::constructAllLVs()
   }
 }
 
+// Initialize all detectors
+void artg4::DetectorHolderService::initialize() {
+  for ( auto entry : categoryMap_ ) {
+    LOG_DEBUG(msgctg) << "Initializing detector with category " << (entry.second)->category();
+    
+    (entry.second)->initialize();
+  }
+}
+
 // Set up all the detectors' PVs
 void artg4::DetectorHolderService::constructAllPVs()
 {
@@ -97,7 +106,7 @@ getDetectorForCategory(std::string category) const
     // We don't have a detector of that category - problem!
     throw cet::exception("DetectorHolderService") 
       << "No detector found for category "
-      << category << ".\n";
+      << category << ".LO";
   }
 }
 
@@ -144,7 +153,7 @@ void artg4::DetectorHolderService::addDBtoCategoryMap(DetectorBase * const db)
 
     // Add it
     categoryMap_.insert(itemToAdd);
-    LOG_DEBUG(msgctg) << "Registered detectory with category: " << db->category() << ".\n";
+    LOG_DEBUG(msgctg) << "Registered detectory with category: " << db->category();
   }
   else {
     // We already have one of these detectors
@@ -165,8 +174,7 @@ void artg4::DetectorHolderService::placeDetector(DetectorBase * const db)
     // The world's mother 'logical volume' is an empty vector.
     worldPV_ = (db -> placeToPVs( std::vector<G4LogicalVolume*>() ))[0];
     LOG_DEBUG(msgctg) << "Just placed detector with category: " 
-		      << db->category() 
-		      << ".\n";
+		      << db->category();
     return;
   }
 
@@ -178,8 +186,7 @@ void artg4::DetectorHolderService::placeDetector(DetectorBase * const db)
     db->placeToPVs(motherCategoryDB -> second -> lvs());
     // Success!
     LOG_DEBUG(msgctg) << "Just placed detector with category: " 
-		      << db->category() 
-		      << ".\n";
+		      << db->category();
     return;
 
   }

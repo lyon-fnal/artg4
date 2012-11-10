@@ -49,6 +49,9 @@ namespace artg4 {
     
     // This registers the passed detector with the service. 
     void registerDetector(DetectorBase * const db);
+    
+    // Initialize - run initialize on all detectors after the particle list is set up
+    void initialize();
 
     // This returns the world physical volume, if it has been fully 
     // constructed, and throws an exception otherwise

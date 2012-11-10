@@ -29,15 +29,17 @@ class G4Event;
 class G4Track;
 class G4Step;
 
-#include "artg4/actionBase/RunActionBase.hh"
-#include "artg4/actionBase/EventActionBase.hh"
-#include "artg4/actionBase/TrackingActionBase.hh"
-#include "artg4/actionBase/SteppingActionBase.hh"
-#include "artg4/actionBase/StackingActionBase.hh"
-#include "artg4/actionBase/PrimaryGeneratorActionBase.hh"
+#include "artg4/actionBase/ActionBase.hh"
 
 // Everything for the Art G4 simulation goes in the @artg4@ namespace
 namespace artg4 {
+  
+  class RunActionBase;
+  class EventActionBase;
+  class TrackingActionBase;
+  class SteppingActionBase;
+  class StackingActionBase;
+  class PrimaryGeneratorActionBase;
    
   class ActionHolderService {
   public:
@@ -53,14 +55,18 @@ namespace artg4 {
     void registerAction(PrimaryGeneratorActionBase* const action);
     
     // Get an action
-    void getAction(std::string name, RunActionBase* out);
-    void getAction(std::string name, EventActionBase* out);
-    void getAction(std::string name, TrackingActionBase* out);
-    void getAction(std::string name, SteppingActionBase* out);
-    void getAction(std::string name, StackingActionBase* out);
-    void getAction(std::string name, PrimaryGeneratorActionBase* out);
+    ActionBase* getAction(std::string name, RunActionBase* out);
+    ActionBase* getAction(std::string name, EventActionBase* out);
+    ActionBase* getAction(std::string name, TrackingActionBase* out);
+    ActionBase* getAction(std::string name, SteppingActionBase* out);
+    ActionBase* getAction(std::string name, StackingActionBase* out);
+    ActionBase* getAction(std::string name, PrimaryGeneratorActionBase* out);
     
     // h3. Art-specific methods
+
+    // Call ActionBase::initialize for each action
+    void initialize();
+
     // Tell each action to notify Art of what it will be producing.
     void callArtProduces(art::EDProducer * prod);
 

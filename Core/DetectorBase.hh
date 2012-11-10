@@ -80,7 +80,10 @@ namespace artg4 {
     // Destructor
     virtual ~DetectorBase(){}
   
-    // Build and store the logical volume (calls your @doBuild@ method). You 
+    // Intialize after the particle list is set up
+    virtual void initialize() {};
+    
+    // Build and store the logical volume (calls your @doBuild@ method). You
     // do not need to call this method yourself. 
     void buildLVs() {
       _myLVs = doBuildLVs();
@@ -130,7 +133,7 @@ namespace artg4 {
   private:
     
     // h3. Private abstract methods you must override (see list above)
-
+    
     // Build the detector logical volume and return it
     virtual std::vector<G4LogicalVolume*> doBuildLVs() = 0;
 
@@ -142,11 +145,11 @@ namespace artg4 {
     // h3. Optional private methods you can override (see list above)
 
     // Tell Art what you will put into the event.
-    virtual void doCallArtProduces(art::EDProducer * producer) {}
+    virtual void doCallArtProduces(art::EDProducer *) {}
     
     // Convert G4 hits into Art hits. Put them in the event (which you can get
     // from the DetectorHolder service).
-    virtual void doFillEventWithArtHits(G4HCofThisEvent* hc) {}
+    virtual void doFillEventWithArtHits(G4HCofThisEvent*) {}
   
     
     // h3. Private data

@@ -18,9 +18,11 @@
 
 #include "artg4/actionBase/ActionBase.hh"
 
+#include "art/Framework/Services/Registry/ServiceHandle.h"
+#include "artg4/services/ActionHolder_service.hh"
+
 // Declarations of types we use as input parameters
 class G4Event;
-
 
 // Everything goes in the Art G4 namespace
 namespace artg4 {
@@ -31,7 +33,10 @@ namespace artg4 {
     // single string for the name of the action object.
     PrimaryGeneratorActionBase(std::string myName)
       : ActionBase( myName )
-    {}
+    {
+      art::ServiceHandle<artg4::ActionHolderService> actionHolder;
+      actionHolder->registerAction(this);
+    }
 
     // Destructor
     virtual ~PrimaryGeneratorActionBase(){}
@@ -39,9 +44,9 @@ namespace artg4 {
     // h3. The interesting methods. 
     // All of these are defined to do nothing by default. Users can override 
     // them if desired, and if they're not overloaded, they do nothing.
-
+    
     // Called for the generation of primaries
-    virtual void generatePrimaries(G4Event * anEvent) {}
+    virtual void generatePrimaries(G4Event *) {}
   };
 }
 

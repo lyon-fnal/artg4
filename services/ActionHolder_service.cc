@@ -11,6 +11,13 @@
 
 #include "messagefacility/MessageLogger/MessageLogger.h"
 
+#include "artg4/actionBase/RunActionBase.hh"
+#include "artg4/actionBase/EventActionBase.hh"
+#include "artg4/actionBase/TrackingActionBase.hh"
+#include "artg4/actionBase/SteppingActionBase.hh"
+#include "artg4/actionBase/StackingActionBase.hh"
+#include "artg4/actionBase/PrimaryGeneratorActionBase.hh"
+
 #include <algorithm>
 
 // Don't type 'std::' all the time...
@@ -31,8 +38,8 @@ artg4::ActionHolderService::ActionHolderService(fhicl::ParameterSet const&,
   steppingActionsMap_(),
   stackingActionsMap_(),
   primaryGeneratorActionsMap_(),
-  allActionsMap_(),
-  currentArtEvent_(nullptr)
+  currentArtEvent_(nullptr),
+  allActionsMap_()
 {}
 
 
@@ -41,7 +48,7 @@ template <typename A>
 void artg4::ActionHolderService::doRegisterAction(A * const action, 
 						  std::map<std::string, A *>& actionMap) 
 {
-  LOG_DEBUG(msgctg) << "Registering action " << action->myName() << "\n";
+  LOG_DEBUG(msgctg) << "Registering action " << action->myName();
   
   // Check if the name exists in the specific action map
   if ( 0 == actionMap.count( action->myName() ) ) {
@@ -106,29 +113,34 @@ A* artg4::ActionHolderService::doGetAction(std::string name, std::map<std::strin
   return actionIter->second;
 }
 
-void artg4::ActionHolderService::getAction(std::string name, RunActionBase* out) {
+artg4::ActionBase* artg4::ActionHolderService::getAction(std::string name, RunActionBase* out) {
   out = doGetAction(name, runActionsMap_);
+  return out;
 }
 
-void artg4::ActionHolderService::getAction(std::string name, EventActionBase* out) {
+artg4::ActionBase* artg4::ActionHolderService::getAction(std::string name, EventActionBase* out) {
   out = doGetAction(name, eventActionsMap_);
+  return out;
 }
 
-void artg4::ActionHolderService::getAction(std::string name, TrackingActionBase* out) {
+artg4::ActionBase* artg4::ActionHolderService::getAction(std::string name, TrackingActionBase* out) {
   out = doGetAction(name, trackingActionsMap_);
+  return out;
 }
 
-void artg4::ActionHolderService::getAction(std::string name, SteppingActionBase* out) {
+artg4::ActionBase* artg4::ActionHolderService::getAction(std::string name, SteppingActionBase* out) {
   out = doGetAction(name, steppingActionsMap_);
+  return out;
 }
 
-void artg4::ActionHolderService::getAction(std::string name, StackingActionBase* out) {
+artg4::ActionBase* artg4::ActionHolderService::getAction(std::string name, StackingActionBase* out) {
   out = doGetAction(name, stackingActionsMap_);
+  return out;
 }
 
-void artg4::ActionHolderService::getAction(std::string name, 
-					   PrimaryGeneratorActionBase* out) {
+artg4::ActionBase* artg4::ActionHolderService::getAction(std::string name, PrimaryGeneratorActionBase* out) {
   out = doGetAction(name, primaryGeneratorActionsMap_);
+  return out;
 }
 
 // h3. Art-specific methods
@@ -138,6 +150,12 @@ void artg4::ActionHolderService::callArtProduces(art::EDProducer * prod)
   // Loop over the "uber" activity map and call @callArtProduces@ on each
   for ( auto entry : allActionsMap_) {
     (entry.second)->callArtProduces(prod);
+  }
+}
+
+void artg4::ActionHolderService::initialize() {
+  for ( auto entry : allActionsMap_ ) {
+    (entry.second)->initialize();
   }
 }
 
