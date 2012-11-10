@@ -30,15 +30,16 @@ class G4Track;
 class G4Step;
 
 #include "artg4/actionBase/ActionBase.hh"
-#include "artg4/actionBase/RunActionBase.hh"
-#include "artg4/actionBase/EventActionBase.hh"
-#include "artg4/actionBase/TrackingActionBase.hh"
-#include "artg4/actionBase/SteppingActionBase.hh"
-#include "artg4/actionBase/StackingActionBase.hh"
-#include "artg4/actionBase/PrimaryGeneratorActionBase.hh"
 
 // Everything for the Art G4 simulation goes in the @artg4@ namespace
 namespace artg4 {
+  
+  class RunActionBase;
+  class EventActionBase;
+  class TrackingActionBase;
+  class SteppingActionBase;
+  class StackingActionBase;
+  class PrimaryGeneratorActionBase;
    
   class ActionHolderService {
   public:

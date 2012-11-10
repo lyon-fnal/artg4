@@ -11,6 +11,13 @@
 
 #include "messagefacility/MessageLogger/MessageLogger.h"
 
+#include "artg4/actionBase/RunActionBase.hh"
+#include "artg4/actionBase/EventActionBase.hh"
+#include "artg4/actionBase/TrackingActionBase.hh"
+#include "artg4/actionBase/SteppingActionBase.hh"
+#include "artg4/actionBase/StackingActionBase.hh"
+#include "artg4/actionBase/PrimaryGeneratorActionBase.hh"
+
 #include <algorithm>
 
 // Don't type 'std::' all the time...
