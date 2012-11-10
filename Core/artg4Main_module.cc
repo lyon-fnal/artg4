@@ -158,7 +158,7 @@ void artg4::artg4Main::beginRun(art::Run & r)
   art::ServiceHandle<PhysicsListHolderService> physicsListHolder;
 
   // Declare the physics list to Geant
-  runManager_->SetUserInitialization( physicsListHolder->getPhysicsList() );
+  runManager_->SetUserInitialization( physicsListHolder->getAndReleasePhysicsList() );
   
   // Get all of the actions and initialize them (do this after the physics list has been
   // loaded [above])
