@@ -145,10 +145,6 @@ void artg4::artg4Main::beginJob()
   // Set up run manager
   LOG_DEBUG("Main_Run_Manager") << "In begin job";
   runManager_.reset( new ArtG4RunManager );
-
-  // Build the detectors' logical volumes
-  art::ServiceHandle<DetectorHolderService> detectorHolder;
-  detectorHolder -> constructAllLVs();
 }
 
 // At begin run
@@ -160,13 +156,19 @@ void artg4::artg4Main::beginRun(art::Run & r)
   // Declare the physics list to Geant
   runManager_->SetUserInitialization( physicsListHolder->getAndReleasePhysicsList() );
   
-  // Get all of the actions and initialize them (do this after the physics list has been
-  // loaded [above])
-  art::ServiceHandle<ActionHolderService> actionHolder;
-  actionHolder->initialize();
+  // Get all of the detectors and initialize them
+  art::ServiceHandle<DetectorHolderService> detectorHolder;
+  detectorHolder->initialize();
+  
+  // Build the detectors' logical volumes
+  detectorHolder -> constructAllLVs();
 
   // Declare the detector construction to Geant
   runManager_->SetUserInitialization(new ArtG4DetectorConstruction);
+  
+  // Get all of the actions and initialize them
+  art::ServiceHandle<ActionHolderService> actionHolder;
+  actionHolder->initialize();
   
   // Declare the primary generator action to Geant
   runManager_->SetUserAction(new ArtG4PrimaryGeneratorAction);
