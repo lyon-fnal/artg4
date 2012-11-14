@@ -31,6 +31,8 @@
 #include "artg4/services/ActionHolder_service.hh"
 #include "artg4/services/DetectorHolder_service.hh"
 #include "artg4/services/PhysicsListHolder_service.hh"
+#include "art/Framework/Services/Optional/RandomNumberGenerator.h"
+
 
 // G4 includes
 #ifdef G4VIS_USE_OPENGLX
@@ -133,6 +135,13 @@ artg4::artg4Main::artg4Main(fhicl::ParameterSet const & p)
   // And running @callArtProduces@ on each
   actionHolder -> callArtProduces(this);
   detectorHolder -> callArtProduces(this);
+  
+  // Set up the random number engine.
+  // See the documentation in RandomNumberHeader.h for
+  // how this works. Note that @createEngine@ is a member function
+  // of our base class (actually, a couple of base classes deep!).
+  // Note that the name @G4Engine@ is special. 
+  createEngine( 12345, "G4Engine");
 }
 
 // Destructor
