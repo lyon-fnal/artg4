@@ -31,9 +31,11 @@
 #include "artg4/services/ActionHolder_service.hh"
 #include "artg4/services/DetectorHolder_service.hh"
 #include "artg4/services/PhysicsListHolder_service.hh"
+#include "art/Framework/Services/Optional/RandomNumberGenerator.h"
+
 
 // G4 includes
-#ifdef G4VIS_USE_OPENGLX
+#ifdef G4VIS_USE
 #include "Geant4/G4VisExecutive.hh"
 #endif
 
@@ -70,7 +72,7 @@ namespace artg4 {
     G4UImanager* UI_;
 
     // Visualization manager if necessary
-#ifdef G4VIS_USE_OPENGLX
+#ifdef G4VIS_USE
     G4VisManager* visManager_;
 #endif
 
@@ -95,7 +97,7 @@ namespace artg4 {
     // Boolean to determine whether we pause execution after each event
     // If it's true, then we do. Otherwise, we pause only after all events
     // have been produced.
-    // False by default, can be changed by config file.
+    // False by default, can be changed by afterEvent in FHICL
     bool pauseAfterEvent_;
     
     // Run diagnostic level (verbosity)
@@ -103,7 +105,14 @@ namespace artg4 {
     
     // When to pop up user interface
     bool uiAtBeginRun_;
-    bool uiAtEndEvent_;
+    bool uiAtEndEvent_; // set by afterEvent in FHICL
+    
+    // What to do at the end of the event
+    // Choices are
+    //     pass -- do nothing
+    //     pause -- Let user press return at the end of each event
+    //     ui    -- show the UI at the end of the event
+    std::string afterEvent_;
     
     // Message logger
     mf::LogInfo logInfo_;
@@ -119,10 +128,11 @@ artg4::artg4Main::artg4Main(fhicl::ParameterSet const & p)
     macroPath_( p.get<std::string>("macroPath",".")),
     pathFinder_( macroPath_),
     visMacro_( p.get<std::string>("visMacro", "vis.mac")),
-    pauseAfterEvent_( p.get<bool>("pauseAfterEvent", false)),
+    pauseAfterEvent_(false),
     rmvlevel_( p.get<int>("rmvlevel",0)),
     uiAtBeginRun_( p.get<bool>("uiAtBeginRun", false)),
-    uiAtEndEvent_( p.get<bool>("uiAtEndEvent", false)),
+    uiAtEndEvent_(false),
+    afterEvent_( p.get<std::string>("afterEvent", "pass")),
     logInfo_("ArtG4Main")
 {
   // We need all of the services to run @produces@ on the data they will store. We do this
@@ -133,6 +143,21 @@ artg4::artg4Main::artg4Main(fhicl::ParameterSet const & p)
   // And running @callArtProduces@ on each
   actionHolder -> callArtProduces(this);
   detectorHolder -> callArtProduces(this);
+  
+  // Set up the random number engine.
+  // See the documentation in RandomNumberHeader.h for
+  // how this works. Note that @createEngine@ is a member function
+  // of our base class (actually, a couple of base classes deep!).
+  // Note that the name @G4Engine@ is special. 
+  createEngine( 12345, "G4Engine");
+  
+  // Handle the afterEvent setting
+  if ( afterEvent_ == "ui" ) {
+    uiAtEndEvent_ = true;
+  }
+  else if ( afterEvent_ == "pause" ) {
+    pauseAfterEvent_ = true;
+  }
 }
 
 // Destructor
@@ -190,7 +215,7 @@ void artg4::artg4Main::beginRun(art::Run & r)
   UI_ = G4UImanager::GetUIpointer();  
 
   // Set up visualization if it's allowed by current values of env. variables
-#ifdef G4VIS_USE_OPENGLX
+#ifdef G4VIS_USE
 
   // Turn on visualization if necessary
   if (enableVisualization_) {
@@ -222,12 +247,13 @@ void artg4::artg4Main::beginRun(art::Run & r)
 	       << macroPath_ << endl;
       // ... and disable visualization for the future
       enableVisualization_ = false;
+      delete visManager_;
 
     } // if the macro was found
 
   } // if visualization was enabled
 
-#endif // G4VIS_USE_OPENGLX
+#endif // G4VIS_USE
   
   // Open a UI if asked
   if ( uiAtBeginRun_ ) {
@@ -258,14 +284,16 @@ void artg4::artg4Main::produce(art::Event & e)
   // Done with the event
   runManager_ -> BeamOnEndEvent();
 
-#ifdef G4VIS_USE_OPENGLX
+#ifdef G4VIS_USE
   // If visualization is enabled, and we want to pause after each event, do
   // the pausing.
   if (enableVisualization_) {
     
+    // Flush the visualization
+    //UI_->ApplyCommand("/tracking/storeTrajectory 1");
+    UI_->ApplyCommand("/vis/viewer/flush");
+    
     if ( uiAtEndEvent_ ) {
-      UI_->ApplyCommand("/tracking/storeTrajectory 1");
-      UI_->ApplyCommand("/vis/viewer/flush");
       session_ = new G4UIterminal;
       session_->SessionStart();
       delete session_;
@@ -276,8 +304,6 @@ void artg4::artg4Main::produce(art::Event & e)
       // logInfo_ prints everything at once, so if we used that, we would
       // find out that we should press ENTER to continue only *after* we'd
       // actually done so!
-      UI_->ApplyCommand("/tracking/storeTrajectory 1");
-      UI_->ApplyCommand("/vis/viewer/flush");
       cout << "Pausing so you can appreciate visualization. "
       << "Hit ENTER to continue." << std::endl;
       std::cin.ignore();
@@ -294,7 +320,7 @@ void artg4::artg4Main::endRun(art::Run &)
   runManager_ -> BeamOnEndRun();
 
   //  visualization stuff
-#ifdef G4VIS_USE_OPENGLX
+#ifdef G4VIS_USE
   // If visualization is enabled and we didn't already pause after each event,
   // pause now, with all the events visible.
   if ( enableVisualization_ && (! pauseAfterEvent_) ) {
