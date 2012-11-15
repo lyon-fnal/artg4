@@ -1,3 +1,4 @@
+
 #ifndef GEOMETRY_SERVICE_HH
 #define GEOMETRY_SERVICE_HH
 
@@ -12,9 +13,11 @@ namespace artg4 {
     GeometryService(fhicl::ParameterSet const&, art::ActivityRegistry&);
     ~GeometryService();
 
-    fhicl::ParameterSet const & getDetector(std::string);
-    //private:
-    
+    fhicl::ParameterSet getDetParSet(std::string);
+    int getInt(std::string);
+
+  private:
+    fhicl::ParameterSet p_;
   };
 
 } //namespace
