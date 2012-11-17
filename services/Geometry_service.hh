@@ -13,8 +13,8 @@ namespace artg4 {
     GeometryService(fhicl::ParameterSet const&, art::ActivityRegistry&);
     ~GeometryService();
 
-    fhicl::ParameterSet getDetParSet(std::string);
-    int getInt(std::string);
+    fhicl::ParameterSet getDetParSet(std::string const &);
+    int getInt(std::string const &);
 
   private:
     fhicl::ParameterSet p_;

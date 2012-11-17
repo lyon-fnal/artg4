@@ -17,14 +17,14 @@ artg4::GeometryService::~GeometryService(){
 
 }
 
-int artg4::GeometryService::getInt(std::string s){
+int artg4::GeometryService::getInt(std::string const & s){
   return p_.get<int>(s);
 
 }
 
 
 //The Geometry Service assumes that individual detectors will be inside of the fhicl Parameter Sets within Geometry . This method allows a user to extract the parameter set by name
-fhicl::ParameterSet artg4::GeometryService::getDetParSet(std::string s){
+fhicl::ParameterSet artg4::GeometryService::getDetParSet(std::string const & s){
 
   fhicl::ParameterSet p = p_.get<fhicl::ParameterSet>(s);
   return p;
