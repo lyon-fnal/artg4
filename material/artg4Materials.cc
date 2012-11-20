@@ -24,7 +24,7 @@
 
 #include "Geant4/G4NistManager.hh"
 
-#include "artg4/services/artg4Materials.hh"
+#include "artg4/material/artg4Materials.hh"
 
 #include <tr1/functional>
 

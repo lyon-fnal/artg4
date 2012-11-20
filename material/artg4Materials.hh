@@ -1,8 +1,8 @@
 #ifndef ARTG4MATERIALS_HH
 #define ARTG4MATERIALS_HH
 
-/** @file constructionMaterials.hh
-
+/** @file constructionMaterials.hh 2005-2011
+    @file artg4Materials.hh  Nov 2012
     Contains declarations of material property getter functions. 
 
     @author Zach Hartwig
