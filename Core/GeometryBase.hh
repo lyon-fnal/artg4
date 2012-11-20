@@ -8,7 +8,7 @@
 #include "fhiclcpp/ParameterSet.h"
 
 #include <string>
-namespace gm2ringsim {
+namespace artg4 {
 
   struct GeometryBase { 
     
