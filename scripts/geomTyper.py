@@ -63,7 +63,7 @@ class GeomEntry:
 
   def applyUnitsToVectors(self):
     if 'vector' in self.typ and not 'bool' in self.typ:
-      print 'for (auto entry : %(name)s ) { entry *= %(units)s; }' % \
+      print 'for (auto& entry : %(name)s ) { entry *= %(units)s; }' % \
         {'name': self.name, 'units': self.units}
 
 def readFile(fileName):
