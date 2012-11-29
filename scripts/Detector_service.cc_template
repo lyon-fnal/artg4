@@ -1,6 +1,6 @@
 // Implementation of %%className%%
 
-#include "artg4geantn02/detectors/%%headerName%%.hh"
+#include "%%namespace%%/CHANGE_ME/%%headerName%%.hh"
 
 #include "art/Framework/Services/Registry/ServiceMacros.h"
 
