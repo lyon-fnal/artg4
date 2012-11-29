@@ -15,7 +15,7 @@ namespace artg4 {
 
     fhicl::ParameterSet getDetParSet(std::string const &);
     int getInt(std::string const &);
-
+    
   private:
     fhicl::ParameterSet p_;
   };

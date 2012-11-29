@@ -23,6 +23,7 @@ namespace artg4 {
     
     virtual ~GeometryBase() {}
     
+    
     std::string name;
     fhicl::ParameterSet p;
     

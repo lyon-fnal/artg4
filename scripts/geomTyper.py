@@ -31,13 +31,19 @@ class GeomEntry:
       units = rparts[1]
 
     # Do we have a boolean value?
-    if value in ("true", "false"):
+    if value.lower() in ("true", "false"):
       typ = "bool"
+      units = ''
+        
+    # Don't have units for vis stuff
+    if 'vis' in name.lower():
       units = ''
 
     # Do we have a vector?
     if value[0] == '[':
       typ = 'std::vector<double>' # Assume double
+    if 'color' in name.lower():
+        units = ''
 
     return typ, name, value, units
 
@@ -50,7 +56,7 @@ class GeomEntry:
   def paramLine(self):
     # if a vector, don't add units
     mult = '* ' + self.units
-    if "vector" in self.typ or self.typ == 'bool':
+    if "vector" in self.typ or self.typ == 'bool' or self.units == '':
       mult = ''
     print '%(name)s( p.get<%(typ)s>("%(name)s") %(mult)s),' % \
       {'name': self.name, 'typ': self.typ, 'mult': mult}
@@ -62,7 +68,7 @@ class GeomEntry:
       print 'oss << "  %(name)s= "; for (auto entry : %(name)s) { oss << " " << entry; }; oss << "\\n";' % {'name': self.name}
 
   def applyUnitsToVectors(self):
-    if 'vector' in self.typ and not 'bool' in self.typ:
+    if 'vector' in self.typ and not 'bool' in self.typ and not 'color' in self.name.lower() and not 'vis' in self.name.lower() :
       print 'for (auto& entry : %(name)s ) { entry *= %(units)s; }' % \
         {'name': self.name, 'units': self.units}
 
