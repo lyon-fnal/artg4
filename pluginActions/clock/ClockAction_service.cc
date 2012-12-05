@@ -51,7 +51,7 @@ mach_clock_get_time(start_);
 #ifdef __MACH__
 mach_clock_get_time(end_);
 #else
-  clock_gettime(clockID_, &end);
+  clock_gettime(clockID_, &end_);
 #endif
   // Print out how long the run took
   logInfo_ << "Elapsed time this run: " 
