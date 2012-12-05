@@ -18,7 +18,8 @@
 
 // Authors: Tasha Arvanitis, Adam Lyon
 // Date: August 2012
-
+// Authors: Brendan Kiburg
+// Data: Dec 2012 --> Make portable to MAC
 // Include guard
 #ifndef CLOCKACTION_SERVICE_HH
 #define CLOCKACTION_SERVICE_HH
@@ -33,7 +34,15 @@
 
 #include "messagefacility/MessageLogger/MessageLogger.h"
 
+
+// This is necessary because the time libraries are implemented 
+// differently on the MAC
+#ifdef __MACH__
+#include <mach/clock.h>
+#include <mach/mach.h>
+#else
 #include <time.h>
+#endif
 
 // Get the base class
 #include "artg4/actionBase/RunActionBase.hh"
@@ -54,22 +63,39 @@ namespace artg4 {
 
     // We don't add anything to the event, so we don't need callArtProduces
     // or FillEventWithArtStuff.
-
+    
   private:
-    // A method to find the difference between two timespec values
-        double diff(timespec start, timespec end);
 
+#ifdef __MACH__
+
+    mach_timespec_t start_;
+    mach_timespec_t end_;
+    
+    clock_serv_t cclock_;
+    mach_timespec_t mts_;
+    
+    // Take a reference to either the start_ or the end_
+    void mach_clock_get_time(mach_timespec_t &someTime);
+#else
     // timespec values for the start and end of the run;
-    timespec start;
-    timespec end;
+    timespec start_;
+    timespec end_;
+    
+    clockid_t clockID_;
+    // A method to find the difference between two timespec values  
+    
+#endif
+    // A message logger for this action
+    mf::LogInfo logInfo_;
 
+    // The diff will use the internal variables rather than being passed
+    // variables, and I will protect against MAC/LINUX timespec types
+    double clockDiff();
+    
     // An identifier to say whether we care about real time (CLOCK_REALTIME)
     // or absolute time (TIMER_ABSTIME).
     // (see <time.h> documentation for more information)
-    clockid_t clockID;
 
-    // A message logger for this action
-    mf::LogInfo logInfo_;
   };
 }
 
