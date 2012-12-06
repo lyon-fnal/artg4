@@ -1,9 +1,0 @@
-<!-- classes_def.xml created by Tasha Arvanitis, July 2012 -->
-
-<lcgdict>
-    <!-- No typedefs here! -->
-    <class name="artg4::TrackArtHit"/>
-    <class name="std::vector< artg4::TrackArtHit >"/>
-    <class name="art::Wrapper< std::vector< artg4::TrackArtHit > >"/>
-
-</lcgdict>
