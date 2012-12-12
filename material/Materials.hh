@@ -30,6 +30,7 @@ namespace artg4Materials
 {
 
   G4Material *Al(); // aluminum
+  G4Material *Ar(); // argon
   G4Material *C();  // carbon
   G4Material *Cr(); // cromium
   G4Material *Cu(); // copper
