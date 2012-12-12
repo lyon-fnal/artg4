@@ -22,6 +22,8 @@ namespace artg4 {
     
     virtual ~RunSettingsBase() {}
     
+    virtual bool contains(std::string) {return false;}
+      
     std::string name;
     fhicl::ParameterSet p;
     
