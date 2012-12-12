@@ -15,10 +15,14 @@ namespace artg4 {
     public:
     
     // The constructor does the registration
-    PhysicsListServiceBase( std::unique_ptr<G4VUserPhysicsList> physicsList ) {
+    PhysicsListServiceBase() {
       art::ServiceHandle<PhysicsListHolderService> ph;
-      ph->registerPhysicsList( std::move(physicsList) );
+      ph->registerPhysicsListService( this );
     }
+    
+    
+    // Make the physics list
+    virtual G4VUserPhysicsList* makePhysicsList() const = 0;
   };
     
 }
