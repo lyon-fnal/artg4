@@ -11,7 +11,6 @@
     @Adapted to artg4 as part of gm2ringsim port
     @author Brendan Kiburg
     @date Dec 2012
-
     
  */
 
