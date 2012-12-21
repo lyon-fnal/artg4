@@ -22,12 +22,12 @@ namespace artg4 {
     
     
     // Make the physics list
-    virtual G4VUserPhysicsList* makePhysicsList() const = 0;
+    virtual G4VUserPhysicsList* makePhysicsList() = 0;
     
     // Call initialize if you need to.
     // This gets called AFTER the physics list is given to Geant.
     // If you don't override it, then nothing will happen when called
-    virtual void initializePhysicsList() const {};
+    virtual void initializePhysicsList() {};
   };
     
 }
