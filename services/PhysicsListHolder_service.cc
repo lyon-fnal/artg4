@@ -25,6 +25,14 @@ G4VUserPhysicsList* artg4::PhysicsListHolderService::makePhysicsList() const {
 }
 
 
+void artg4::PhysicsListHolderService::initializePhysicsList() const {
+  // Make sure we have one
+  if ( ! physicsListService_ ) {
+    throw cet::exception("PhysicsListHolderService") << "No physics list has been registered.\n";
+  }
+  
+  physicsListService_->initializePhysicsList();
+}
 
 // Register the service with Art
 using artg4::PhysicsListHolderService;

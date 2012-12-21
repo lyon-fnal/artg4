@@ -39,6 +39,9 @@ namespace artg4 {
     
     // Get Physics list
     G4VUserPhysicsList* makePhysicsList() const;
+    
+    // Initialize the physics list if necessary
+    void initializePhysicsList() const;
 
   private:
     
