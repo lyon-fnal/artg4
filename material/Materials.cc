@@ -39,6 +39,12 @@ G4Material *artg4Materials::Al()
   return Al;
 }
 
+G4Material *artg4Materials::Ar()
+{
+  static G4Material *Ar =
+  G4NistManager::Instance()->FindOrBuildMaterial("G4_Ar");
+  return Ar;
+}
 
 G4Material *artg4Materials::C()
 {

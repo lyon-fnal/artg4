@@ -16,7 +16,6 @@ namespace artg4 {
     ~RunSettingsService();
     
     fhicl::ParameterSet getSettings(std::string const &);
-    
   private:
     fhicl::ParameterSet p_;
   };
