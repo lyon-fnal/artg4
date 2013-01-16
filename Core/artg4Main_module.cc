@@ -175,15 +175,15 @@ void artg4::artg4Main::beginJob()
 // At begin run
 void artg4::artg4Main::beginRun(art::Run & r)
 {  
-  // Get the physics list
+  // Get the physics list and pass it to Geant and initialize the list if necessary
   art::ServiceHandle<PhysicsListHolderService> physicsListHolder;
-
-  // Declare the physics list to Geant
-  runManager_->SetUserInitialization( physicsListHolder->getAndReleasePhysicsList() );
+  runManager_->SetUserInitialization( physicsListHolder->makePhysicsList() );
+  physicsListHolder->initializePhysicsList();
   
   // Get all of the detectors and initialize them
   art::ServiceHandle<DetectorHolderService> detectorHolder;
   detectorHolder->initialize();
+
   
   // Build the detectors' logical volumes
   detectorHolder -> constructAllLVs();

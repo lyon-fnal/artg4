@@ -17,31 +17,36 @@
 
 #include "Geant4/G4VUserPhysicsList.hh"
 
-#include <memory>
-
 // Everything for the Art G4 simulation goes in the @artg4@ namespace
 namespace artg4 {
   
+  class PhysicsListServiceBase;
+  
   class PhysicsListHolderService {
   public:
+  
     
     // Constructor for Physics List holder
     PhysicsListHolderService(fhicl::ParameterSet const&, art::ActivityRegistry&) :
-      physicsList_()
+      physicsListService_()
     {}
     
     // Destructor - don't do anything
     virtual ~PhysicsListHolderService() {}
     
     // This registers the passed detector with the service.
-    void registerPhysicsList( std::unique_ptr<G4VUserPhysicsList> );
+    void registerPhysicsListService( PhysicsListServiceBase* );
     
     // Get Physics list
-    G4VUserPhysicsList* getAndReleasePhysicsList();
+    G4VUserPhysicsList* makePhysicsList() const;
+    
+    // Initialize the physics list if necessary
+    void initializePhysicsList() const;
 
   private:
     
-    std::unique_ptr<G4VUserPhysicsList> physicsList_;
+    PhysicsListServiceBase* physicsListService_;
+    
   };
   
 } // end namespace artg4

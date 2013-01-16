@@ -1,0 +1,18 @@
+# Standard artg4 stuff
+
+BEGIN_PROLOG
+standardArtG4Producer : {
+     module_type: artg4Main
+     enableVisualization: true
+     macroPath: ".:./macros:../macros:../../macros"
+     visMacro: "vis.mac"
+     afterEvent: ui  // (ui, pause, pass)
+}
+END_PROLOG
+
+standardArtG4Services: {
+  DetectorHolder: {}
+  ActionHolder: {}
+  PhysicsListHolder: {}
+  RandomNumberGenerator: {}
+}

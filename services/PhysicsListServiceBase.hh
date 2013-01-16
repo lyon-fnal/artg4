@@ -15,10 +15,19 @@ namespace artg4 {
     public:
     
     // The constructor does the registration
-    PhysicsListServiceBase( std::unique_ptr<G4VUserPhysicsList> physicsList ) {
+    PhysicsListServiceBase() {
       art::ServiceHandle<PhysicsListHolderService> ph;
-      ph->registerPhysicsList( std::move(physicsList) );
+      ph->registerPhysicsListService( this );
     }
+    
+    
+    // Make the physics list
+    virtual G4VUserPhysicsList* makePhysicsList() = 0;
+    
+    // Call initialize if you need to.
+    // This gets called AFTER the physics list is given to Geant.
+    // If you don't override it, then nothing will happen when called
+    virtual void initializePhysicsList() {};
   };
     
 }
