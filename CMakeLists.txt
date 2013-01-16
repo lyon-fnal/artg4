@@ -120,10 +120,9 @@ add_subdirectory( services )
 add_subdirectory( material )
 add_subdirectory( pluginActions )
 add_subdirectory( util )
-# add_subdirectory( test )
 add_subdirectory( fcl )
 add_subdirectory( ups )
-
+add_subdirectory( vis )
 
 # Packaging facility
 include(UseCPack)
