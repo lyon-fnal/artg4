@@ -1,14 +1,13 @@
 // Common materials used throughout the simulation
 
 #include "artg4/services/RunSettings_service.hh"
-
-#include <iostream>
+#include "messagefacility/MessageLogger/MessageLogger.h"
 
 artg4::RunSettingsService::RunSettingsService(fhicl::ParameterSet const & p, 
 					      art::ActivityRegistry &) :
   p_ (p) 
 {
-  std::cout << "\nRunSettingsService has been constructed!" << std::endl;
+  LOG_DEBUG("RunSettingService") << "RunSettingsService has been constructed!";
 }
 
 // Destructor
