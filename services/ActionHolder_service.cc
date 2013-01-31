@@ -168,6 +168,14 @@ void artg4::ActionHolderService::fillEventWithArtStuff()
   }
 }
 
+void artg4::ActionHolderService::fillRunWithArtStuff()
+{
+  // Loop over the run activities and call @fillRunWithArtStuff@ on each
+  for ( auto entry : runActionsMap_ ) {
+    (entry.second)->fillRunWithArtStuff(getCurrArtRun());
+  }
+}
+
 // h2. Action methods
 
 // I tried to be good and use @std::for_each@ but it got really messy very 

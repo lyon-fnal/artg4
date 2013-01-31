@@ -183,7 +183,6 @@ void artg4::artg4Main::beginRun(art::Run & r)
   // Get all of the detectors and initialize them
   art::ServiceHandle<DetectorHolderService> detectorHolder;
   detectorHolder->initialize();
-
   
   // Build the detectors' logical volumes
   detectorHolder -> constructAllLVs();
@@ -194,6 +193,9 @@ void artg4::artg4Main::beginRun(art::Run & r)
   // Get all of the actions and initialize them
   art::ServiceHandle<ActionHolderService> actionHolder;
   actionHolder->initialize();
+  
+  // Store the run in the action holder
+  actionHolder->setCurrArtRun(r);
   
   // Declare the primary generator action to Geant
   runManager_->SetUserAction(new ArtG4PrimaryGeneratorAction);

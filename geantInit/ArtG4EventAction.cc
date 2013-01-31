@@ -43,4 +43,7 @@ void artg4::ArtG4EventAction::EndOfEventAction(const G4Event * currentEvent)
   // Run EndOfEventAction
   art::ServiceHandle<ActionHolderService> ahs;
   ahs -> endOfEventAction(currentEvent);
+  
+  // Every action needs to write out their event data now, if they have any
+  ahs -> fillEventWithArtStuff();
 }
