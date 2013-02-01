@@ -317,8 +317,11 @@ void artg4::artg4Main::produce(art::Event & e)
 }
 
 // At end run
-void artg4::artg4Main::endRun(art::Run &)
+void artg4::artg4Main::endRun(art::Run & r)
 {
+  art::ServiceHandle<ActionHolderService> actionHolder;
+  actionHolder->setCurrArtRun(r);
+
   runManager_ -> BeamOnEndRun();
 
   //  visualization stuff

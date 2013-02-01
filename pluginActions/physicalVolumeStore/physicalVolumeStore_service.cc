@@ -17,7 +17,7 @@ artg4::PhysicalVolumeStore::~PhysicalVolumeStore()
 
 
 void artg4::PhysicalVolumeStore::callArtProduces(art::EDProducer* producer) {
-  producer->produces<pvMap, art::InRun>();
+  producer->produces<pvMap, art::InRun>( myName() );
 }
 
 ULong64_t artg4::PhysicalVolumeStore::uidForPhysicalVolume(const G4VPhysicalVolume* pvptr ) {
@@ -30,19 +30,15 @@ ULong64_t artg4::PhysicalVolumeStore::uidForPhysicalVolume(const G4VPhysicalVolu
   if ( pvIter == pvMap_->end() ) {
     // Don't have it already -- add it
     pvMap_->insert( std::pair< ULong64_t, std::string>( uid, pvptr->GetName() ) );
-    std::cout << "Adding " << uid << " : " << pvptr->GetName() << std::endl;
   }
   
   return uid;
 }
 
 void artg4::PhysicalVolumeStore::fillRunWithArtStuff(art::Run& r) {
-  std::cout << "Before r.put" << std::endl;
   
   // Put our map into the run
   r.put( std::move(pvMap_) );
-
-  std::cout << "After r.put" << std::endl;
 
 }
 
