@@ -1,0 +1,6 @@
+<!--  art::Wrapper lines need only top level data product objects  -->
+
+<lcgdict>
+    <class name="std::map< ULong64_t, std::string >"/>
+    <class name="art::Wrapper< std::map< ULong64_t, std::string > >"/>
+</lcgdict>
