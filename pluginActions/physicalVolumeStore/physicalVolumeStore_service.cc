@@ -5,42 +5,36 @@
 
 #include <iostream>
 
-artg4::PhysicalVolumeStore::PhysicalVolumeStore(fhicl::ParameterSet const & p,
+artg4::PhysicalVolumeStoreService::PhysicalVolumeStoreService(fhicl::ParameterSet const & p,
                                                 art::ActivityRegistry&)
-  : RunActionBase(p.get<std::string>("name", "PhysicalVolumeStore")),
-    pvMap_( new pvMap ),
+  : RunActionBase(p.get<std::string>("name", "")),
+    pvs_( new artg4::PhysicalVolumeStoreData ),
     logInfo_("PhysicalVolumeStore")
 { }
 
-artg4::PhysicalVolumeStore::~PhysicalVolumeStore()
+artg4::PhysicalVolumeStoreService::~PhysicalVolumeStoreService()
 { }
 
 
-void artg4::PhysicalVolumeStore::callArtProduces(art::EDProducer* producer) {
-  producer->produces<pvMap, art::InRun>( myName() );
+void artg4::PhysicalVolumeStoreService::callArtProduces(art::EDProducer* producer) {
+  producer->produces< artg4::PhysicalVolumeStoreData, art::InRun>( myName() );
 }
 
-ULong64_t artg4::PhysicalVolumeStore::uidForPhysicalVolume(const G4VPhysicalVolume* pvptr ) {
+unsigned int artg4::PhysicalVolumeStoreService::idGivenPhysicalVolume(const G4VPhysicalVolume* pvptr ) {
   
-  // Determine the UID
-  ULong64_t uid = reinterpret_cast<ULong64_t>( pvptr );
-  
-  // Do we already have it?
-  auto pvIter = pvMap_->find(uid);
-  if ( pvIter == pvMap_->end() ) {
-    // Don't have it already -- add it
-    pvMap_->insert( std::pair< ULong64_t, std::string>( uid, pvptr->GetName() ) );
-  }
-  
-  return uid;
+  // Determine the id
+  return pvs_->idGivenString( pvptr->GetName() );
 }
 
-void artg4::PhysicalVolumeStore::fillRunWithArtStuff(art::Run& r) {
+void artg4::PhysicalVolumeStoreService::fillRunWithArtStuff(art::Run& r) {
+  
+  // Debug
+  mf::LogDebug("PhysicalVolumeStore") << "Storing " << pvs_->size() << " items in the physical volume store";
   
   // Put our map into the run
-  r.put( std::move(pvMap_) );
+  r.put( std::move(pvs_), myName() );
 
 }
 
-using artg4::PhysicalVolumeStore;
-DEFINE_ART_SERVICE(PhysicalVolumeStore)
+using artg4::PhysicalVolumeStoreService;
+DEFINE_ART_SERVICE(PhysicalVolumeStoreService)

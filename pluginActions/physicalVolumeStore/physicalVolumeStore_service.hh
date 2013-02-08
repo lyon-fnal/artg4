@@ -25,13 +25,14 @@
 #include <map>
 #include <string>
 #include <memory>
-#include "TObject.h"  // To pick up ULong64_t
 
 #include "artg4/actionBase/RunActionBase.hh"
 #include "fhiclcpp/ParameterSet.h"
 #include "messagefacility/MessageLogger/MessageLogger.h"
 #include "art/Framework/Services/Registry/ActivityRegistry.h"
 #include "art/Framework/Core/EDProducer.h"
+
+#include "artg4/pluginActions/physicalVolumeStore/PhysicalVolumeStoreData.hh"
 
 #include "Geant4/G4VPhysicalVolume.hh"
 
@@ -40,25 +41,28 @@ namespace artg4 {
   
   typedef std::map< ULong64_t, std::string> pvMap;
   
-  class PhysicalVolumeStore : public artg4::RunActionBase {
+  class PhysicalVolumeStoreService : public artg4::RunActionBase {
     
     public:
-      PhysicalVolumeStore(fhicl::ParameterSet const&, art::ActivityRegistry&);
-      virtual ~PhysicalVolumeStore();
+      PhysicalVolumeStoreService(fhicl::ParameterSet const&, art::ActivityRegistry&);
+      virtual ~PhysicalVolumeStoreService();
     
       // Prepare Art for our data
       virtual void callArtProduces(art::EDProducer * producer);
     
       // Get the UID and add to the map
-      ULong64_t uidForPhysicalVolume(const G4VPhysicalVolume* pv);
+      unsigned int idGivenPhysicalVolume(const G4VPhysicalVolume* pv);
 
       // Write out our data to the Run record
       virtual void fillRunWithArtStuff(art::Run& r);
     
+      // Return the data itself
+      const artg4::PhysicalVolumeStoreData& getData() const { return *pvs_; }
+    
     private:
     
       // The map
-      std::unique_ptr<pvMap> pvMap_;
+      std::unique_ptr<artg4::PhysicalVolumeStoreData> pvs_;
     
       // Message logger
       mf::LogInfo logInfo_;

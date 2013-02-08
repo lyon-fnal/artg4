@@ -1,6 +1,8 @@
 <!--  art::Wrapper lines need only top level data product objects  -->
 
 <lcgdict>
-    <class name="std::map< ULong64_t, std::string >"/>
-    <class name="art::Wrapper< std::map< ULong64_t, std::string > >"/>
+    <class name="artg4::PhysicalVolumeStoreData"/>
+    <class name="art::Wrapper<artg4::PhysicalVolumeStoreData>"/>
+    <class name="artg4::StringIDs"/>
+    <class name="art::Wrapper<artg4::StringIDs>"/>
 </lcgdict>

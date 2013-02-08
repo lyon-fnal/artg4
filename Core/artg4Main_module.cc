@@ -168,7 +168,7 @@ artg4::artg4Main::~artg4Main()
 void artg4::artg4Main::beginJob()
 {
   // Set up run manager
-  LOG_DEBUG("Main_Run_Manager") << "In begin job";
+  mf::LogDebug("Main_Run_Manager") << "In begin job";
   runManager_.reset( new ArtG4RunManager );
 }
 

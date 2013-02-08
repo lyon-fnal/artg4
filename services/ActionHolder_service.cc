@@ -48,7 +48,7 @@ template <typename A>
 void artg4::ActionHolderService::doRegisterAction(A * const action, 
 						  std::map<std::string, A *>& actionMap) 
 {
-  LOG_DEBUG(msgctg) << "Registering action " << action->myName();
+   mf::LogDebug(msgctg) << "Registering action " << action->myName();
   
   // Check if the name exists in the specific action map
   if ( 0 == actionMap.count( action->myName() ) ) {

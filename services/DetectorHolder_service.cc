@@ -35,7 +35,7 @@ artg4::DetectorHolderService::DetectorHolderService(fhicl::ParameterSet const&,
 // Register a detector object with this service
 void artg4::DetectorHolderService::registerDetector(DetectorBase *const db)
 {
-  LOG_DEBUG(msgctg) << "Registering detector named " << db->myName();
+  mf::LogDebug(msgctg) << "Registering detector named " << db->myName();
   addDBtoCategoryMap(db);
 }
 
@@ -63,7 +63,7 @@ void artg4::DetectorHolderService::constructAllLVs()
 {
   // Let's loop over the detectors in the map
   for( auto entry : categoryMap_ ) {
-    LOG_DEBUG(msgctg) << "Constructing logical volumes for detector of "
+    mf::LogDebug(msgctg) << "Constructing logical volumes for detector of "
           << "category " << (entry.second)->category();
 
       (entry.second)->buildLVs();
@@ -73,7 +73,7 @@ void artg4::DetectorHolderService::constructAllLVs()
 // Initialize all detectors
 void artg4::DetectorHolderService::initialize() {
   for ( auto entry : categoryMap_ ) {
-    LOG_DEBUG(msgctg) << "Initializing detector with category " << (entry.second)->category();
+    mf::LogDebug(msgctg) << "Initializing detector with category " << (entry.second)->category();
     
     (entry.second)->initialize();
   }
@@ -84,7 +84,7 @@ void artg4::DetectorHolderService::constructAllPVs()
 {
   // Let's loop over the detectors in the map
   for ( auto entry : categoryMap_) {
-   LOG_DEBUG(msgctg) << "Constructing physical volumes for detector of "
+   mf::LogDebug(msgctg) << "Constructing physical volumes for detector of "
 	 	      << "category " << (entry.second)->category();
 
     placeDetector(entry.second);
@@ -123,7 +123,7 @@ void artg4::DetectorHolderService::callArtProduces(art::EDProducer * prod)
   // Let's loop over the detectors in the map
   for ( auto entry : categoryMap_ ) {
 
-    LOG_DEBUG(msgctg) << "Calling art produces for category " 
+    mf::LogDebug(msgctg) << "Calling art produces for category " 
 		      << (entry.second)->category();
     (entry.second)->callArtProduces(prod);
   }
@@ -134,7 +134,7 @@ void artg4::DetectorHolderService::fillEventWithArtHits(G4HCofThisEvent* hc)
 {
   // Let's loop over the detectors in the map
   for ( auto entry : categoryMap_ ) {
-    LOG_DEBUG(msgctg) << "Converting hits for category " 
+    mf::LogDebug(msgctg) << "Converting hits for category " 
 		      << (entry.second)->category();
     (entry.second)->fillEventWithArtHits(hc);
   }
@@ -153,7 +153,7 @@ void artg4::DetectorHolderService::addDBtoCategoryMap(DetectorBase * const db)
 
     // Add it
     categoryMap_.insert(itemToAdd);
-    LOG_DEBUG(msgctg) << "Registered detectory with category: " << db->category();
+    mf::LogDebug(msgctg) << "Registered detector with category: " << db->category();
   }
   else {
     // We already have one of these detectors
@@ -173,7 +173,7 @@ void artg4::DetectorHolderService::placeDetector(DetectorBase * const db)
 
     // The world's mother 'logical volume' is an empty vector.
     worldPV_ = (db -> placeToPVs( std::vector<G4LogicalVolume*>() ))[0];
-    LOG_DEBUG(msgctg) << "Just placed detector with category: " 
+    mf::LogDebug(msgctg) << "Just placed detector with category: " 
 		      << db->category();
     return;
   }
@@ -185,7 +185,7 @@ void artg4::DetectorHolderService::placeDetector(DetectorBase * const db)
     // We have a parent volume - pass the DB its mother volume and call place.
     db->placeToPVs(motherCategoryDB -> second -> lvs());
     // Success!
-    LOG_DEBUG(msgctg) << "Just placed detector with category: " 
+    mf::LogDebug(msgctg) << "Just placed detector with category: " 
 		      << db->category();
     return;
 
