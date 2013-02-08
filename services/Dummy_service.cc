@@ -1,6 +1,7 @@
 // Common materials used throughout the simulation
 
 #include "artg4/services/Dummy_service.hh"
+#include "messagefacility/MessageLogger/MessageLogger.h"
 
 #include <iostream>
 
@@ -17,9 +18,9 @@ artg4::DummyService::~DummyService()
 
 void artg4::DummyService::notifyArtOfProduction(art::EDProducer * prod)
 {
-  std::cout << "running produces<int>()...";
+  mf::LogDebug("DummyService") << "running produces<int>()...";
   prod -> produces<int>();
-  std::cout << "done!" << std::endl;
+  mf::LogDebug("DummyService") << "done!";
 }
 
 using artg4::DummyService;

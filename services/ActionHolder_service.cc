@@ -48,7 +48,7 @@ template <typename A>
 void artg4::ActionHolderService::doRegisterAction(A * const action, 
 						  std::map<std::string, A *>& actionMap) 
 {
-  LOG_DEBUG(msgctg) << "Registering action " << action->myName();
+   mf::LogDebug(msgctg) << "Registering action " << action->myName();
   
   // Check if the name exists in the specific action map
   if ( 0 == actionMap.count( action->myName() ) ) {
@@ -165,6 +165,14 @@ void artg4::ActionHolderService::fillEventWithArtStuff()
   // Loop over the "uber" activity map and call @fillEventWithArtStuff@ on each
   for ( auto entry : allActionsMap_ ) {
     (entry.second)->fillEventWithArtStuff(getCurrArtEvent());
+  }
+}
+
+void artg4::ActionHolderService::fillRunWithArtStuff()
+{
+  // Loop over the run activities and call @fillRunWithArtStuff@ on each
+  for ( auto entry : runActionsMap_ ) {
+    (entry.second)->fillRunWithArtStuff(getCurrArtRun());
   }
 }
 

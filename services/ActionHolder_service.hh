@@ -21,6 +21,7 @@
 #include "art/Framework/Services/Registry/ActivityRegistry.h"
 #include "art/Framework/Core/EDProducer.h"
 #include "art/Framework/Principal/Event.h"
+#include "art/Framework/Principal/Run.h"
 
 #include <map>
 
@@ -73,9 +74,17 @@ namespace artg4 {
     // Tell each action to dump anything it likes into the Art event
     void fillEventWithArtStuff();
 
+    // Tell the run actions to dump their stuff into the Art run
+    void fillRunWithArtStuff();
+    
     // Set/get the current Art event
     void setCurrArtEvent(art::Event & e) { currentArtEvent_ = &e; }
     art::Event & getCurrArtEvent() { return (*currentArtEvent_); }
+    
+    // Set/get the current Art Run
+    void setCurrArtRun(art::Run & r) { currentArtRun_ = &r; }
+    art::Run & getCurrArtRun() { return (*currentArtRun_); }
+    
 
     // h3. Action methods
 
@@ -113,6 +122,9 @@ namespace artg4 {
 
     // Hold on to the current Art event
     art::Event * currentArtEvent_;
+    
+    // Hold on to the current Art run
+    art::Run * currentArtRun_;
 
     // An uber-collection of all registered actions, arranged by name
     std::map<std::string, ActionBase*> allActionsMap_;

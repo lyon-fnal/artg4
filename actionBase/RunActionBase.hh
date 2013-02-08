@@ -29,6 +29,8 @@
 
 #include "art/Framework/Services/Registry/ServiceHandle.h"
 #include "artg4/services/ActionHolder_service.hh"
+#include "art/Framework/Principal/Run.h"
+
 
 // Declarations of types we use as input parameters
 class G4Run;
@@ -62,6 +64,9 @@ namespace artg4 {
 
     // Called at the end of each run.
     virtual void endOfRunAction(const G4Run *) {}
+    
+    // Called at the end of the run to store any Run information
+    virtual void fillRunWithArtStuff(art::Run&) {}
 
   };
 }
