@@ -30,7 +30,6 @@
 #include "fhiclcpp/ParameterSet.h"
 #include "messagefacility/MessageLogger/MessageLogger.h"
 #include "art/Framework/Services/Registry/ActivityRegistry.h"
-#include "art/Framework/Core/EDProducer.h"
 
 #include "artg4/pluginActions/physicalVolumeStore/PhysicalVolumeStoreData.hh"
 

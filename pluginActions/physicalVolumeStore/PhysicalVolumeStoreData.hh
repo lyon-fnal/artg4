@@ -16,12 +16,13 @@ namespace artg4 {
     
       // Forward these functions
       #ifndef __GCCXML__
-    
-      // Call initialize if you load PhysicalVolumeStore from the Run
-      void initialize() { ids_.initialize(); }
-    
+        
       // Given a string, return the ID
       unsigned int idGivenString(const std::string & s) { return ids_.idGivenString(s); }
+    
+      // Reset the contents
+      void reset( PhysicalVolumeStoreData const & desired ) { ids_.reset( desired.ids_ ); }
+    
       #endif
     
       // Given the ID, return the string (you'll call this most often when reading)

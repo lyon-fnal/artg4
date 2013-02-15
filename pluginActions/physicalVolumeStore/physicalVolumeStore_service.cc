@@ -6,11 +6,11 @@
 #include <iostream>
 
 artg4::PhysicalVolumeStoreService::PhysicalVolumeStoreService(fhicl::ParameterSet const & p,
-                                                art::ActivityRegistry&)
+                                                art::ActivityRegistry& )
   : RunActionBase(p.get<std::string>("name", "")),
     pvs_( new artg4::PhysicalVolumeStoreData ),
     logInfo_("PhysicalVolumeStore")
-{ }
+{}
 
 artg4::PhysicalVolumeStoreService::~PhysicalVolumeStoreService()
 { }
