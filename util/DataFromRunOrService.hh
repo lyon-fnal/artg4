@@ -1,14 +1,24 @@
+// DataFromRunOrService
 //
-//  DataFromRunOrService.hh
-//  gm2ringsimDev_xcode
+// A utility templated function to get data either from the Run record or from
+// a service. The run record is tried first. If that fails and the service does not
+// exist, then an exception is thrown.
 //
-//  Created by Adam Lyon on 2/15/13.
-//  Copyright (c) 2013 Adam Lyon. All rights reserved.
-//
+// 
 
-#ifndef gm2ringsimDev_xcode_DataFromRunOrService_hh
-#define gm2ringsimDev_xcode_DataFromRunOrService_hh
+#ifndef DATAFROMRUNORSERVICE_HH
+#define DATAFROMRUNORSERVICE_HH
 
+#include <string>
 
+namespace artg4 {
+  
+  template <typename DATATYPE,
+            typename SERVICETYPE >
+  
+  const DATATYPE& dataFromRunOrService(const std::string)
+  
+  
+}
 
 #endif
