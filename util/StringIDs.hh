@@ -42,6 +42,9 @@ namespace artg4 {
       // Given a string, return the ID and add it to the list
       unsigned int idGivenString(const std::string & s);
 
+      // Reset - put in a new string vector (presumedly because you've read one in)
+      void reset( StringIDs const & desired );
+
       #endif // __GCCXML__
     
       // Given an ID, return the string
@@ -51,6 +54,7 @@ namespace artg4 {
     
       // Return the number of entries
       unsigned int size() const { return stringVec_.size(); }
+    
     
     private:
     

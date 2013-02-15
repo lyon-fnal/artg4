@@ -47,6 +47,9 @@ namespace artg4 {
       PhysicalVolumeStoreService(fhicl::ParameterSet const&, art::ActivityRegistry&);
       virtual ~PhysicalVolumeStoreService();
     
+      // PostBeginRun (fill the data if there is some in the run)
+      void postBeginRun( art::Run const & r);
+    
       // Prepare Art for our data
       virtual void callArtProduces(art::EDProducer * producer);
     
@@ -60,6 +63,11 @@ namespace artg4 {
       const artg4::PhysicalVolumeStoreData& getData() const { return *pvs_; }
     
     private:
+    
+      // If we're getting the PhysicalVolumeStoreData from a file, use these
+      // for the producer and instance labels
+      std::string producerLabel_;
+      std::string instanceLabel_;
     
       // The map
       std::unique_ptr<artg4::PhysicalVolumeStoreData> pvs_;

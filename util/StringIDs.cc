@@ -57,4 +57,15 @@ unsigned int artg4::StringIDs::idGivenString( const std::string & s ) {
   return val;
 }
 
+// Reset - put in a new string vector (presumedly because you've read one in)
+void artg4::StringIDs::reset( StringIDs const & desired ) {
+  
+  // Replace contents
+  stringVec_ = desired.stringVec_;
+  
+  // Re-initialize
+  initialize();
+}
+
+
 #endif  // __GCCXML__
