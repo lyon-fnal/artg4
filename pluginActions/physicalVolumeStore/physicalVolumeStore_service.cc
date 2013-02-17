@@ -7,7 +7,7 @@
 
 artg4::PhysicalVolumeStoreService::PhysicalVolumeStoreService(fhicl::ParameterSet const & p,
                                                 art::ActivityRegistry& )
-  : RunActionBase(p.get<std::string>("name", "")),
+  : RunActionBase(p.get<std::string>("name", "physicalVolumeStore")),
     pvs_( new artg4::PhysicalVolumeStoreData ),
     logInfo_("PhysicalVolumeStore")
 {}
@@ -26,7 +26,7 @@ unsigned int artg4::PhysicalVolumeStoreService::idGivenPhysicalVolume(const G4VP
   return pvs_->idGivenString( pvptr->GetName() );
 }
 
-void artg4::PhysicalVolumeStoreService::fillRunWithArtStuff(art::Run& r) {
+void artg4::PhysicalVolumeStoreService::fillRunEndWithArtStuff(art::Run& r) {
   
   // Debug
   mf::LogDebug("PhysicalVolumeStore") << "Storing " << pvs_->size() << " items in the physical volume store";

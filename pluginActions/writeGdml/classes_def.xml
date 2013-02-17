@@ -1,0 +1,6 @@
+<!--  art::Wrapper lines need only top level data product objects  -->
+
+<lcgdict>
+    <class name="artg4::GdmlText"/>
+    <class name="art::Wrapper<artg4::GdmlText>"/>
+</lcgdict>

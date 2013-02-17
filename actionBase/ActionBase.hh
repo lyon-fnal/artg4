@@ -12,6 +12,7 @@
 #include <iostream>
 #include "art/Framework/Core/EDProducer.h"
 #include "art/Framework/Principal/Event.h"
+#include "art/Framework/Principal/Run.h"
 
 // Declarations of types we use as input parameters
 
@@ -46,6 +47,13 @@ namespace artg4 {
     // already. This is called by ActionHolder at the very end of the Art
     // event, after all the GEANT stuff is finished.
     virtual void fillEventWithArtStuff(art::Event &){}
+    
+    // Fill the Art event with Run information at the beginning of the run
+    virtual void fillRunBeginWithArtStuff(art::Run &){}
+
+    // Fill the Art event with Run information at the end of the run
+    virtual void fillRunEndWithArtStuff(art::Run &){}
+
 
   private:
     // A string containing this action object's name

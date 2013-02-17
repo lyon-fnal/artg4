@@ -75,7 +75,8 @@ namespace artg4 {
     void fillEventWithArtStuff();
 
     // Tell the run actions to dump their stuff into the Art run
-    void fillRunWithArtStuff();
+    void fillRunBeginWithArtStuff();
+    void fillRunEndWithArtStuff();
     
     // Set/get the current Art event
     void setCurrArtEvent(art::Event & e) { currentArtEvent_ = &e; }

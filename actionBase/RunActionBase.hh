@@ -64,9 +64,6 @@ namespace artg4 {
 
     // Called at the end of each run.
     virtual void endOfRunAction(const G4Run *) {}
-    
-    // Called at the end of the run to store any Run information
-    virtual void fillRunWithArtStuff(art::Run&) {}
 
   };
 }

@@ -22,6 +22,9 @@ void artg4::ArtG4RunAction::BeginOfRunAction(const G4Run * currentRun)
   // Run beginOfRunAction
   actionHolder -> beginOfRunAction(currentRun);
   
+  // Actions can write out data at the begin run if necessary
+  actionHolder -> fillRunBeginWithArtStuff();
+  
 }
 // Called at the end of each run:
 void artg4::ArtG4RunAction::EndOfRunAction(const G4Run * currentRun)
@@ -33,5 +36,5 @@ void artg4::ArtG4RunAction::EndOfRunAction(const G4Run * currentRun)
   actionHolder -> endOfRunAction(currentRun);
   
   // Actions need to write out their run data, if they have any
-  actionHolder -> fillRunWithArtStuff();
+  actionHolder -> fillRunEndWithArtStuff();
 }

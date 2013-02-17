@@ -168,11 +168,19 @@ void artg4::ActionHolderService::fillEventWithArtStuff()
   }
 }
 
-void artg4::ActionHolderService::fillRunWithArtStuff()
+void artg4::ActionHolderService::fillRunBeginWithArtStuff()
 {
-  // Loop over the run activities and call @fillRunWithArtStuff@ on each
-  for ( auto entry : runActionsMap_ ) {
-    (entry.second)->fillRunWithArtStuff(getCurrArtRun());
+  // Loop over the activities and call @fillRunBeginWithArtStuff@ on each
+  for ( auto entry : allActionsMap_ ) {
+    (entry.second)->fillRunBeginWithArtStuff(getCurrArtRun());
+  }
+}
+
+void artg4::ActionHolderService::fillRunEndWithArtStuff()
+{
+  // Loop over the activities and call @fillRunEndWithArtStuff@ on each
+  for ( auto entry : allActionsMap_ ) {
+    (entry.second)->fillRunEndWithArtStuff(getCurrArtRun());
   }
 }
 

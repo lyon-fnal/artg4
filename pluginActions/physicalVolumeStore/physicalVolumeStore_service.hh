@@ -30,6 +30,7 @@
 #include "fhiclcpp/ParameterSet.h"
 #include "messagefacility/MessageLogger/MessageLogger.h"
 #include "art/Framework/Services/Registry/ActivityRegistry.h"
+#include "art/Framework/Core/EDProducer.h"
 
 #include "artg4/pluginActions/physicalVolumeStore/PhysicalVolumeStoreData.hh"
 
@@ -53,7 +54,7 @@ namespace artg4 {
       unsigned int idGivenPhysicalVolume(const G4VPhysicalVolume* pv);
 
       // Write out our data to the Run record
-      virtual void fillRunWithArtStuff(art::Run& r);
+      virtual void fillRunEndWithArtStuff(art::Run& r);
     
       // Return the data itself
       const artg4::PhysicalVolumeStoreData& getData() const { return *pvs_; }
