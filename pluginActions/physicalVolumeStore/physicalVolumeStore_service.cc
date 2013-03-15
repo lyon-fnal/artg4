@@ -33,7 +33,15 @@ void artg4::PhysicalVolumeStoreService::fillRunEndWithArtStuff(art::Run& r) {
   
   // Put our map into the run
   r.put( std::move(pvs_), myName() );
-
+  
+  // pvs_ should now be invalid and set to nullptr. But in fact
+  // due to https://cdcvs.fnal.gov/redmine/issues/3601 this does not happen.
+  // So need to do a release to avoid a segfault
+  pvs_.release();
+  
+  // Point to a new valid collection
+  pvs_.reset( new artg4::PhysicalVolumeStoreData );
+    
 }
 
 using artg4::PhysicalVolumeStoreService;
