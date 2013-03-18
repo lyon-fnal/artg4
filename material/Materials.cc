@@ -389,37 +389,38 @@ G4Material* artg4Materials::PbF2()
       // Material Properties table
       const G4int nEntries = 8 ;
 
-      // Transmission coefficients measured for 186mm long cyrstal
+       // Order from low energy to high energy (required for Geant 4.9.5)
        G4double wavelengths[ nEntries ] =
-         { 200.*nm,
-           250.*nm,
-           300.*nm,
-           350.*nm,
-           400.*nm,
-           600.*nm,
-           800.*nm,
-           1240.*nm } ;
+         { 1240.*nm,
+             800.*nm,
+             600.*nm,
+             400.*nm,
+             350.*nm,
+             300.*nm,
+             250.*nm,
+             200.*nm } ;
        
+       // Transmission coefficients measured for 186mm long crystal
        G4double transmission[ nEntries ] =
-         { 0.,   // 200 nm
-           0.,   // 250 nm
-           0.60, // 300 nm
-           0.74, // 350 nm
-           0.76, // 400 nm
-           0.79, // 600 nm (RB add point by interpolation)
-           0.82, // 800 nm
-           0.88 } ; // 1240 nm
+         { 0.88, // 1240 nm
+             0.82, // 800 nm
+             0.79, // 600 nm (RB add point by interpolation)
+             0.76, // 400 nm
+             0.74, // 350 nm
+             0.60, // 300 nm
+             0.,   // 250 nm
+             0. } ; // 200 nm
        
        // refractive index data from http://refractiveindex.info/?group=CRYSTALS&material=PbF2
        G4double refractiveIndex[ nEntries ] =
-         { 2.57, // 200 nm
-           2.02, // 250 nm
-           1.94, // 300 nm
-           1.85, // 350 nm
-           1.82, // 400 nm
-           1.76, // 600 nm
-           1.75, // 800 nm
-           1.74 } ; // 1240 nm
+         { 1.74, // 1240 nm
+             1.75, // 800 nm
+             1.76, // 600 nm
+             1.82, // 400 nm
+             1.85, // 350 nm
+             1.94, // 300 nm
+             2.02, // 250 nm
+             2.57 } ; // 200 nm
 
     G4double photonEnergy[ nEntries ] ;
     G4double absorptionLength[ nEntries ] ;
@@ -430,6 +431,7 @@ G4Material* artg4Materials::PbF2()
        absorptionLength[ i ] = -186.*mm / log( transmission[ i ] ) ;
     }
 
+    // Geant 4.9.5 Material properties table: photonEnergy must be in order
     G4MaterialPropertiesTable* table = new G4MaterialPropertiesTable() ;
     table->AddProperty( "RINDEX", photonEnergy, refractiveIndex, nEntries ) ;
     table->AddProperty( "ABSLENGTH", photonEnergy, absorptionLength, nEntries ) ;
@@ -490,9 +492,10 @@ G4Material* artg4Materials::BicronBC630()
       const G4int nEntries = 5 ;
 
       // Transmission coefficients from bicron datasheet: assume 100 micron thickness
-      G4double wavelengths[ nEntries ] =
-	 { 200.*nm, 270.*nm, 280.*nm, 700.*nm, 950.*nm };
-      G4double transmission[ nEntries ] = { 0., 0., 0.95, 0.95, 0.95 } ;
+       
+      // Order from low energy to high energy (required for Geant 4.9.5)
+      G4double wavelengths[ nEntries ] = { 950.*nm, 700.*nm, 280.*nm, 270.*nm, 200.*nm };
+      G4double transmission[ nEntries ] = { 0.95, 0.95, 0.95, 0., 0. } ;
 
       G4double photonEnergy[ nEntries ] ;
       G4double refractiveIndex[ nEntries ] ;
@@ -500,12 +503,12 @@ G4Material* artg4Materials::BicronBC630()
 
       for( int i = 0 ; i < nEntries ; ++i )
       {
-	 photonEnergy[ i ] = 0.001240 * MeV * nm / wavelengths[ i ] ;
-      	 refractiveIndex[ i ] = 1.465 ; // actual index of Bicron BC630
-	 // refractiveIndex[ i ] = 1.665 ; // higher index for testing
-	 absorptionLength[ i ] = -0.1*mm / log( transmission[ i ] ) ;
+          photonEnergy[ i ] = 0.001240 * MeV * nm / wavelengths[ i ] ;
+          refractiveIndex[ i ] = 1.465 ; // actual index of Bicron BC630
+          absorptionLength[ i ] = -0.1*mm / log( transmission[ i ] ) ;
       }
 
+      // Geant 4.9.5 Material properties table: photonEnergy must be in order
       G4MaterialPropertiesTable* table = new G4MaterialPropertiesTable() ;
       table->AddProperty( "RINDEX", photonEnergy, refractiveIndex, nEntries ) ;
       table->AddProperty( "ABSLENGTH", photonEnergy, absorptionLength, nEntries ) ;
