@@ -387,21 +387,46 @@ G4Material* artg4Materials::PbF2()
       PbF2 -> AddMaterial(artg4Materials::F(), 15.496*perCent);
 
       // Material Properties table
-      const G4int nEntries = 7 ;
+      const G4int nEntries = 8 ;
 
       // Transmission coefficients measured for 186mm long cyrstal
-    G4double wavelengths[ nEntries ] =
-       { 200.*nm, 250.*nm, 300.*nm, 350.*nm, 400.*nm, 800.*nm, 1240.*nm } ;
-    G4double transmission[ nEntries ] = { 0., 0., 0.60, 0.74, 0.76, 0.82, 0.88 } ;
+       G4double wavelengths[ nEntries ] =
+         { 200.*nm,
+           250.*nm,
+           300.*nm,
+           350.*nm,
+           400.*nm,
+           600.*nm,
+           800.*nm,
+           1240.*nm } ;
+       
+       G4double transmission[ nEntries ] =
+         { 0.,   // 200 nm
+           0.,   // 250 nm
+           0.60, // 300 nm
+           0.74, // 350 nm
+           0.76, // 400 nm
+           0.79, // 600 nm (RB add point by interpolation)
+           0.82, // 800 nm
+           0.88 } ; // 1240 nm
+       
+       // refractive index data from http://refractiveindex.info/?group=CRYSTALS&material=PbF2
+       G4double refractiveIndex[ nEntries ] =
+         { 2.57, // 200 nm
+           2.02, // 250 nm
+           1.94, // 300 nm
+           1.85, // 350 nm
+           1.82, // 400 nm
+           1.76, // 600 nm
+           1.75, // 800 nm
+           1.74 } ; // 1240 nm
 
     G4double photonEnergy[ nEntries ] ;
-    G4double refractiveIndex[ nEntries ] ;
     G4double absorptionLength[ nEntries ] ;
 
     for( int i = 0 ; i < nEntries ; ++i )
     {
        photonEnergy[ i ] = 0.001240 * MeV * nm / wavelengths[ i ] ;
-       refractiveIndex[ i ] = 1.82 ;
        absorptionLength[ i ] = -186.*mm / log( transmission[ i ] ) ;
     }
 
