@@ -178,7 +178,6 @@ void artg4::artg4Main::beginRun(art::Run & r)
   // Get the physics list and pass it to Geant and initialize the list if necessary
   art::ServiceHandle<PhysicsListHolderService> physicsListHolder;
   runManager_->SetUserInitialization( physicsListHolder->makePhysicsList() );
-  physicsListHolder->initializePhysicsList();
   
   // Get all of the detectors and initialize them
   art::ServiceHandle<DetectorHolderService> detectorHolder;
@@ -212,6 +211,7 @@ void artg4::artg4Main::beginRun(art::Run & r)
   runManager_ -> SetUserAction(new ArtG4RunAction);
 
   runManager_->Initialize();
+  physicsListHolder->initializePhysicsList();
 
   //get the pointer to the User Interface manager   
   UI_ = G4UImanager::GetUIpointer();  
