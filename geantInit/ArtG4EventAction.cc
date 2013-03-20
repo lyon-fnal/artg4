@@ -36,7 +36,7 @@ void artg4::ArtG4EventAction::BeginOfEventAction(const G4Event * currentEvent)
 // event and pass the call on to the action objects.
 void artg4::ArtG4EventAction::EndOfEventAction(const G4Event * currentEvent)
 {
-  // Convert geant hits to art
+  // Convert geant hits to art for DETECTORS
   art::ServiceHandle<artg4::DetectorHolderService> dhs;
   dhs -> fillEventWithArtHits( currentEvent->GetHCofThisEvent() );
  
@@ -44,6 +44,8 @@ void artg4::ArtG4EventAction::EndOfEventAction(const G4Event * currentEvent)
   art::ServiceHandle<ActionHolderService> ahs;
   ahs -> endOfEventAction(currentEvent);
   
-  // Every action needs to write out their event data now, if they have any
+  // Every ACTION needs to write out their event data now, if they have any
+  // (do this within ArtG4EventAction) since some still need to be within
+  // Geant
   ahs -> fillEventWithArtStuff();
 }
