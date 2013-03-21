@@ -76,13 +76,9 @@ namespace artg4Materials
 
   //  OPTICAL SURFACES
   G4OpticalSurface *PolishedMetal();
-  G4OpticalSurface *Millipore();
   G4OpticalSurface *Specular();
-  G4OpticalSurface *SpecularNoGap();
   G4OpticalSurface *Diffuse();
-  G4OpticalSurface *SuperDiffuse();
   G4OpticalSurface *Black();
-  G4OpticalSurface *RoughBlack();
   G4OpticalSurface *Open();
 
   //  A lookup by name!
