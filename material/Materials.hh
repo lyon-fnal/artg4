@@ -10,6 +10,7 @@
     @author Justin Phillips
     @date 2005-2011
     @moved over to artg4 Nov 2012, Brendan Kiburg
+    @author NSF(3/13): Fixed some materials, added some new ones, cleaned up code
 */
 
 #include "Geant4/G4Material.hh"
@@ -26,15 +27,17 @@
     If you add materials here, be sure to update the name->function
     map at the bottom of constructionMaterials.cc
 */
+
 namespace artg4Materials
 {
-
+  //  ELEMENTS
   G4Material *Al(); // aluminum
   G4Material *Ar(); // argon
+  G4Material *Be(); // beryllium 
   G4Material *C();  // carbon
-  G4Material *Cr(); // cromium
+  G4Material *Cr(); // chromium
   G4Material *Cu(); // copper
-  G4Material *F();  // flourine
+  G4Material *F();  // fluorine
   G4Material *Fe(); // iron
   G4Material *H();  // hydrogen
   G4Material *Mg(); // magnesium
@@ -46,30 +49,32 @@ namespace artg4Materials
   G4Material *Si(); // silicon
   G4Material *Ti(); // titanium
   G4Material *W();  // tungsten
+  G4Material *Zn(); // zinc
   
-  
-  // Here be the mixtures 
-  G4Material *Air();       // The same stuff as in our President's head 
-  G4Material *Al6061();    // Alloy for the inflector mandrel
-  G4Material *BC404Scintillator();     // Plastic Scintillator
-  G4Material *BC408Scintillator();     // Another lastic Scintillator
-  G4Material *BCF10ScintFiber();     // Plastic scintillating fiber
-  G4Material *Conductor(); // superconducting material for inflector
-  G4Material *MacorCeramic();   // Ceramic for quadrupole supports
-  G4Material *Mylar();     // carbon, hydrogen, oxygen
-  G4Material *NbTi();      // superconducting Niobium-Titanium
-  G4Material *PbSb();      // lead-antimony alloy
-  G4Material *Vacuum();
-  G4Material *Vacuum1();
-  G4Material *H2O();
-  G4Material *PbF2();
-  G4Material *Quartz() ;
-  G4Material *BicronBC630();    // optical grease
-  G4Material *Borosilicate();   // using the pyrex borosilicate formulation from the NIST database in G4
+  //  COMPOUNDS
+  G4Material *Air();
+  G4Material *Al5052();            // inner/outer quad electrodes 
+  G4Material *Al6061();            // inflector mandrel, upper/lower quad electrodes, etc.
+  G4Material *BC404Scintillator(); // plastic scintillator
+  G4Material *BC408Scintillator(); // another plastic scintillator
+  G4Material *BCF10ScintFiber();   // plastic scintillating fiber
+  G4Material *BicronBC630();       // optical grease
+  G4Material *Borosilicate();      // using the pyrex borosilicate formulation from the NIST database in G4
+  G4Material *Brass();             // quad support bolts, etc.
+  G4Material *Conductor();         // NSF(3/13): Fixed this @bug for the aluminum stabilized NbTi/Cu inflector superconductor (NbTi:Cu:Al = 1.0:0.9:3.7)
   G4Material *Epoxy();
+  G4Material *H2O();               // where is this used, exactly?
+  G4Material *Kapton();            // insulator (e.g. inflector superconducting wires)
+  G4Material *MacorCeramic();      // quad standoffs/supports
+  G4Material *Mylar();             // carbon, hydrogen, oxygen
+  G4Material *NbTi();              // NSF(3/13): Fixed this @bug for the inflector superconductor (Nb:Ti = 1:1)
+  G4Material *PbSb();              // lead-antimony alloy
+  G4Material *Vacuum();
+  G4Material *Vacuum1();           // index of refraction = 1; needed for optical processes
+  G4Material *PbF2();              // calo xtals
+  G4Material *Quartz();
 
-
-  // optical surfaces
+  //  OPTICAL SURFACES
   G4OpticalSurface *PolishedMetal();
   G4OpticalSurface *Millipore();
   G4OpticalSurface *Specular();
@@ -80,7 +85,7 @@ namespace artg4Materials
   G4OpticalSurface *RoughBlack();
   G4OpticalSurface *Open();
 
-  // a lookup by name!
+  //  A lookup by name!
   G4Material *findByName(G4String);
   G4OpticalSurface *findOpticalByName(G4String);
 

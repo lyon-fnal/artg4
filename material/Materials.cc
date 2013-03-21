@@ -20,6 +20,7 @@
     @author Justin Phillips
     @date 2005-2011
     @Moved over for artg4 Nov 2012, Brendan Kiburg
+    @author NSF(3/13): Fixed some materials, added some new ones, cleaned up code
 */
 
 #include "Geant4/G4NistManager.hh"
@@ -30,7 +31,10 @@
 
 #include <boost/algorithm/string.hpp>
 
-/*  ELEMENTS  */
+
+//====================================================================//
+//===========================   ELEMENTS  ============================//
+//====================================================================//
 
 G4Material *artg4Materials::Al()
 {
@@ -42,8 +46,15 @@ G4Material *artg4Materials::Al()
 G4Material *artg4Materials::Ar()
 {
   static G4Material *Ar =
-  G4NistManager::Instance()->FindOrBuildMaterial("G4_Ar");
+    G4NistManager::Instance()->FindOrBuildMaterial("G4_Ar");
   return Ar;
+}
+
+G4Material *artg4Materials::Be()
+{
+  static G4Material *Be =
+    G4NistManager::Instance()->FindOrBuildMaterial("G4_Be");
+  return Be;
 }
 
 G4Material *artg4Materials::C()
@@ -52,7 +63,6 @@ G4Material *artg4Materials::C()
     G4NistManager::Instance()->FindOrBuildMaterial("G4_C");
   return C;
 }
-
 
 G4Material *artg4Materials::Cr()
 {
@@ -68,7 +78,6 @@ G4Material *artg4Materials::Cu()
   return Cu;
 }
 
-
 G4Material *artg4Materials::F()
 {
   static G4Material *F = 
@@ -83,15 +92,12 @@ G4Material *artg4Materials::Fe()
   return Fe;
 }
 
-
 G4Material *artg4Materials::H()
 {
   static G4Material *H = 
     G4NistManager::Instance()->FindOrBuildMaterial("G4_H");
   return H;
-  
 }
-
 
 G4Material *artg4Materials::Mg()
 {
@@ -100,14 +106,12 @@ G4Material *artg4Materials::Mg()
   return Mg;
 }
 
-
 G4Material *artg4Materials::N()
 {
   static G4Material *N = 
     G4NistManager::Instance()->FindOrBuildMaterial("G4_N");
   return N;
 }
-
 
 G4Material *artg4Materials::Nb()
 {
@@ -116,14 +120,12 @@ G4Material *artg4Materials::Nb()
   return Nb;
 }
 
-
 G4Material *artg4Materials::O()
 {
   static G4Material *O = 
     G4NistManager::Instance()->FindOrBuildMaterial("G4_O");
   return O;
 }
-
 
 G4Material *artg4Materials::Pb()
 {
@@ -132,15 +134,12 @@ G4Material *artg4Materials::Pb()
   return Pb;
 }
 
-
 G4Material *artg4Materials::Sb()
 {
   static G4Material *Sb = 
     G4NistManager::Instance()->FindOrBuildMaterial("G4_Sb");
   return Sb;
-  
 }
-
 
 G4Material *artg4Materials::Si()
 {
@@ -149,15 +148,12 @@ G4Material *artg4Materials::Si()
   return Si;
 }
 
-
 G4Material *artg4Materials::Ti()
 {
   static G4Material* Ti = 
     G4NistManager::Instance()->FindOrBuildMaterial("G4_Ti");
   return Ti;
-  
 }
-
 
 G4Material *artg4Materials::W()
 {
@@ -166,13 +162,17 @@ G4Material *artg4Materials::W()
   return W;
 }
 
+G4Material *artg4Materials::Zn()
+{
+  static G4Material *Zn = 
+    G4NistManager::Instance()->FindOrBuildMaterial("G4_Zn");
+  return Zn;
+}
 
 
-/*****************************************************************/
-
-
-/*  MIXTURES  */
-
+//====================================================================//
+//===========================   COMPOUNDS   ==========================//
+//====================================================================//
 
 G4Material *artg4Materials::Air()
 {
@@ -181,24 +181,35 @@ G4Material *artg4Materials::Air()
 }
 
 
-G4Material *artg4Materials::Al6061()
+G4Material *artg4Materials::Al5052() // quad inner/outer electordes
 {
+  static G4Material *Al5052 = new G4Material( "AluminumAlloy5052-H34", 2.68*g/cm3, 3 );
   static bool init = true;
-  static G4Material *Al6061 = new G4Material("AluminumAlloy6061",
-					     2.700*g/cm3,
-					     5);
-
   if( init ){
-    Al6061 -> AddMaterial(artg4Materials::Al(), 97.92*perCent);
-    Al6061 -> AddMaterial(artg4Materials::Si(), 0.60*perCent);
-    Al6061 -> AddMaterial(artg4Materials::Cu(), 0.28*perCent);
-    Al6061 -> AddMaterial(artg4Materials::Mg(), 1.0*perCent);
-    Al6061 -> AddMaterial(artg4Materials::Cr(), 0.20*perCent);
+    Al5052->AddMaterial(artg4Materials::Mg(), 2.50*perCent); //z=12
+    Al5052->AddMaterial(artg4Materials::Al(),97.25*perCent); //z=13
+    Al5052->AddMaterial(artg4Materials::Si(), 0.25*perCent); //z=14
+    init = false;
+  }
+  return Al5052;
+}
+
+
+G4Material *artg4Materials::Al6061() // inflector mandrel, quad upper/lower electrodes, etc.
+{
+  static G4Material *Al6061 = new G4Material( "AluminumAlloy6061-T6", 2.70*g/cm3, 5 );
+  static bool init = true;
+  if( init ){
+    Al6061->AddMaterial(artg4Materials::Mg(), 1.00*perCent); // z=12
+    Al6061->AddMaterial(artg4Materials::Al(),97.92*perCent); // z=13
+    Al6061->AddMaterial(artg4Materials::Si(), 0.60*perCent); // z=14
+    Al6061->AddMaterial(artg4Materials::Cr(), 0.20*perCent); // z=24
+    Al6061->AddMaterial(artg4Materials::Cu(), 0.28*perCent); // z=29
     init = false;
   }    
-
   return Al6061;
 }
+
 
 namespace{ 
   G4Material *Scintillator(G4String name, 
@@ -245,84 +256,205 @@ G4Material *artg4Materials::BCF10ScintFiber(){
   return BCF10;
 }
 
-/** @bug This implementation is probably wrong as to the material
-    properties of the inflector conductor. */
-G4Material *artg4Materials::Conductor()
+
+G4Material* artg4Materials::BicronBC630()
 {
+   static bool init = true;
+   static G4Material *bicronBC630;
+
+   if( init ){
+
+      G4NistManager* nistMan = G4NistManager::Instance();
+      std::vector<G4int> natoms;
+      std::vector<G4double> fractionMass;
+      std::vector<G4String> elements;
+
+       //--------------------------------------------------
+       // Silicone (Template for Optical Grease)
+       //--------------------------------------------------
+       
+       elements.push_back("C");     natoms.push_back(2);
+       elements.push_back("H");     natoms.push_back(6);
+       double density = 1.060*g/cm3;
+       
+       bicronBC630 = nistMan->
+       ConstructNewMaterial("BicronBC630", elements, natoms, density);
+       
+       // Material Properties table
+       const G4int nEntries = 5 ;
+       
+       // Transmission coefficients from bicron datasheet: assume 100 micron thickness
+       
+       // Order from low energy to high energy (required for Geant 4.9.5)
+       G4double wavelengths[ nEntries ] = { 950.*nm, 700.*nm, 280.*nm, 270.*nm, 200.*nm };
+       G4double transmission[ nEntries ] = { 0.95, 0.95, 0.95, 0., 0. } ;
+       
+       G4double photonEnergy[ nEntries ] ;
+       G4double refractiveIndex[ nEntries ] ;
+       G4double absorptionLength[ nEntries ] ;
+       
+       for( int i = 0 ; i < nEntries ; ++i )
+       {
+           photonEnergy[ i ] = 0.001240 * MeV * nm / wavelengths[ i ] ;
+           refractiveIndex[ i ] = 1.465 ; // actual index of Bicron BC630
+           absorptionLength[ i ] = -0.1*mm / log( transmission[ i ] ) ;
+       }
+       
+       // Geant 4.9.5 Material properties table: photonEnergy must be in order
+       G4MaterialPropertiesTable* table = new G4MaterialPropertiesTable() ;
+       table->AddProperty( "RINDEX", photonEnergy, refractiveIndex, nEntries ) ;
+       table->AddProperty( "ABSLENGTH", photonEnergy, absorptionLength, nEntries ) ;
+       
+       bicronBC630->SetMaterialPropertiesTable( table ) ;
+       
+       init = false;
+   }
+    
+    return bicronBC630;
+}
+
+
+G4Material* artg4Materials::Borosilicate() // aka, pyrex
+{
+  static G4Material *pyrex = 
+     G4NistManager::Instance()->FindOrBuildMaterial("G4_Pyrex_Glass");
+
+  // http://hypernews.slac.stanford.edu/HyperNews/geant4/get/opticalphotons/299.html
+  const G4int num = 2 ;
+  G4MaterialPropertiesTable* myPyrexWindow = new G4MaterialPropertiesTable();
+  G4double pyrexPhotonAbsorptionLengthNRG[num] = { 1.0*eV, 5.0*eV } ;
+  G4double pyrexPhotonAbsorptionLength[num] = {5000.*mm , 5000.*mm};
+  myPyrexWindow->AddProperty("ABSLENGTH",pyrexPhotonAbsorptionLengthNRG,
+			      pyrexPhotonAbsorptionLength,num);
+  G4double pyrexPhotonRefractiveIndexNRG[num] = { 1.0*eV, 5.0*eV } ;
+  G4double pyrexPhotonRefractiveIndex[num] = {1.51 , 1.51};
+  myPyrexWindow->AddProperty("RINDEX",pyrexPhotonRefractiveIndexNRG,
+			      pyrexPhotonRefractiveIndex,num);
+  pyrex->SetMaterialPropertiesTable(myPyrexWindow);
+
+  return pyrex;
+}
+
+
+G4Material *artg4Materials::Brass() // E821 quad support bolts
+{
+  //  http://webmineral.com/data/Brass.shtml, http://www.engineeringtoolbox.com/metal-alloys-densities-d_50.html
+  static G4Material *Brass = new G4Material( "Brass", 8.52*g/cm3, 2 );
   static bool init = true;
-  static G4Material *Conductor = new G4Material("Conductor", 
-						5.0*g/mole, 
-						3);
   if( init ){
-    Conductor -> AddMaterial(artg4Materials::NbTi(),16.667*perCent);
-    Conductor -> AddMaterial(artg4Materials::Cu(),16.667*perCent);
-    Conductor -> AddMaterial(artg4Materials::Al(),66.667*perCent);
+    Brass->AddMaterial( artg4Materials::Cu(), 59.31*perCent ); //z=29
+    Brass->AddMaterial( artg4Materials::Zn(), 40.69*perCent ); //z=30
     init = false;
   }
-  
+  return Brass;
+}
+
+
+G4Material *artg4Materials::Conductor()
+{
+  //  NSF(3/13), Source: E821 inflector NIM paper, plus some simple calculations involving MASS fractions
+  static G4Material *Conductor = new G4Material( "Conductor", 4.394*g/cm3, 3 );
+  static bool init = true;
+  if( init ){
+    Conductor->AddMaterial(artg4Materials::NbTi(),30.95*perCent);
+    Conductor->AddMaterial(artg4Materials::Cu(),  25.15*perCent);
+    Conductor->AddMaterial(artg4Materials::Al(),  43.90*perCent);
+    init = false;
+  }
   return Conductor;
 }
 
 
-/** Reference: http://www.azom.com/details.asp?ArticleID=1459 */
-G4Material *artg4Materials::MacorCeramic()
+G4Material* artg4Materials::Epoxy() // same as quartz, with different R and density
 {
+  //  http://www.mt-berlin.com/frames_cryst/descriptions/quartz%20.htm
+  static G4Material *epoxy = new G4Material( "Epoxy", 1.02*g/cm3, 2 );
   static bool init = true;
-  static G4Material *MacorCeramic =  new G4Material("MacorCeramic", 
-						    2.52*g/cm3,
-						    6);
   if( init ){
-    MacorCeramic -> AddMaterial(G4NistManager::Instance()->FindOrBuildMaterial("G4_SILICON_DIOXIDE"),46.*perCent);
-    MacorCeramic -> AddMaterial(G4NistManager::Instance()->FindOrBuildMaterial("G4_ALUMINUM_OXIDE"),16.*perCent);
-    MacorCeramic -> AddMaterial(G4NistManager::Instance()->FindOrBuildMaterial("G4_POTASSIUM_OXIDE"),10.*perCent);
-    MacorCeramic -> AddMaterial(G4NistManager::Instance()->FindOrBuildMaterial("G4_MAGNESIUM_OXIDE"),17.*perCent);
-    MacorCeramic -> AddMaterial(G4NistManager::Instance()->FindOrBuildMaterial("G4_B"),4.4*perCent);
-    MacorCeramic -> AddMaterial(G4NistManager::Instance()->FindOrBuildMaterial("G4_O"),6.6*perCent);
-    
+    //  http://www.convertunits.com/molarmass/SiO2
+    epoxy->AddMaterial(artg4Materials::Si(),46.743*perCent);
+    epoxy->AddMaterial(artg4Materials::O(), 53.257*perCent);
+
+    //  Material properties table
+    const G4int nEntries = 2;
+    G4double epoxyR = 1.5; //refractive index
+    G4double photonEnergy[ nEntries ]     = { 1.0*eV,  5.0*eV  };
+    G4double refractiveIndex[ nEntries ]  = { epoxyR,  epoxyR  };
+    G4double absorptionLength[ nEntries ] = { 500.*cm, 500.*cm };
+
+    G4MaterialPropertiesTable* table = new G4MaterialPropertiesTable();
+    table->AddProperty( "RINDEX",    photonEnergy, refractiveIndex,  nEntries );
+    table->AddProperty( "ABSLENGTH", photonEnergy, absorptionLength, nEntries );
+
+    epoxy->SetMaterialPropertiesTable( table ) ;
     init = false;
   }
-    
+  return epoxy;
+}
+
+
+G4Material *artg4Materials::H2O()
+{
+  static G4Material *H2O = G4NistManager::Instance()->FindOrBuildMaterial("G4_WATER");
+  return H2O;
+}
+
+
+G4Material *artg4Materials::Kapton()
+{
+  static G4Material *Kapton = G4NistManager::Instance()->FindOrBuildMaterial("G4_KAPTON");
+  return Kapton;
+}
+
+
+G4Material *artg4Materials::MacorCeramic()
+{
+  //  http://www.azom.com/details.asp?ArticleID=1459
+  static G4Material *MacorCeramic = new G4Material( "MacorCeramic", 2.52*g/cm3, 6 );
+  static bool init = true;
+  if( init ){
+    MacorCeramic->AddMaterial(G4NistManager::Instance()->FindOrBuildMaterial("G4_SILICON_DIOXIDE"),46.*perCent);
+    MacorCeramic->AddMaterial(G4NistManager::Instance()->FindOrBuildMaterial("G4_ALUMINUM_OXIDE"), 16.*perCent);
+    MacorCeramic->AddMaterial(G4NistManager::Instance()->FindOrBuildMaterial("G4_POTASSIUM_OXIDE"),10.*perCent);
+    MacorCeramic->AddMaterial(G4NistManager::Instance()->FindOrBuildMaterial("G4_MAGNESIUM_OXIDE"),17.*perCent);
+    MacorCeramic->AddMaterial(G4NistManager::Instance()->FindOrBuildMaterial("G4_B"),4.4*perCent);
+    MacorCeramic->AddMaterial(G4NistManager::Instance()->FindOrBuildMaterial("G4_O"),6.6*perCent);
+    init = false;
+  }
   return MacorCeramic;
 }
 
 
 G4Material *artg4Materials::Mylar()
 {
-  static G4Material *Mylar = 
-    G4NistManager::Instance()->FindOrBuildMaterial("G4_MYLAR");
+  static G4Material *Mylar = G4NistManager::Instance()->FindOrBuildMaterial("G4_MYLAR");
   return Mylar;
 }
 
 
 G4Material *artg4Materials::NbTi()
 {
-  // INCOMPLETE!!  FIND CORRECT VALUES!
+  //  NSF(3/13): E821 inflector NIM paper, plus some simple calculations involving MASS fractions
+  static G4Material *NbTi = new G4Material( "NbTi", 6.555*g/cm3, 2 );
   static bool init = true;
-  static G4Material *NbTi = new G4Material("NbTi",
-					   6.54*g/cm3, 
-					   2);
   if( init ){
-    NbTi -> AddMaterial(artg4Materials::Nb(), 65.535*perCent);
-    NbTi -> AddMaterial(artg4Materials::Ti(), 34.465*perCent); 
+    NbTi->AddMaterial(artg4Materials::Nb(),66.00*perCent);
+    NbTi->AddMaterial(artg4Materials::Ti(),34.00*perCent); 
     init = false;
   }
-  
   return NbTi;
 }
 
 
 G4Material* artg4Materials::PbSb()
 {
+  static G4Material *PbSb = new G4Material( "PbSb", 11.19*g/cm3, 2 ); // NSF(3/13): density calculated from mass fractions below
   static bool init = true;
-  static G4Material *PbSb = new G4Material("PbSb",
-					   10.8948*g/mole,
-					   2);
   if( init ){
-    PbSb -> AddMaterial(artg4Materials::Pb(), 94.*perCent);
-    PbSb -> AddMaterial(artg4Materials::Sb(), 6.*perCent);
+    PbSb->AddMaterial(artg4Materials::Pb(),94.*perCent); //assume correct
+    PbSb->AddMaterial(artg4Materials::Sb(), 6.*perCent); //assume correct
     init = false;
   }
-  
   return PbSb;
 }
 
@@ -339,6 +471,7 @@ G4Material *artg4Materials::Vacuum()
   
   return Vacuum;
 }  
+
 
 G4Material *artg4Materials::Vacuum1()
 // vacuum with index of refraction = 1; needed for optical processes
@@ -368,11 +501,6 @@ G4Material *artg4Materials::Vacuum1()
   return Vacuum1;
 }  
 
-G4Material *artg4Materials::H2O(){
-
-  static G4Material *H2O = G4NistManager::Instance()->FindOrBuildMaterial("G4_WATER");
-  return H2O;
-}
 
 G4Material* artg4Materials::PbF2()
 {
@@ -444,6 +572,7 @@ G4Material* artg4Materials::PbF2()
    return PbF2;
 }
 
+
 G4Material* artg4Materials::Quartz() // SiO2
 {
   static G4Material *quartz = 
@@ -465,114 +594,10 @@ G4Material* artg4Materials::Quartz() // SiO2
   return quartz;
 }
 
-G4Material* artg4Materials::BicronBC630()
-{
-   static bool init = true;
-   static G4Material *bicronBC630;
 
-   if( init ){
-
-      G4NistManager* nistMan = G4NistManager::Instance();
-      std::vector<G4int> natoms;
-      std::vector<G4double> fractionMass;
-      std::vector<G4String> elements;
-
-      //--------------------------------------------------
-      // Silicone (Template for Optical Grease)
-      //--------------------------------------------------
-
-      elements.push_back("C");     natoms.push_back(2);
-      elements.push_back("H");     natoms.push_back(6);
-      double density = 1.060*g/cm3;
-
-      bicronBC630 = nistMan->
-          ConstructNewMaterial("BicronBC630", elements, natoms, density);
-
-      // Material Properties table
-      const G4int nEntries = 5 ;
-
-      // Transmission coefficients from bicron datasheet: assume 100 micron thickness
-       
-      // Order from low energy to high energy (required for Geant 4.9.5)
-      G4double wavelengths[ nEntries ] = { 950.*nm, 700.*nm, 280.*nm, 270.*nm, 200.*nm };
-      G4double transmission[ nEntries ] = { 0.95, 0.95, 0.95, 0., 0. } ;
-
-      G4double photonEnergy[ nEntries ] ;
-      G4double refractiveIndex[ nEntries ] ;
-      G4double absorptionLength[ nEntries ] ;
-
-      for( int i = 0 ; i < nEntries ; ++i )
-      {
-          photonEnergy[ i ] = 0.001240 * MeV * nm / wavelengths[ i ] ;
-          refractiveIndex[ i ] = 1.465 ; // actual index of Bicron BC630
-          absorptionLength[ i ] = -0.1*mm / log( transmission[ i ] ) ;
-      }
-
-      // Geant 4.9.5 Material properties table: photonEnergy must be in order
-      G4MaterialPropertiesTable* table = new G4MaterialPropertiesTable() ;
-      table->AddProperty( "RINDEX", photonEnergy, refractiveIndex, nEntries ) ;
-      table->AddProperty( "ABSLENGTH", photonEnergy, absorptionLength, nEntries ) ;
-
-      bicronBC630->SetMaterialPropertiesTable( table ) ;
-
-      init = false;
-   }
-
-   return bicronBC630;
-}
-
-G4Material* artg4Materials::Borosilicate() // aka, pyrex
-{
-  static G4Material *pyrex = 
-     G4NistManager::Instance()->FindOrBuildMaterial("G4_Pyrex_Glass");
-
-  // http://hypernews.slac.stanford.edu/HyperNews/geant4/get/opticalphotons/299.html
-  const G4int num = 2 ;
-  G4MaterialPropertiesTable* myPyrexWindow = new G4MaterialPropertiesTable();
-  G4double pyrexPhotonAbsorptionLengthNRG[num] = { 1.0*eV, 5.0*eV } ;
-  G4double pyrexPhotonAbsorptionLength[num] = {5000.*mm , 5000.*mm};
-  myPyrexWindow->AddProperty("ABSLENGTH",pyrexPhotonAbsorptionLengthNRG,
-			      pyrexPhotonAbsorptionLength,num);
-  G4double pyrexPhotonRefractiveIndexNRG[num] = { 1.0*eV, 5.0*eV } ;
-  G4double pyrexPhotonRefractiveIndex[num] = {1.51 , 1.51};
-  myPyrexWindow->AddProperty("RINDEX",pyrexPhotonRefractiveIndexNRG,
-			      pyrexPhotonRefractiveIndex,num);
-  pyrex->SetMaterialPropertiesTable(myPyrexWindow);
-
-  return pyrex;
-}
-
-G4Material* artg4Materials::Epoxy() // same as quartz with different R and density
-{
-   static bool init = true;
-   // http://www.mt-berlin.com/frames_cryst/descriptions/quartz%20.htm
-   static G4Material *epoxy = new G4Material("Epoxy",
-					     1.02*g/cm3,
-					     2);
-   if( init ){
-      // http://www.convertunits.com/molarmass/SiO2
-      epoxy -> AddMaterial(artg4Materials::Si(), 46.743*perCent);
-      epoxy -> AddMaterial(artg4Materials::O(), 53.257*perCent);
-
-      // Material Properties table
-      const G4int nEntries = 2 ;
-      G4double epoxyRefractiveIndex = 1.5;
-      G4double photonEnergy[ nEntries ] = { 1.0*eV, 5.0*eV } ;
-      G4double refractiveIndex[ nEntries ] = { epoxyRefractiveIndex,
-                                               epoxyRefractiveIndex} ;
-      G4double absorptionLength[ nEntries ] = { 500.*cm, 500.*cm } ;
-
-      G4MaterialPropertiesTable* table = new G4MaterialPropertiesTable() ;
-      table->AddProperty( "RINDEX", photonEnergy, refractiveIndex, nEntries ) ;
-      table->AddProperty( "ABSLENGTH", photonEnergy, absorptionLength, nEntries ) ;
-
-      epoxy->SetMaterialPropertiesTable( table ) ;
-
-      init = false;
-   }
-  
-   return epoxy;
-}
+//====================================================================//
+//=======================   OPTICAL SURFACES   =======================//
+//====================================================================//
 
 G4OpticalSurface* artg4Materials::PolishedMetal()
 {
@@ -589,6 +614,7 @@ G4OpticalSurface* artg4Materials::PolishedMetal()
 
    return polishedMetal;
 }
+
 
 G4OpticalSurface* artg4Materials::Millipore()
 { // optical surfaces don't work quite the way we thought they did when we wrote this
@@ -770,6 +796,7 @@ G4OpticalSurface* artg4Materials::Specular()
    return specular;
 }
 
+
 G4OpticalSurface* artg4Materials::SpecularNoGap()
 // reflectivity = 1, pure specular reflection, with no air gap
 //    (probably the same as "polished" finish)
@@ -842,6 +869,7 @@ G4OpticalSurface* artg4Materials::SpecularNoGap()
    return specularNoGap;
 }
 
+
 G4OpticalSurface* artg4Materials::Diffuse()
 // reflectivity = 1, pure diffuse reflection, with air gap; specular reflection at xtal surface
 {
@@ -912,6 +940,7 @@ G4OpticalSurface* artg4Materials::Diffuse()
   
    return diffuse;
 }
+
 
 G4OpticalSurface* artg4Materials::SuperDiffuse()
 // reflectivity = 1, pure diffuse reflection, with air gap; diffuse reflection at xtal surface
@@ -984,6 +1013,7 @@ G4OpticalSurface* artg4Materials::SuperDiffuse()
   
    return superDiffuse;
 }
+
 
 G4OpticalSurface* artg4Materials::Black()
 // reflectivity = 0, with air gap; specualar spike reflections at xtal surface
@@ -1129,6 +1159,7 @@ G4OpticalSurface* artg4Materials::RoughBlack()
    return roughblack;
 }
 
+
 G4OpticalSurface* artg4Materials::Open()
 // Specular lobe reflections at xtal surface (finish type = ground)
 // This is different from surface wrapping "None" because "None" makes  a perfectly smooth crystal surface
@@ -1150,6 +1181,7 @@ G4OpticalSurface* artg4Materials::Open()
   return open;
 }
 
+
 namespace{
 
   struct map_t { G4String name; std::tr1::function<G4Material*()> func;};
@@ -1158,7 +1190,10 @@ namespace{
 #define MAKE_MAP_T(NAME) {""#NAME, artg4Materials::NAME}
 
   map_t namemap_[] = {
+    //  Elements
     MAKE_MAP_T(Al),
+    MAKE_MAP_T(Ar),
+    MAKE_MAP_T(Be),
     MAKE_MAP_T(C),
     MAKE_MAP_T(Cr),
     MAKE_MAP_T(Cu),
@@ -1174,24 +1209,29 @@ namespace{
     MAKE_MAP_T(Si),
     MAKE_MAP_T(Ti),
     MAKE_MAP_T(W),
+    MAKE_MAP_T(Zn),
+    //  Compounds
     MAKE_MAP_T(Air),
+    MAKE_MAP_T(Al5052),
     MAKE_MAP_T(Al6061),
     MAKE_MAP_T(BC404Scintillator),
     MAKE_MAP_T(BC408Scintillator),
     MAKE_MAP_T(BCF10ScintFiber),
+    MAKE_MAP_T(BicronBC630),
+    MAKE_MAP_T(Borosilicate),
+    MAKE_MAP_T(Brass),
     MAKE_MAP_T(Conductor),
+    MAKE_MAP_T(Epoxy),
+    MAKE_MAP_T(H2O),
+    MAKE_MAP_T(Kapton),
     MAKE_MAP_T(MacorCeramic),
     MAKE_MAP_T(Mylar),
     MAKE_MAP_T(NbTi),
     MAKE_MAP_T(PbSb),
     MAKE_MAP_T(Vacuum),
     MAKE_MAP_T(Vacuum1),
-    MAKE_MAP_T(H2O),
     MAKE_MAP_T(PbF2),
     MAKE_MAP_T(Quartz),
-    MAKE_MAP_T(BicronBC630),
-    MAKE_MAP_T(Borosilicate),
-    MAKE_MAP_T(Epoxy),
   };
 
   opticalmap_t opticalmap_[] = {
@@ -1221,6 +1261,7 @@ G4Material *artg4Materials::findByName(G4String name){
   return 0;
 }
 
+
 G4OpticalSurface *artg4Materials::findOpticalByName(G4String name){
   std::string sname(name);
   for(int i=0; i!=sizeof(opticalmap_)/sizeof(opticalmap_[0]); ++i){
@@ -1242,3 +1283,4 @@ const char* artg4Materials::material_not_found::what() const throw() {
   message_ = o.str();
   return message_.c_str();
 }
+
