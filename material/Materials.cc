@@ -269,47 +269,48 @@ G4Material* artg4Materials::BicronBC630()
       std::vector<G4double> fractionMass;
       std::vector<G4String> elements;
 
-      //--------------------------------------------------
-      // Silicone (Template for Optical Grease)
-      //--------------------------------------------------
-
-      elements.push_back("C");     natoms.push_back(2);
-      elements.push_back("H");     natoms.push_back(6);
-      double density = 1.060*g/cm3;
-
-      bicronBC630 = nistMan->
-          ConstructNewMaterial("BicronBC630", elements, natoms, density);
-
-      // Material Properties table
-      const G4int nEntries = 5 ;
-
-      // Transmission coefficients from bicron datasheet: assume 100 micron thickness
-      G4double wavelengths[ nEntries ] =
-	 { 200.*nm, 270.*nm, 280.*nm, 700.*nm, 950.*nm };
-      G4double transmission[ nEntries ] = { 0., 0., 0.95, 0.95, 0.95 } ;
-
-      G4double photonEnergy[ nEntries ] ;
-      G4double refractiveIndex[ nEntries ] ;
-      G4double absorptionLength[ nEntries ] ;
-
-      for( int i = 0 ; i < nEntries ; ++i )
-      {
-	 photonEnergy[ i ] = 0.001240 * MeV * nm / wavelengths[ i ] ;
-      	 refractiveIndex[ i ] = 1.465 ; // actual index of Bicron BC630
-	 // refractiveIndex[ i ] = 1.665 ; // higher index for testing
-	 absorptionLength[ i ] = -0.1*mm / log( transmission[ i ] ) ;
-      }
-
-      G4MaterialPropertiesTable* table = new G4MaterialPropertiesTable() ;
-      table->AddProperty( "RINDEX", photonEnergy, refractiveIndex, nEntries ) ;
-      table->AddProperty( "ABSLENGTH", photonEnergy, absorptionLength, nEntries ) ;
-
-      bicronBC630->SetMaterialPropertiesTable( table ) ;
-
-      init = false;
+       //--------------------------------------------------
+       // Silicone (Template for Optical Grease)
+       //--------------------------------------------------
+       
+       elements.push_back("C");     natoms.push_back(2);
+       elements.push_back("H");     natoms.push_back(6);
+       double density = 1.060*g/cm3;
+       
+       bicronBC630 = nistMan->
+       ConstructNewMaterial("BicronBC630", elements, natoms, density);
+       
+       // Material Properties table
+       const G4int nEntries = 5 ;
+       
+       // Transmission coefficients from bicron datasheet: assume 100 micron thickness
+       
+       // Order from low energy to high energy (required for Geant 4.9.5)
+       G4double wavelengths[ nEntries ] = { 950.*nm, 700.*nm, 280.*nm, 270.*nm, 200.*nm };
+       G4double transmission[ nEntries ] = { 0.95, 0.95, 0.95, 0., 0. } ;
+       
+       G4double photonEnergy[ nEntries ] ;
+       G4double refractiveIndex[ nEntries ] ;
+       G4double absorptionLength[ nEntries ] ;
+       
+       for( int i = 0 ; i < nEntries ; ++i )
+       {
+           photonEnergy[ i ] = 0.001240 * MeV * nm / wavelengths[ i ] ;
+           refractiveIndex[ i ] = 1.465 ; // actual index of Bicron BC630
+           absorptionLength[ i ] = -0.1*mm / log( transmission[ i ] ) ;
+       }
+       
+       // Geant 4.9.5 Material properties table: photonEnergy must be in order
+       G4MaterialPropertiesTable* table = new G4MaterialPropertiesTable() ;
+       table->AddProperty( "RINDEX", photonEnergy, refractiveIndex, nEntries ) ;
+       table->AddProperty( "ABSLENGTH", photonEnergy, absorptionLength, nEntries ) ;
+       
+       bicronBC630->SetMaterialPropertiesTable( table ) ;
+       
+       init = false;
    }
-
-   return bicronBC630;
+    
+    return bicronBC630;
 }
 
 
@@ -514,24 +515,51 @@ G4Material* artg4Materials::PbF2()
       PbF2 -> AddMaterial(artg4Materials::F(), 15.496*perCent);
 
       // Material Properties table
-      const G4int nEntries = 7 ;
+      const G4int nEntries = 8 ;
 
-      // Transmission coefficients measured for 186mm long cyrstal
-    G4double wavelengths[ nEntries ] =
-       { 200.*nm, 250.*nm, 300.*nm, 350.*nm, 400.*nm, 800.*nm, 1240.*nm } ;
-    G4double transmission[ nEntries ] = { 0., 0., 0.60, 0.74, 0.76, 0.82, 0.88 } ;
+       // Order from low energy to high energy (required for Geant 4.9.5)
+       G4double wavelengths[ nEntries ] =
+         { 1240.*nm,
+             800.*nm,
+             600.*nm,
+             400.*nm,
+             350.*nm,
+             300.*nm,
+             250.*nm,
+             200.*nm } ;
+       
+       // Transmission coefficients measured for 186mm long crystal
+       G4double transmission[ nEntries ] =
+         { 0.88, // 1240 nm
+             0.82, // 800 nm
+             0.79, // 600 nm (RB add point by interpolation)
+             0.76, // 400 nm
+             0.74, // 350 nm
+             0.60, // 300 nm
+             0.,   // 250 nm
+             0. } ; // 200 nm
+       
+       // refractive index data from http://refractiveindex.info/?group=CRYSTALS&material=PbF2
+       G4double refractiveIndex[ nEntries ] =
+         { 1.74, // 1240 nm
+             1.75, // 800 nm
+             1.76, // 600 nm
+             1.82, // 400 nm
+             1.85, // 350 nm
+             1.94, // 300 nm
+             2.02, // 250 nm
+             2.57 } ; // 200 nm
 
     G4double photonEnergy[ nEntries ] ;
-    G4double refractiveIndex[ nEntries ] ;
     G4double absorptionLength[ nEntries ] ;
 
     for( int i = 0 ; i < nEntries ; ++i )
     {
        photonEnergy[ i ] = 0.001240 * MeV * nm / wavelengths[ i ] ;
-       refractiveIndex[ i ] = 1.82 ;
        absorptionLength[ i ] = -186.*mm / log( transmission[ i ] ) ;
     }
 
+    // Geant 4.9.5 Material properties table: photonEnergy must be in order
     G4MaterialPropertiesTable* table = new G4MaterialPropertiesTable() ;
     table->AddProperty( "RINDEX", photonEnergy, refractiveIndex, nEntries ) ;
     table->AddProperty( "ABSLENGTH", photonEnergy, absorptionLength, nEntries ) ;
@@ -585,115 +613,6 @@ G4OpticalSurface* artg4Materials::PolishedMetal()
    }
 
    return polishedMetal;
-}
-
-
-G4OpticalSurface* artg4Materials::Millipore()
-{ // optical surfaces don't work quite the way we thought they did when we wrote this
-  //  ---- we haven't been using this "Millipore" wrapping ----
-   static bool init = true;
-   static G4OpticalSurface *millipore = new G4OpticalSurface("Millipore");
-
-   if( init ){
-
-      // type of optical surface
-      millipore->SetType(dielectric_dielectric);
-      millipore->SetModel(unified);
-      millipore->SetFinish(polishedbackpainted);
-      double facetSlopeDistributionSigma = 0; // the geant4 code calls this "sigma_alpha"
-      millipore->SetSigmaAlpha(facetSlopeDistributionSigma);
-
-      // Material Properties table
-
-      const G4int nEntries = 12 ;
-
-      // take the reflectance of millipore from the measurement shown in 
-      // https://muon.npl.washington.edu/elog/g2/Detectors/357
-      // Note: that measurement stops at 1.55 eV (aboutr 800 nm), and I've just extrapolated
-      // flat down to 1 eV
-      G4double photonEnergy[ nEntries ] = 
-	 { 1.0*eV,
-	   1.55*eV,
-	   2.7*eV,
-	   2.97*eV,
-	   3.31*eV,
-	   3.55*eV,
-	   3.82*eV,
-	   4.46*eV,
-	   4.92*eV,
-	   5.5*eV,
-	   5.82*eV,
-	   6.21*eV
-	 };
-
-      G4double reflectivity[nEntries] = 
-	 { 0.976,
-	   0.976,
-	   0.979,
-	   0.966,
-	   0.94,
-	   0.912,
-	   0.827,
-	   0.438,
-	   0.391,
-	   0.079,
-	   0.0474,
-	   0.044
-	 };
-
-      // assume the millipore is not optically coupled, since it does not bind
-      //  to the surface.  There is then a thin layer of air, and the effective
-      //  index is 1.0
-      G4double effectiveRefractiveIndex = 1.0;
-      G4double refractiveIndex[nEntries];
-      std::fill_n(refractiveIndex, nEntries, effectiveRefractiveIndex);
-
-      // I believe that what GEANT4 means by efficiency is the transmission 
-      // efficiency
-//      G4double transmissionEfficiency = 0;
-//      G4double efficiency[nEntries];
-//      std::fill_n(efficiency, nEntries, transmissionEfficiency);
-      // the above didn't work to make the material opaque.  Instead, set the absorption length to 0
-      G4double zeroLength = 0;
-      G4double absorptionLength[nEntries];
-      std::fill_n(absorptionLength, nEntries, zeroLength);
-
-      // UNIFIED model parameters
-      // specular spike: specular reflection (theta_reflect = theta_incident) relative to average surface plane
-      // specular lobe:  specular reflection relative to local surfance normal (rough polished surfaces)
-      // backscatter: fraction of light that does just that: would result physically from multiple reflections from microfacets
-      // diffuse or lambertion: calculated as (1 - sum(other three))
-      // initially estimate 
-      // -- from tyvek, where 1/2 - 2/3 of reflection is specular
-      // -- further assuming that the PbF2 crystal surface is highly polished
-      
-      G4double specularSpikeValue = 0.5;
-      G4double specularLobeValue = 0;
-      G4double backscatterValue = 0;
-      G4double specularSpike[nEntries];
-      G4double specularLobe[nEntries];
-      G4double backscatter[nEntries];
-
-      std::fill_n(specularSpike, nEntries, specularSpikeValue);
-      std::fill_n(specularLobe, nEntries, specularLobeValue);
-      std::fill_n(backscatter, nEntries, backscatterValue);
-      
-
-      G4MaterialPropertiesTable* table = new G4MaterialPropertiesTable() ;
-      table->AddProperty("RINDEX",                photonEnergy, refractiveIndex, nEntries ) ;
-      table->AddProperty("SPECULARSPIKECONSTANT", photonEnergy, specularSpike,   nEntries );
-      table->AddProperty("SPECULARLOBECONSTANT",  photonEnergy, specularLobe,    nEntries );
-      table->AddProperty("BACKSCATTERCONSTANT",   photonEnergy, backscatter,     nEntries );
-      table->AddProperty("REFLECTIVITY",          photonEnergy, reflectivity,    nEntries );
-      table->AddProperty("ABSLENGTH",             photonEnergy, absorptionLength,nEntries ); 
-//      table->AddProperty("EFFICIENCY",            photonEnergy, efficiency,      nEntries ); 
-
-      millipore->SetMaterialPropertiesTable( table ) ;
-
-      init = false;
-   }
-  
-   return millipore;
 }
 
 
@@ -769,79 +688,6 @@ G4OpticalSurface* artg4Materials::Specular()
 }
 
 
-G4OpticalSurface* artg4Materials::SpecularNoGap()
-// reflectivity = 1, pure specular reflection, with no air gap
-//    (probably the same as "polished" finish)
-{
-   static bool init = true;
-   static G4OpticalSurface *specularNoGap = new G4OpticalSurface("SpecularNoGap");
-
-   if( init ){
-
-      // type of optical surface
-      specularNoGap->SetType(dielectric_dielectric);
-      specularNoGap->SetModel(unified);
-      specularNoGap->SetFinish(polishedbackpainted); // "polished" means wrapping does specular reflection
-      double facetSlopeDistributionSigma = 0; // the geant4 code calls this "sigma_alpha"
-      specularNoGap->SetSigmaAlpha(facetSlopeDistributionSigma);
-
-      // Material Properties table
-
-      const G4int nEntries = 12 ;
-
-      G4double photonEnergy[ nEntries ] = 
-	 { 1.0*eV,
-	   1.55*eV,
-	   2.7*eV,
-	   2.97*eV,
-	   3.31*eV,
-	   3.55*eV,
-	   3.82*eV,
-	   4.46*eV,
-	   4.92*eV,
-	   5.5*eV,
-	   5.82*eV,
-	   6.21*eV
-	 };
-
-      G4double reflectivityValue = 1.0;
-      G4double reflectivity[nEntries];
-      std::fill_n(reflectivity, nEntries, reflectivityValue);
-
-      // refractive index = same as PbF (no air gap)
-      G4double effectiveRefractiveIndex = 1.82;
-      G4double refractiveIndex[nEntries];
-      std::fill_n(refractiveIndex, nEntries, effectiveRefractiveIndex);
-
-      // all reflection at xtal surface is specular, perfectly smooth xtal surface
-      G4double specularSpikeValue = 1.0;
-      G4double specularLobeValue = 0;
-      G4double backscatterValue = 0;
-      G4double specularSpike[nEntries];
-      G4double specularLobe[nEntries];
-      G4double backscatter[nEntries];
-
-      std::fill_n(specularSpike, nEntries, specularSpikeValue);
-      std::fill_n(specularLobe, nEntries, specularLobeValue);
-      std::fill_n(backscatter, nEntries, backscatterValue);
-      
-
-      G4MaterialPropertiesTable* table = new G4MaterialPropertiesTable() ;
-      table->AddProperty("RINDEX",                photonEnergy, refractiveIndex, nEntries ) ;
-      table->AddProperty("SPECULARSPIKECONSTANT", photonEnergy, specularSpike,   nEntries );
-      table->AddProperty("SPECULARLOBECONSTANT",  photonEnergy, specularLobe,    nEntries );
-      table->AddProperty("BACKSCATTERCONSTANT",   photonEnergy, backscatter,     nEntries );
-      table->AddProperty("REFLECTIVITY",          photonEnergy, reflectivity,    nEntries );
-
-      specularNoGap->SetMaterialPropertiesTable( table ) ;
-
-      init = false;
-   }
-  
-   return specularNoGap;
-}
-
-
 G4OpticalSurface* artg4Materials::Diffuse()
 // reflectivity = 1, pure diffuse reflection, with air gap; specular reflection at xtal surface
 {
@@ -914,79 +760,6 @@ G4OpticalSurface* artg4Materials::Diffuse()
 }
 
 
-G4OpticalSurface* artg4Materials::SuperDiffuse()
-// reflectivity = 1, pure diffuse reflection, with air gap; diffuse reflection at xtal surface
-{
-   static bool init = true;
-   static G4OpticalSurface *superDiffuse = new G4OpticalSurface("Super Diffuse");
-
-   if( init ){
-
-      // type of optical surface
-      superDiffuse->SetType(dielectric_dielectric);
-      superDiffuse->SetModel(unified);
-      superDiffuse->SetFinish(groundbackpainted); // "ground" means wrapping does diffuse reflection
-      double facetAngleDistributionSigma = 0.07379; // based on slope calculations
-      superDiffuse->SetSigmaAlpha(facetAngleDistributionSigma);
-   
-
-      // Material Properties table
-
-      const G4int nEntries = 12 ;
-
-      G4double photonEnergy[ nEntries ] = 
-	 { 1.0*eV,
-	   1.55*eV,
-	   2.7*eV,
-	   2.97*eV,
-	   3.31*eV,
-	   3.55*eV,
-	   3.82*eV,
-	   4.46*eV,
-	   4.92*eV,
-	   5.5*eV,
-	   5.82*eV,
-	   6.21*eV
-	 };
-
-      G4double reflectivityValue = 1.0;
-      G4double reflectivity[nEntries];
-      std::fill_n(reflectivity, nEntries, reflectivityValue);
-
-      // refractive index for air gap
-      G4double effectiveRefractiveIndex = 1.0;
-      G4double refractiveIndex[nEntries];
-      std::fill_n(refractiveIndex, nEntries, effectiveRefractiveIndex);
-
-      // all reflection at xtal surface is diffuse
-      G4double specularSpikeValue = 0;
-      G4double specularLobeValue = 0;
-      G4double backscatterValue = 0;
-      G4double specularSpike[nEntries];
-      G4double specularLobe[nEntries];
-      G4double backscatter[nEntries];
-
-      std::fill_n(specularSpike, nEntries, specularSpikeValue);
-      std::fill_n(specularLobe, nEntries, specularLobeValue);
-      std::fill_n(backscatter, nEntries, backscatterValue);
-      
-
-      G4MaterialPropertiesTable* table = new G4MaterialPropertiesTable() ;
-      table->AddProperty("RINDEX",                photonEnergy, refractiveIndex, nEntries ) ;
-      table->AddProperty("SPECULARSPIKECONSTANT", photonEnergy, specularSpike,   nEntries );
-      table->AddProperty("SPECULARLOBECONSTANT",  photonEnergy, specularLobe,    nEntries );
-      table->AddProperty("BACKSCATTERCONSTANT",   photonEnergy, backscatter,     nEntries );
-      table->AddProperty("REFLECTIVITY",          photonEnergy, reflectivity,    nEntries );
-
-      superDiffuse->SetMaterialPropertiesTable( table ) ;
-
-      init = false;
-   }
-  
-   return superDiffuse;
-}
-
-
 G4OpticalSurface* artg4Materials::Black()
 // reflectivity = 0, with air gap; specualar spike reflections at xtal surface
 {
@@ -1056,79 +829,6 @@ G4OpticalSurface* artg4Materials::Black()
    }
   
    return black;
-}
-
-
-G4OpticalSurface* artg4Materials::RoughBlack()
-// reflectivity = 0, with air gap; specular lobe reflections at xtal surface
-// ---- This wrapping is now the same as "Black" ----
-{
-   static bool init = true;
-   static G4OpticalSurface *roughblack = new G4OpticalSurface("RoughBlack");
-
-   if( init ){
-
-      // type of optical surface
-      roughblack->SetType(dielectric_dielectric);
-      roughblack->SetModel(unified);
-      roughblack->SetFinish(polishedbackpainted);
-      double facetAngleDistributionSigma = 0.07379; // based on slope calculations
-      roughblack->SetSigmaAlpha(facetAngleDistributionSigma);
-
-      // Material Properties table
-
-      const G4int nEntries = 12 ;
-
-      G4double photonEnergy[ nEntries ] = 
-	 { 1.0*eV,
-	   1.55*eV,
-	   2.7*eV,
-	   2.97*eV,
-	   3.31*eV,
-	   3.55*eV,
-	   3.82*eV,
-	   4.46*eV,
-	   4.92*eV,
-	   5.5*eV,
-	   5.82*eV,
-	   6.21*eV
-	 };
-
-      G4double reflectivityValue = 0.0;
-      G4double reflectivity[nEntries];
-      std::fill_n(reflectivity, nEntries, reflectivityValue);
-
-      // refractive index for air gap
-      G4double effectiveRefractiveIndex = 1.0;
-      G4double refractiveIndex[nEntries];
-      std::fill_n(refractiveIndex, nEntries, effectiveRefractiveIndex);
-      
-      // all reflection at xtal surface is specular lobe
-      G4double specularSpikeValue = 0;
-      G4double specularLobeValue = 1.0;
-      G4double backscatterValue = 0;
-      G4double specularSpike[nEntries];
-      G4double specularLobe[nEntries];
-      G4double backscatter[nEntries];
-
-      std::fill_n(specularSpike, nEntries, specularSpikeValue);
-      std::fill_n(specularLobe, nEntries, specularLobeValue);
-      std::fill_n(backscatter, nEntries, backscatterValue);
-
-      G4MaterialPropertiesTable* table = new G4MaterialPropertiesTable() ;
-      table->AddProperty("RINDEX",                photonEnergy, refractiveIndex, nEntries ) ;
-      table->AddProperty("SPECULARSPIKECONSTANT", photonEnergy, specularSpike,   nEntries );
-      table->AddProperty("SPECULARLOBECONSTANT",  photonEnergy, specularLobe,    nEntries );
-      table->AddProperty("BACKSCATTERCONSTANT",   photonEnergy, backscatter,     nEntries );
-      table->AddProperty("REFLECTIVITY",          photonEnergy, reflectivity,    nEntries );
-
-
-      roughblack->SetMaterialPropertiesTable( table ) ;
-
-      init = false;
-   }
-  
-   return roughblack;
 }
 
 
@@ -1208,13 +908,9 @@ namespace{
 
   opticalmap_t opticalmap_[] = {
     MAKE_MAP_T(PolishedMetal),
-    MAKE_MAP_T(Millipore),
     MAKE_MAP_T(Specular),
-    MAKE_MAP_T(SpecularNoGap),
     MAKE_MAP_T(Diffuse),
     MAKE_MAP_T(Black),
-    MAKE_MAP_T(SuperDiffuse),
-    MAKE_MAP_T(RoughBlack),
     MAKE_MAP_T(Open),
   };
 }
