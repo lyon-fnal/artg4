@@ -76,10 +76,17 @@ namespace artg4Materials
 
   //  OPTICAL SURFACES
   G4OpticalSurface *PolishedMetal();
+  G4OpticalSurface *PolishedMetalReverse();
   G4OpticalSurface *Specular();
+  G4OpticalSurface *SpecularReverse();
   G4OpticalSurface *Diffuse();
+  G4OpticalSurface *DiffuseReverse();
   G4OpticalSurface *Black();
-  G4OpticalSurface *Open();
+  G4OpticalSurface *BlackReverse();
+  G4OpticalSurface *Open(); // PbF2 surface
+  G4OpticalSurface *OpenReverse();
+  G4OpticalSurface *GroundGlass();
+  G4OpticalSurface *EtchedGlass();
 
   //  A lookup by name!
   G4Material *findByName(G4String);
