@@ -76,6 +76,12 @@ namespace artg4 {
     G4VisManager* visManager_;
 #endif
 
+	// Pseudorandom engine seed (originally hardcoded to 12345),
+	// obtained from the configuration file.
+	// Note: the maximum seed value is 9e8, which is potentially larger
+	// than a long can hold.
+	long seed_;
+
     // Determine whether we should use visualization
     // False by default, can be set by config file
     bool enableVisualization_;
@@ -124,6 +130,7 @@ artg4::artg4Main::artg4Main(fhicl::ParameterSet const & p)
   : runManager_(),
     session_(0),
     UI_(0),
+	seed_(p.get<long>("seed", -1)),
     enableVisualization_( p.get<bool>("enableVisualization",false)),
     macroPath_( p.get<std::string>("macroPath",".")),
     pathFinder_( macroPath_),
@@ -149,7 +156,14 @@ artg4::artg4Main::artg4Main(fhicl::ParameterSet const & p)
   // how this works. Note that @createEngine@ is a member function
   // of our base class (actually, a couple of base classes deep!).
   // Note that the name @G4Engine@ is special. 
-  createEngine( 12345, "G4Engine");
+  if (seed_ == -1) {
+	  // Construct seed from time and pid. (default behavior if 
+	  // no seed is provided by the fcl file)
+	  seed_ = time(0) + getpid();
+	  seed_ = ((seed_ & 0xFFFF0000) >> 16) | ((seed_ & 0x0000FFFF) << 16); //exchange upper and lower word
+	  seed_ = seed_ % 900000000; // ensure the seed is in the correct range for createEngine
+  }
+  createEngine( seed_, "G4Engine");
   
   // Handle the afterEvent setting
   if ( afterEvent_ == "ui" ) {
