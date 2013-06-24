@@ -7,6 +7,7 @@ standardArtG4Producer : {
      macroPath: ".:./macros:../macros:../../macros"
      visMacro: "vis.mac"
      afterEvent: ui  // (ui, pause, pass)
+     seed: -1
 }
 END_PROLOG
 

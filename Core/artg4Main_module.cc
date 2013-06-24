@@ -76,6 +76,12 @@ namespace artg4 {
     G4VisManager* visManager_;
 #endif
 
+	// Pseudorandom engine seed (originally hardcoded to 12345),
+	// obtained from the configuration file.
+	// Note: the maximum seed value is 9e8, which is potentially larger
+	// than a long can hold.
+	long seed_;
+
     // Determine whether we should use visualization
     // False by default, can be set by config file
     bool enableVisualization_;
@@ -99,6 +105,20 @@ namespace artg4 {
     // have been produced.
     // False by default, can be changed by afterEvent in FHICL
     bool pauseAfterEvent_;
+
+	// Boolean to determine whether we're in "visualize only certain
+	// events" mode. If so, we pause and show the visualization only after
+	// the given events. Turning this on only works if visualization is
+	// also enabled, and it will pause, pass, or bring up a UI at the end
+	// of the given events, as specified by afterEvent.
+	bool visSpecificEvents_;
+
+	// If we're in "visualize only certain events" mode, this vector
+	// contains the events for which the visualization should be displayed.
+	// This is a map because determining whether an event is in there is
+	// O(log(n)), rather than O(n) for a vector, and find(...) is a heck of
+	// a lot more convenient than looping over the vector.
+	std::map<int, bool> eventsToDisplay_;
     
     // Run diagnostic level (verbosity)
     int rmvlevel_;
@@ -124,17 +144,34 @@ artg4::artg4Main::artg4Main(fhicl::ParameterSet const & p)
   : runManager_(),
     session_(0),
     UI_(0),
+	seed_(p.get<long>("seed", -1)),
     enableVisualization_( p.get<bool>("enableVisualization",false)),
     macroPath_( p.get<std::string>("macroPath",".")),
     pathFinder_( macroPath_),
     visMacro_( p.get<std::string>("visMacro", "vis.mac")),
     pauseAfterEvent_(false),
+	visSpecificEvents_(p.get<bool>("visualizeSpecificEvents",false)),
+	eventsToDisplay_(),
     rmvlevel_( p.get<int>("rmvlevel",0)),
     uiAtBeginRun_( p.get<bool>("uiAtBeginRun", false)),
     uiAtEndEvent_(false),
     afterEvent_( p.get<std::string>("afterEvent", "pass")),
     logInfo_("ArtG4Main")
 {
+	// If we're in "visualize specific events" mode (essentially only pause
+	// after given events), then extract the list of events we need to
+	// pause for. They are placed in a map because it is more efficient to
+	// determine whether a given entry is present in the map than a vector.
+	if (visSpecificEvents_) {
+		std::vector<int> eventsToDisplayVec = 
+			p.get<vector<int>>("eventsToDisplay");
+		for (size_t i = 0; i < eventsToDisplayVec.size(); i++) {
+			eventsToDisplay_[eventsToDisplayVec[i]] = true;
+		}
+		// Would be nice to have error checking here, but for now, if you
+		// do something silly, it'll probably just crash. 
+	}
+
   // We need all of the services to run @produces@ on the data they will store. We do this
   // by retrieving the holder services.
   art::ServiceHandle<ActionHolderService> actionHolder;
@@ -149,7 +186,15 @@ artg4::artg4Main::artg4Main(fhicl::ParameterSet const & p)
   // how this works. Note that @createEngine@ is a member function
   // of our base class (actually, a couple of base classes deep!).
   // Note that the name @G4Engine@ is special. 
-  createEngine( 12345, "G4Engine");
+  if (seed_ == -1) {
+	  // Construct seed from time and pid. (default behavior if 
+	  // no seed is provided by the fcl file)
+	  // Note: According to Kevin Lynch, the two lines below are not portable. 
+	  seed_ = time(0) + getpid();
+	  seed_ = ((seed_ & 0xFFFF0000) >> 16) | ((seed_ & 0x0000FFFF) << 16); //exchange upper and lower word
+	  seed_ = seed_ % 900000000; // ensure the seed is in the correct range for createEngine
+  }
+  createEngine( seed_, "G4Engine");
   
   // Handle the afterEvent setting
   if ( afterEvent_ == "ui" ) {
@@ -294,22 +339,29 @@ void artg4::artg4Main::produce(art::Event & e)
     // Flush the visualization
     //UI_->ApplyCommand("/tracking/storeTrajectory 1");
     UI_->ApplyCommand("/vis/viewer/flush");
-    
-    if ( uiAtEndEvent_ ) {
-      session_ = new G4UIterminal;
-      session_->SessionStart();
-      delete session_;
-    }
-    
-    if ( pauseAfterEvent_ ) {
-      // Use cout so that it is printed to console immediately.
-      // logInfo_ prints everything at once, so if we used that, we would
-      // find out that we should press ENTER to continue only *after* we'd
-      // actually done so!
-      cout << "Pausing so you can appreciate visualization. "
-      << "Hit ENTER to continue." << std::endl;
-      std::cin.ignore();
-    }
+
+    // Only pause or bring up a UI if
+	//  a) we're doing so for all events (!visSpecificEvents_)
+	//  b) the current event was specified as one to pause for
+	//     (eventsToDisplay_.count(e.id().event()) > 0)
+	if ( !visSpecificEvents_ || eventsToDisplay_.count(e.id().event()) > 0 ) {
+		if ( uiAtEndEvent_ ) {
+			session_ = new G4UIterminal;
+			session_->SessionStart();
+			delete session_;
+		}
+
+		if ( pauseAfterEvent_) {
+			// Use cout so that it is printed to console immediately.
+			// logInfo_ prints everything at once, so if we used that, we
+			// would find out that we should press ENTER to continue only
+			// *after* we'd actually done so!
+			cout << "Event: " << e.id().event() 
+				<< ", pausing so you can appreciate visualization. "
+				<< "Hit ENTER to continue." << std::endl;
+			std::cin.ignore();
+		}
+	}
     
   }
 #endif
@@ -328,15 +380,15 @@ void artg4::artg4Main::endRun(art::Run & r)
 #ifdef G4VIS_USE
   // If visualization is enabled and we didn't already pause after each event,
   // pause now, with all the events visible.
-//  if ( enableVisualization_ && (! pauseAfterEvent_) ) {
-    // Use cout so that it is printed to console immediately. 
-    // logInfo_ prints everything at once, so if we used that, we would
-    // find out that we should press ENTER to finish only *after* we'd 
-    // actually done so!
-//    cout << "Pausing so you can appreciate visualization. "
-//	 << "Hit ENTER to finish job." << std::endl;
-//    std::cin.ignore();
-//  }
+  //  if ( enableVisualization_ && (! pauseAfterEvent_) ) {
+  // Use cout so that it is printed to console immediately. 
+  // logInfo_ prints everything at once, so if we used that, we would
+  // find out that we should press ENTER to finish only *after* we'd 
+  // actually done so!
+  //    cout << "Pausing so you can appreciate visualization. "
+  //	 << "Hit ENTER to finish job." << std::endl;
+  //    std::cin.ignore();
+  //  }
   if ( enableVisualization_ ) {
     // Delete ui
     delete visManager_;
