@@ -52,9 +52,11 @@ namespace artg4Materials
   G4Material *Zn(); // zinc
   
   //  COMPOUNDS
+  G4Material *CO2();
   G4Material *Air();
   G4Material *Al5052();            // inner/outer quad electrodes 
   G4Material *Al6061();            // inflector mandrel, upper/lower quad electrodes, etc.
+  G4Material *ArCO2();             // Gas for the tracking straws
   G4Material *BC404Scintillator(); // plastic scintillator
   G4Material *BC408Scintillator(); // another plastic scintillator
   G4Material *BCF10ScintFiber();   // plastic scintillating fiber

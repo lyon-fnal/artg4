@@ -174,6 +174,12 @@ G4Material *artg4Materials::Zn()
 //===========================   COMPOUNDS   ==========================//
 //====================================================================//
 
+G4Material *artg4Materials::CO2()
+{
+  static G4Material *CO2 = G4NistManager::Instance()->FindOrBuildMaterial("G4_CARBON_DIOXIDE");
+  return CO2;
+}
+
 G4Material *artg4Materials::Air()
 {
   static G4Material *Air = G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR");
@@ -210,6 +216,18 @@ G4Material *artg4Materials::Al6061() // inflector mandrel, quad upper/lower elec
   return Al6061;
 }
 
+G4Material *artg4Materials::ArCO2(){
+  static G4Material *ArCO2 = new G4Material("ArgonCO2", 0.0018*g/cm3 ,2);
+  
+  static bool init = true;
+  if (init){
+    ArCO2->AddMaterial(artg4Materials::Ar(), 80*perCent);
+    ArCO2->AddMaterial(artg4Materials::CO2(), 20*perCent);
+    init = false;
+  }
+  
+  return ArCO2;
+}
 
 namespace{ 
   G4Material *Scintillator(G4String name, 
@@ -457,7 +475,6 @@ G4Material* artg4Materials::PbSb()
   }
   return PbSb;
 }
-
 
 G4Material *artg4Materials::Vacuum()
 {
