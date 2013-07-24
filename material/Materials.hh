@@ -85,6 +85,10 @@ namespace artg4Materials
   G4OpticalSurface *DiffuseReverse();
   G4OpticalSurface *Black();
   G4OpticalSurface *BlackReverse();
+  G4OpticalSurface *Tedlar();
+  G4OpticalSurface *TedlarReverse();
+  G4OpticalSurface *Millipore();
+  G4OpticalSurface *MilliporeReverse();
   G4OpticalSurface *Open(); // PbF2 surface
   G4OpticalSurface *OpenReverse();
   G4OpticalSurface *GroundGlass();
