@@ -1032,38 +1032,62 @@ G4OpticalSurface* artg4Materials::Tedlar()
 
       // Material Properties table
 
-      const G4int nEntries = 12 ;
+      const G4int nEntries = 24 ;
 
       G4double photonEnergy[ nEntries ] = 
-	 { 1.0*eV,
-	   1.55*eV,
-	   2.7*eV,
-	   2.97*eV,
-	   3.31*eV,
-	   3.55*eV,
-	   3.82*eV,
-	   4.46*eV,
-	   4.92*eV,
-	   5.5*eV,
-	   5.82*eV,
-	   6.21*eV
+	{ 1.38*eV,
+	  1.55*eV,
+	  1.77*eV,
+	  1.82*eV,
+	  1.88*eV,
+	  1.94*eV,
+	  2.0*eV,
+	  2.07*eV,
+	  2.14*eV,
+	  2.21*eV,
+	  2.3*eV,
+	  2.38*eV,
+	  2.48*eV,
+	  2.58*eV,
+	  2.7*eV,
+	  2.82*eV,
+	  2.95*eV,
+	  3.1*eV,
+	  3.31*eV,
+	  3.54*eV,
+	  3.81*eV,
+	  4.13*eV,
+	  4.51*eV,
+	  4.96*eV
 	 };
 
-
+      // From Detector Elog 584
       G4double reflectivity[nEntries] = 
 	{
-	  0.0658,
-	  0.0739,
-	  0.0791,
-	  0.0815,
-	  0.0659,
-	  0.0584,
-	  0.0585,
-	  0.0609,
+	  0.0669,
+	  0.0741,
+	  0.0708,
+	  0.0708,
+	  0.0708,
+	  0.0713,
+	  0.0718,
+	  0.0728,
+	  0.0735,
+	  0.0741,
+	  0.0749,
+	  0.0760,
+	  0.0776,
+	  0.0788,
+	  0.0805,
+	  0.0821,
+	  0.0835,
+	  0.0831,
+	  0.0679,
+	  0.0601,
 	  0.0605,
-	  0.0605,
-	  0.0605,
-	  0.0605
+	  0.0631,
+	  0.0635,
+	  0.0637
 	};
       
       // refractive index for air gap
@@ -1114,39 +1138,63 @@ G4OpticalSurface* artg4Materials::TedlarReverse()
         
         // Material Properties table
         
-        const G4int nEntries = 12 ;
+        const G4int nEntries = 24 ;
         
-        G4double photonEnergy[ nEntries ] =
-        { 1.0*eV,
-            1.55*eV,
-            2.7*eV,
-            2.97*eV,
-            3.31*eV,
-            3.55*eV,
-            3.82*eV,
-            4.46*eV,
-            4.92*eV,
-            5.5*eV,
-            5.82*eV,
-            6.21*eV
-        };	
-	
+       G4double photonEnergy[ nEntries ] = 
+	{ 1.38*eV,
+	  1.55*eV,
+	  1.77*eV,
+	  1.82*eV,
+	  1.88*eV,
+	  1.94*eV,
+	  2.0*eV,
+	  2.07*eV,
+	  2.14*eV,
+	  2.21*eV,
+	  2.3*eV,
+	  2.38*eV,
+	  2.48*eV,
+	  2.58*eV,
+	  2.7*eV,
+	  2.82*eV,
+	  2.95*eV,
+	  3.1*eV,
+	  3.31*eV,
+	  3.54*eV,
+	  3.81*eV,
+	  4.13*eV,
+	  4.51*eV,
+	  4.96*eV
+	 };
 
-	G4double reflectivity[nEntries] = 
-	  {
-	    0.0658,
-	    0.0739,
-	    0.0791,
-	    0.0815,
-	    0.0659,
-	    0.0584,
-	    0.0585,
-	    0.0609,
-	    0.0605,
-	    0.0605,
-	    0.0605,
-	    0.0605
-	  };
+      // From Detector Elog 584
+      G4double reflectivity[nEntries] = 
+	{
+	  0.0669,
+	  0.0741,
+	  0.0708,
+	  0.0708,
+	  0.0708,
+	  0.0713,
+	  0.0718,
+	  0.0728,
+	  0.0735,
+	  0.0741,
+	  0.0749,
+	  0.0760,
+	  0.0776,
+	  0.0788,
+	  0.0805,
+	  0.0821,
+	  0.0835,
+	  0.0831,
+	  0.0679,
+	  0.0601,
+	  0.0605,
+	  0.0631,
+	  0.0635,
+	  0.0637
+	};
 	               
         
         G4MaterialPropertiesTable* table = new G4MaterialPropertiesTable() ;
@@ -1177,39 +1225,64 @@ G4OpticalSurface* artg4Materials::Millipore()
 
       // Material Properties table
 
-      const G4int nEntries = 12 ;
+      const G4int nEntries = 24 ;
 
       G4double photonEnergy[ nEntries ] = 
-	 { 1.0*eV,
-	   1.55*eV,
-	   2.7*eV,
-	   2.97*eV,
-	   3.31*eV,
-	   3.55*eV,
-	   3.82*eV,
-	   4.46*eV,
-	   4.92*eV,
-	   5.5*eV,
-	   5.82*eV,
-	   6.21*eV
+	{ 1.38*eV,
+	  1.55*eV,
+	  1.77*eV,
+	  1.82*eV,
+	  1.88*eV,
+	  1.94*eV,
+	  2.0*eV,
+	  2.07*eV,
+	  2.14*eV,
+	  2.21*eV,
+	  2.3*eV,
+	  2.38*eV,
+	  2.48*eV,
+	  2.58*eV,
+	  2.7*eV,
+	  2.82*eV,
+	  2.95*eV,
+	  3.1*eV,
+	  3.31*eV,
+	  3.54*eV,
+	  3.81*eV,
+	  4.13*eV,
+	  4.51*eV,
+	  4.96*eV
 	 };
 
-
+      // From Detector Elog 584
       G4double reflectivity[nEntries] = 
 	{
-	  0.974,
-	  0.975,
+	  0.972,
+	  0.982,
 	  0.984,
+	  0.985,
+	  0.987,
+	  0.987,
 	  0.988,
-	  0.979,
-	  0.974,
-	  0.962,
-	  0.923,
-	  0.86,
-	  0.86,
-	  0.86,
-	  0.86
+	  0.989,
+	  0.991,
+	  0.992,
+	  0.993,
+	  0.994,
+	  0.995,
+	  0.999,
+	  1,
+	  1,
+	  1,
+	  1,
+	  1,
+	  1,
+	  0.967,
+	  0.978,
+	  0.951,
+	  0.893
 	};
+
       
       // refractive index for air gap
       G4double effectiveRefractiveIndex = 1.0;
@@ -1259,40 +1332,63 @@ G4OpticalSurface* artg4Materials::MilliporeReverse()
         
         // Material Properties table
         
-        const G4int nEntries = 12 ;
+        const G4int nEntries = 24 ;
         
-        G4double photonEnergy[ nEntries ] =
-        { 1.0*eV,
-            1.55*eV,
-            2.7*eV,
-            2.97*eV,
-            3.31*eV,
-            3.55*eV,
-            3.82*eV,
-            4.46*eV,
-            4.92*eV,
-            5.5*eV,
-            5.82*eV,
-            6.21*eV
-        };	
-	
+      G4double photonEnergy[ nEntries ] = 
+	{ 1.38*eV,
+	  1.55*eV,
+	  1.77*eV,
+	  1.82*eV,
+	  1.88*eV,
+	  1.94*eV,
+	  2.0*eV,
+	  2.07*eV,
+	  2.14*eV,
+	  2.21*eV,
+	  2.3*eV,
+	  2.38*eV,
+	  2.48*eV,
+	  2.58*eV,
+	  2.7*eV,
+	  2.82*eV,
+	  2.95*eV,
+	  3.1*eV,
+	  3.31*eV,
+	  3.54*eV,
+	  3.81*eV,
+	  4.13*eV,
+	  4.51*eV,
+	  4.96*eV
+	 };
 
-	G4double reflectivity[nEntries] = 
-	  {
-	    0.974,
-	    0.975,
-	    0.984,
-	    0.988,
-	    0.979,
-	    0.974,
-	    0.962,
-	    0.923,
-	    0.86,
-	    0.86,
-	    0.86,
-	    0.86
-	  };
-	               
+      // From Detector Elog 584
+      G4double reflectivity[nEntries] = 
+	{
+	  0.972,
+	  0.982,
+	  0.984,
+	  0.985,
+	  0.987,
+	  0.987,
+	  0.988,
+	  0.989,
+	  0.991,
+	  0.992,
+	  0.993,
+	  0.994,
+	  0.995,
+	  0.999,
+	  1,
+	  1,
+	  1,
+	  1,
+	  1,
+	  1,
+	  0.967,
+	  0.978,
+	  0.951,
+	  0.893
+	};	               
         
         G4MaterialPropertiesTable* table = new G4MaterialPropertiesTable() ;
         table->AddProperty("REFLECTIVITY",          photonEnergy, reflectivity,    nEntries );
