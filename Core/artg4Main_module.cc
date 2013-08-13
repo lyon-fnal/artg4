@@ -378,17 +378,6 @@ void artg4::artg4Main::endRun(art::Run & r)
 
   //  visualization stuff
 #ifdef G4VIS_USE
-  // If visualization is enabled and we didn't already pause after each event,
-  // pause now, with all the events visible.
-  //  if ( enableVisualization_ && (! pauseAfterEvent_) ) {
-  // Use cout so that it is printed to console immediately. 
-  // logInfo_ prints everything at once, so if we used that, we would
-  // find out that we should press ENTER to finish only *after* we'd 
-  // actually done so!
-  //    cout << "Pausing so you can appreciate visualization. "
-  //	 << "Hit ENTER to finish job." << std::endl;
-  //    std::cin.ignore();
-  //  }
   if ( enableVisualization_ ) {
     // Delete ui
     delete visManager_;
