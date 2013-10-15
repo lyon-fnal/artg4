@@ -61,7 +61,7 @@ namespace artg4Materials
   G4Material *BC408Scintillator(); // another plastic scintillator
   G4Material *BCF10ScintFiber();   // plastic scintillating fiber
   G4Material *BicronBC630();       // optical grease
-  G4Material *Borosilicate();      // using the pyrex borosilicate formulation from the NIST database in G4
+  G4Material *Borosilicate();      // using the pyrex borosilicate formulation from the NIST database in G4 (we were using this for SiPM window, but now we have created a separate SiPM surface resin material)
   G4Material *Brass();             // quad support bolts, etc.
   G4Material *Conductor();         // NSF(3/13): Fixed this @bug for the aluminum stabilized NbTi/Cu inflector superconductor (NbTi:Cu:Al = 1.0:0.9:3.7)
   G4Material *Epoxy();
@@ -75,6 +75,7 @@ namespace artg4Materials
   G4Material *Vacuum1();           // index of refraction = 1; needed for optical processes
   G4Material *PbF2();              // calo xtals
   G4Material *Quartz();
+  G4Material *SiPMSurfaceResin();  // has correct index of refraction for SiPM coating
 
   //  OPTICAL SURFACES
   G4OpticalSurface *PolishedMetal();

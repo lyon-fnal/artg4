@@ -611,6 +611,25 @@ G4Material* artg4Materials::Quartz() // SiO2
   return quartz;
 }
 
+G4Material* artg4Materials::SiPMSurfaceResin()
+/* With the correct index of refraction (n = 1.55). Other bulk properties don't matter for the simulation, because particle tracks are killed when they enter the photodetector volume.
+ */
+{
+    static bool init = true;
+    static G4Material *sipmresin = G4NistManager::Instance()->FindOrBuildMaterial("G4_Si");
+    
+    if( init ){
+    const G4int nEntries = 2 ;
+    G4MaterialPropertiesTable* table = new G4MaterialPropertiesTable();
+    G4double photonEnergy[nEntries] = { 1.0*eV, 5.0*eV } ;
+    G4double refractiveIndex[nEntries] = {1.55 , 1.55};
+    table->AddProperty("RINDEX", photonEnergy, refractiveIndex, nEntries);
+    sipmresin->SetMaterialPropertiesTable(table);
+    }
+    return sipmresin;
+}
+
+
 
 //====================================================================//
 //=======================   OPTICAL SURFACES   =======================//
@@ -1588,6 +1607,7 @@ namespace{
     MAKE_MAP_T(Vacuum1),
     MAKE_MAP_T(PbF2),
     MAKE_MAP_T(Quartz),
+    MAKE_MAP_T(SiPMSurfaceResin),
   };
 
   opticalmap_t opticalmap_[] = {
