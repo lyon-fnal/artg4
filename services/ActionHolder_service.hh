@@ -140,5 +140,7 @@ namespace artg4 {
 
   };
 }
+using artg4::ActionHolderService;
+DECLARE_ART_SERVICE(ActionHolderService, LEGACY)
 
 #endif // ACTION_HOLDER_HH

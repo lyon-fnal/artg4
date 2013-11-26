@@ -116,5 +116,6 @@ namespace artg4 {
 
 } // end namespace artg4
 
-
+using artg4::DetectorHolderService;
+DECLARE_ART_SERVICE(DetectorHolderService,LEGACY)
 #endif // DETECTOR_HOLDER_HH

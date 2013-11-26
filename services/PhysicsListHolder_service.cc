@@ -36,4 +36,5 @@ void artg4::PhysicsListHolderService::initializePhysicsList() const {
 
 // Register the service with Art
 using artg4::PhysicsListHolderService;
+
 DEFINE_ART_SERVICE(PhysicsListHolderService)

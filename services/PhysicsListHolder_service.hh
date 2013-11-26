@@ -51,5 +51,6 @@ namespace artg4 {
   
 } // end namespace artg4
 
-
+using artg4::PhysicsListHolderService;
+DECLARE_ART_SERVICE(PhysicsListHolderService,LEGACY)
 #endif // PHYSICSLIST_HOLDER_SERVICE

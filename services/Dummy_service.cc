@@ -24,4 +24,5 @@ void artg4::DummyService::notifyArtOfProduction(art::EDProducer * prod)
 }
 
 using artg4::DummyService;
+
 DEFINE_ART_SERVICE(DummyService)

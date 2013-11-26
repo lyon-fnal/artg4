@@ -265,4 +265,5 @@ void artg4::ActionHolderService::generatePrimaries(G4Event* theEvent) {
 
 // Register the service with Art
 using artg4::ActionHolderService;
+
 DEFINE_ART_SERVICE(ActionHolderService)

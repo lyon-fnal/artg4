@@ -21,4 +21,7 @@ namespace artg4 {
   };
 }
 
+using artg4::RunSettingsService;
+DECLARE_ART_SERVICE(RunSettingsService,LEGACY)
+
 #endif
