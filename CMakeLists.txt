@@ -39,6 +39,7 @@ cet_set_compiler_flags(DIAGS VIGILANT WERROR
    EXTRA_FLAGS -pedantic
    EXTRA_CXX_FLAGS -std=c++11
 )
+# ADD NO_UNDEFINED to ensure closed link
 
 cet_have_qual( sse2 SSE2 )
 if ( SSE2 )
