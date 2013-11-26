@@ -1,3 +1,3 @@
-art_make(LIBRARIES "${XERCESCLIB}" "${allG4Libs}" )
+art_make(LIB_LIBRARIES "${XERCESCLIB}" "${allG4Libs}" )
 
 install_headers()
