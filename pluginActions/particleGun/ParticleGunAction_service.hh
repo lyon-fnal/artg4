@@ -58,4 +58,7 @@ namespace artg4 {
   };
 }
 
+using artg4::ParticleGunActionService;
+DECLARE_ART_SERVICE(ParticleGunActionService,LEGACY)
+
 #endif

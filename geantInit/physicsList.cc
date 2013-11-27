@@ -144,8 +144,10 @@ void physicsList::ConstructProcess(){
   G4EmSaturation* emSaturation = G4LossTableManager::Instance()->EmSaturation();
   theScintillationProcess->AddSaturation(emSaturation);
 
-  G4OpticalSurfaceModel themodel = unified;
-  theBoundaryProcess->SetModel(themodel);
+  // Commenting out these two lines because thiswas apparently an obsolete call that was removed starting with G4.9.6.beta01. It didn't actually do anything with the input parameter according to cern.ch bug search
+
+  //G4OpticalSurfaceModel themodel = unified;
+  //theBoundaryProcess->SetModel(themodel);
 
   theParticleIterator->reset();
   while( (*theParticleIterator)() ){

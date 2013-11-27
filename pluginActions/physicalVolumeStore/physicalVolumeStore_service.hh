@@ -30,6 +30,7 @@
 #include "fhiclcpp/ParameterSet.h"
 #include "messagefacility/MessageLogger/MessageLogger.h"
 #include "art/Framework/Services/Registry/ActivityRegistry.h"
+#include "art/Framework/Services/Registry/ServiceMacros.h"
 #include "art/Framework/Core/EDProducer.h"
 
 #include "artg4/pluginActions/physicalVolumeStore/PhysicalVolumeStoreData.hh"
@@ -68,5 +69,9 @@ namespace artg4 {
       mf::LogInfo logInfo_;
   };
 }
+
+using artg4::PhysicalVolumeStoreService;
+DECLARE_ART_SERVICE(PhysicalVolumeStoreService,LEGACY)
+
 
 #endif  // UOM_HH
