@@ -54,7 +54,7 @@ cet_report_compiler_flags()
 
 find_ups_product(cetbuildtools v3_06_02)
 find_ups_product(xerces_c v3_1_1)
-find_ups_geant4( v4_9_5_p01 )
+find_ups_geant4( v4_9_6_p02 )
 find_ups_product(cpp0x v1_03_23)
 find_ups_product(libsigcpp v2_2_11)
 find_ups_product(cppunit v1_12_1)
@@ -82,7 +82,7 @@ find_library( XERCESCLIB  NAMES xerces-c PATHS $ENV{XERCESCROOT}/lib NO_DEFAULT_
 include(ArtDictionary)
 
 
-#message(STATUS "-----> All Geant4 is ${allG4Libs}")
+#message(STATUS "-----> All Geant4 is ${G4_LIB_LIST}")
 
 # Build these directories
 add_subdirectory( geantInit )
