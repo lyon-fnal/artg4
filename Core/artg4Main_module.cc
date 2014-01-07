@@ -176,11 +176,15 @@ artg4::artg4Main::artg4Main(fhicl::ParameterSet const & p)
   // by retrieving the holder services.
   art::ServiceHandle<ActionHolderService> actionHolder;
   art::ServiceHandle<DetectorHolderService> detectorHolder;
-  
-  // And running @callArtProduces@ on each
-  actionHolder -> callArtProduces(this);
-  detectorHolder -> callArtProduces(this);
-  
+    detectorHolder->initialize();
+    //hjw:
+    //detectorHolder -> callArtProduces(this);
+    // Build the detectors' logical volumes
+    detectorHolder -> constructAllLVs();
+    // And running @callArtProduces@ on each
+    actionHolder -> callArtProduces(this);
+    detectorHolder -> callArtProduces(this);
+    
   // Set up the random number engine.
   // See the documentation in RandomNumberHeader.h for
   // how this works. Note that @createEngine@ is a member function
@@ -226,11 +230,13 @@ void artg4::artg4Main::beginRun(art::Run & r)
   
   // Get all of the detectors and initialize them
   art::ServiceHandle<DetectorHolderService> detectorHolder;
+/*
   detectorHolder->initialize();
-  
+  //hjw:
+  //detectorHolder -> callArtProduces(this);
   // Build the detectors' logical volumes
   detectorHolder -> constructAllLVs();
-
+*/
   // Declare the detector construction to Geant
   runManager_->SetUserInitialization(new ArtG4DetectorConstruction);
   
