@@ -52,14 +52,16 @@ namespace artg4Materials
   G4Material *Zn(); // zinc
   
   //  COMPOUNDS
+  G4Material *CO2();
   G4Material *Air();
   G4Material *Al5052();            // inner/outer quad electrodes 
   G4Material *Al6061();            // inflector mandrel, upper/lower quad electrodes, etc.
+  G4Material *ArCO2();             // Gas for the tracking straws
   G4Material *BC404Scintillator(); // plastic scintillator
   G4Material *BC408Scintillator(); // another plastic scintillator
   G4Material *BCF10ScintFiber();   // plastic scintillating fiber
   G4Material *BicronBC630();       // optical grease
-  G4Material *Borosilicate();      // using the pyrex borosilicate formulation from the NIST database in G4
+  G4Material *Borosilicate();      // using the pyrex borosilicate formulation from the NIST database in G4 (we were using this for SiPM window, but now we have created a separate SiPM surface resin material)
   G4Material *Brass();             // quad support bolts, etc.
   G4Material *Conductor();         // NSF(3/13): Fixed this @bug for the aluminum stabilized NbTi/Cu inflector superconductor (NbTi:Cu:Al = 1.0:0.9:3.7)
   G4Material *Epoxy();
@@ -73,13 +75,25 @@ namespace artg4Materials
   G4Material *Vacuum1();           // index of refraction = 1; needed for optical processes
   G4Material *PbF2();              // calo xtals
   G4Material *Quartz();
+  G4Material *SiPMSurfaceResin();  // has correct index of refraction for SiPM coating
 
   //  OPTICAL SURFACES
   G4OpticalSurface *PolishedMetal();
+  G4OpticalSurface *PolishedMetalReverse();
   G4OpticalSurface *Specular();
+  G4OpticalSurface *SpecularReverse();
   G4OpticalSurface *Diffuse();
+  G4OpticalSurface *DiffuseReverse();
   G4OpticalSurface *Black();
-  G4OpticalSurface *Open();
+  G4OpticalSurface *BlackReverse();
+  G4OpticalSurface *Tedlar();
+  G4OpticalSurface *TedlarReverse();
+  G4OpticalSurface *Millipore();
+  G4OpticalSurface *MilliporeReverse();
+  G4OpticalSurface *Open(); // PbF2 surface
+  G4OpticalSurface *OpenReverse();
+  G4OpticalSurface *GroundGlass();
+  G4OpticalSurface *EtchedGlass();
 
   //  A lookup by name!
   G4Material *findByName(G4String);

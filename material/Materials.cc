@@ -174,6 +174,12 @@ G4Material *artg4Materials::Zn()
 //===========================   COMPOUNDS   ==========================//
 //====================================================================//
 
+G4Material *artg4Materials::CO2()
+{
+  static G4Material *CO2 = G4NistManager::Instance()->FindOrBuildMaterial("G4_CARBON_DIOXIDE");
+  return CO2;
+}
+
 G4Material *artg4Materials::Air()
 {
   static G4Material *Air = G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR");
@@ -210,6 +216,18 @@ G4Material *artg4Materials::Al6061() // inflector mandrel, quad upper/lower elec
   return Al6061;
 }
 
+G4Material *artg4Materials::ArCO2(){
+  static G4Material *ArCO2 = new G4Material("ArgonCO2", 0.0018*g/cm3 ,2);
+  
+  static bool init = true;
+  if (init){
+    ArCO2->AddMaterial(artg4Materials::Ar(), 80*perCent);
+    ArCO2->AddMaterial(artg4Materials::CO2(), 20*perCent);
+    init = false;
+  }
+  
+  return ArCO2;
+}
 
 namespace{ 
   G4Material *Scintillator(G4String name, 
@@ -458,7 +476,6 @@ G4Material* artg4Materials::PbSb()
   return PbSb;
 }
 
-
 G4Material *artg4Materials::Vacuum()
 {
   static G4Material *Vacuum = new G4Material("Vacuum", 
@@ -594,6 +611,25 @@ G4Material* artg4Materials::Quartz() // SiO2
   return quartz;
 }
 
+G4Material* artg4Materials::SiPMSurfaceResin()
+/* With the correct index of refraction (n = 1.55). Other bulk properties don't matter for the simulation, because particle tracks are killed when they enter the photodetector volume.
+ */
+{
+    static bool init = true;
+    static G4Material *sipmresin = G4NistManager::Instance()->FindOrBuildMaterial("G4_Si");
+    
+    if( init ){
+    const G4int nEntries = 2 ;
+    G4MaterialPropertiesTable* table = new G4MaterialPropertiesTable();
+    G4double photonEnergy[nEntries] = { 1.0*eV, 5.0*eV } ;
+    G4double refractiveIndex[nEntries] = {1.55 , 1.55};
+    table->AddProperty("RINDEX", photonEnergy, refractiveIndex, nEntries);
+    sipmresin->SetMaterialPropertiesTable(table);
+    }
+    return sipmresin;
+}
+
+
 
 //====================================================================//
 //=======================   OPTICAL SURFACES   =======================//
@@ -615,8 +651,25 @@ G4OpticalSurface* artg4Materials::PolishedMetal()
    return polishedMetal;
 }
 
+G4OpticalSurface* artg4Materials::PolishedMetalReverse()
+// same as PolishedMetal (back side same as front)
+{
+    static bool init = true;
+    static G4OpticalSurface *polishedMetalReverse = new G4OpticalSurface("PolishedMetalReverse");
+    
+    if( init ){
+        polishedMetalReverse->SetType( dielectric_metal ) ;
+        polishedMetalReverse->SetFinish( polished ) ;
+        polishedMetalReverse->SetModel( unified ) ;
+        
+        init = false;
+    }
+    
+    return polishedMetalReverse;
+}
 
 G4OpticalSurface* artg4Materials::Specular()
+// PbF2 crystal surface with specular wrapping material
 // reflectivity = 1, pure specular reflection, with air gap
 {
    static bool init = true;
@@ -628,7 +681,7 @@ G4OpticalSurface* artg4Materials::Specular()
       specular->SetType(dielectric_dielectric);
       specular->SetModel(unified);
       specular->SetFinish(polishedbackpainted); // "polished" means wrapping does specular reflection
-      double facetAngleDistributionSigma = 0.07379; // based on slope calculations
+      double facetAngleDistributionSigma = 0.07379; // based on slope calculations for PbF2 surface
       specular->SetSigmaAlpha(facetAngleDistributionSigma);
 
       // Material Properties table
@@ -687,8 +740,57 @@ G4OpticalSurface* artg4Materials::Specular()
    return specular;
 }
 
+G4OpticalSurface* artg4Materials::SpecularReverse()
+// Optical surface for photons hitting the other side of the specular wrapping
+//     (i.e., the photons would enter the PbF2 crystal if the wrapping weren't there to stop them)
+// reflectivity = 1, pure specular reflection
+{
+    static bool init = true;
+    static G4OpticalSurface *specularReverse = new G4OpticalSurface("SpecularReverse");
+    
+    if( init ){
+        
+        // type of optical surface
+        specularReverse->SetType(dielectric_dielectric);
+        specularReverse->SetModel(unified);
+        specularReverse->SetFinish(polishedfrontpainted); // "polished" means wrapping does specular reflection
+        
+        // Material Properties table
+        
+        const G4int nEntries = 12 ;
+        
+        G4double photonEnergy[ nEntries ] =
+        { 1.0*eV,
+            1.55*eV,
+            2.7*eV,
+            2.97*eV,
+            3.31*eV,
+            3.55*eV,
+            3.82*eV,
+            4.46*eV,
+            4.92*eV,
+            5.5*eV,
+            5.82*eV,
+            6.21*eV
+        };
+        
+        G4double reflectivityValue = 1.0;
+        G4double reflectivity[nEntries];
+        std::fill_n(reflectivity, nEntries, reflectivityValue);
+        
+        G4MaterialPropertiesTable* table = new G4MaterialPropertiesTable() ;
+        table->AddProperty("REFLECTIVITY",          photonEnergy, reflectivity,    nEntries );
+        
+        specularReverse->SetMaterialPropertiesTable( table ) ;
+        
+        init = false;
+    }
+    
+    return specularReverse;
+}
 
 G4OpticalSurface* artg4Materials::Diffuse()
+// PbF2 crystal surface with diffuse white wrapping material
 // reflectivity = 1, pure diffuse reflection, with air gap; specular reflection at xtal surface
 {
    static bool init = true;
@@ -700,7 +802,7 @@ G4OpticalSurface* artg4Materials::Diffuse()
       diffuse->SetType(dielectric_dielectric);
       diffuse->SetModel(unified);
       diffuse->SetFinish(groundbackpainted); // "ground" means wrapping does diffuse reflection
-      double facetAngleDistributionSigma = 0.07379; // based on slope calculations
+      double facetAngleDistributionSigma = 0.07379; // based on slope calculations for PbF2 surface
       diffuse->SetSigmaAlpha(facetAngleDistributionSigma);
 
       // Material Properties table
@@ -760,7 +862,58 @@ G4OpticalSurface* artg4Materials::Diffuse()
 }
 
 
+G4OpticalSurface* artg4Materials::DiffuseReverse()
+// Optical surface for photons hitting the other side of the diffuse wrapping
+//     (i.e., the photons would enter the PbF2 crystal if the wrapping weren't there to stop them)
+// reflectivity = 1, pure diffuse reflection
+{
+    static bool init = true;
+    static G4OpticalSurface *diffuseReverse = new G4OpticalSurface("DiffuseReverse");
+    
+    if( init ){
+        
+        // type of optical surface
+        diffuseReverse->SetType(dielectric_dielectric);
+        diffuseReverse->SetModel(unified);
+        diffuseReverse->SetFinish(groundfrontpainted); // "ground" means wrapping does diffuse reflection
+        
+        // Material Properties table
+        
+        const G4int nEntries = 12 ;
+        
+        G4double photonEnergy[ nEntries ] =
+        { 1.0*eV,
+            1.55*eV,
+            2.7*eV,
+            2.97*eV,
+            3.31*eV,
+            3.55*eV,
+            3.82*eV,
+            4.46*eV,
+            4.92*eV,
+            5.5*eV,
+            5.82*eV,
+            6.21*eV
+        };
+        
+        G4double reflectivityValue = 1.0;
+        G4double reflectivity[nEntries];
+        std::fill_n(reflectivity, nEntries, reflectivityValue);
+        
+        G4MaterialPropertiesTable* table = new G4MaterialPropertiesTable() ;
+        table->AddProperty("REFLECTIVITY",          photonEnergy, reflectivity,    nEntries );
+        
+        diffuseReverse->SetMaterialPropertiesTable( table ) ;
+        
+        init = false;
+    }
+    
+    return diffuseReverse;
+}
+
+
 G4OpticalSurface* artg4Materials::Black()
+// PbF2 crystal surface with black wrapping material
 // reflectivity = 0, with air gap; specualar spike reflections at xtal surface
 {
    static bool init = true;
@@ -772,7 +925,7 @@ G4OpticalSurface* artg4Materials::Black()
       black->SetType(dielectric_dielectric);
       black->SetModel(unified);
       black->SetFinish(polishedbackpainted);
-      double facetAngleDistributionSigma = 0.07379; // based on slope calculations
+      double facetAngleDistributionSigma = 0.07379; // based on slope calculations for PbF2 surface
       black->SetSigmaAlpha(facetAngleDistributionSigma);
 
       // Material Properties table
@@ -832,9 +985,444 @@ G4OpticalSurface* artg4Materials::Black()
 }
 
 
+G4OpticalSurface* artg4Materials::BlackReverse()
+// Optical surface for photons hitting the other side of the black wrapping
+//     (i.e., the photons would enter the PbF2 crystal if the wrapping weren't there to stop them)
+// reflectivity = 0
+{
+    static bool init = true;
+    static G4OpticalSurface *blackReverse = new G4OpticalSurface("BlackReverse");
+    
+    if( init ){
+        
+        // type of optical surface
+        blackReverse->SetType(dielectric_dielectric);
+        blackReverse->SetModel(unified);
+        blackReverse->SetFinish(polishedfrontpainted);
+        
+        // Material Properties table
+        
+        const G4int nEntries = 12 ;
+        
+        G4double photonEnergy[ nEntries ] =
+        { 1.0*eV,
+            1.55*eV,
+            2.7*eV,
+            2.97*eV,
+            3.31*eV,
+            3.55*eV,
+            3.82*eV,
+            4.46*eV,
+            4.92*eV,
+            5.5*eV,
+            5.82*eV,
+            6.21*eV
+        };
+        
+        G4double reflectivityValue = 0.0;
+        G4double reflectivity[nEntries];
+        std::fill_n(reflectivity, nEntries, reflectivityValue);
+        
+        G4MaterialPropertiesTable* table = new G4MaterialPropertiesTable() ;
+        table->AddProperty("REFLECTIVITY",          photonEnergy, reflectivity,    nEntries );
+        
+        blackReverse->SetMaterialPropertiesTable( table ) ;
+        
+        init = false;
+    }
+    
+    return blackReverse;
+}
+
+G4OpticalSurface* artg4Materials::Tedlar()
+// Diffuse reflection based on reflectivity measurements made on Tedlar paper
+{
+   static bool init = true;
+   static G4OpticalSurface *tedlar = new G4OpticalSurface("Tedlar");
+
+   if( init ){
+
+      // type of optical surface
+      tedlar->SetType(dielectric_dielectric);
+      tedlar->SetModel(unified);
+      tedlar->SetFinish(groundbackpainted);
+      double facetAngleDistributionSigma = 0.07379; // based on slope calculations for PbF2 surface
+      tedlar->SetSigmaAlpha(facetAngleDistributionSigma);
+
+      // Material Properties table
+
+      const G4int nEntries = 24 ;
+
+      G4double photonEnergy[ nEntries ] = 
+	{ 1.38*eV,
+	  1.55*eV,
+	  1.77*eV,
+	  1.82*eV,
+	  1.88*eV,
+	  1.94*eV,
+	  2.0*eV,
+	  2.07*eV,
+	  2.14*eV,
+	  2.21*eV,
+	  2.3*eV,
+	  2.38*eV,
+	  2.48*eV,
+	  2.58*eV,
+	  2.7*eV,
+	  2.82*eV,
+	  2.95*eV,
+	  3.1*eV,
+	  3.31*eV,
+	  3.54*eV,
+	  3.81*eV,
+	  4.13*eV,
+	  4.51*eV,
+	  4.96*eV
+	 };
+
+      // From Detector Elog 584
+      G4double reflectivity[nEntries] = 
+	{
+	  0.0669,
+	  0.0741,
+	  0.0708,
+	  0.0708,
+	  0.0708,
+	  0.0713,
+	  0.0718,
+	  0.0728,
+	  0.0735,
+	  0.0741,
+	  0.0749,
+	  0.0760,
+	  0.0776,
+	  0.0788,
+	  0.0805,
+	  0.0821,
+	  0.0835,
+	  0.0831,
+	  0.0679,
+	  0.0601,
+	  0.0605,
+	  0.0631,
+	  0.0635,
+	  0.0637
+	};
+      
+      // refractive index for air gap
+      G4double effectiveRefractiveIndex = 1.0;
+      G4double refractiveIndex[nEntries];
+      std::fill_n(refractiveIndex, nEntries, effectiveRefractiveIndex);
+
+      // xtal surface is faceted; all reflections are specular using surface normal from distribution      
+      G4double specularSpikeValue = 0.0;
+      G4double specularLobeValue = 1.0;
+      G4double backscatterValue = 0;
+      G4double specularSpike[nEntries];
+      G4double specularLobe[nEntries];
+      G4double backscatter[nEntries];
+
+      std::fill_n(specularSpike, nEntries, specularSpikeValue);
+      std::fill_n(specularLobe, nEntries, specularLobeValue);
+      std::fill_n(backscatter, nEntries, backscatterValue);
+
+      G4MaterialPropertiesTable* table = new G4MaterialPropertiesTable() ;
+      table->AddProperty("RINDEX",                photonEnergy, refractiveIndex, nEntries ) ;
+      table->AddProperty("SPECULARSPIKECONSTANT", photonEnergy, specularSpike,   nEntries );
+      table->AddProperty("SPECULARLOBECONSTANT",  photonEnergy, specularLobe,    nEntries );
+      table->AddProperty("BACKSCATTERCONSTANT",   photonEnergy, backscatter,     nEntries );
+      table->AddProperty("REFLECTIVITY",          photonEnergy, reflectivity,    nEntries );
+
+
+      tedlar->SetMaterialPropertiesTable( table ) ;
+
+      init = false;
+   }
+  
+   return tedlar;
+}
+
+G4OpticalSurface* artg4Materials::TedlarReverse()
+// Optical surface for photons that would be entering the xtal
+{
+    static bool init = true;
+    static G4OpticalSurface *tedlarReverse = new G4OpticalSurface("TedlarReverse");
+    
+    if( init ){
+        
+        // type of optical surface
+        tedlarReverse->SetType(dielectric_dielectric);
+        tedlarReverse->SetModel(unified);
+        tedlarReverse->SetFinish(groundfrontpainted);
+        
+        // Material Properties table
+        
+        const G4int nEntries = 24 ;
+        
+       G4double photonEnergy[ nEntries ] = 
+	{ 1.38*eV,
+	  1.55*eV,
+	  1.77*eV,
+	  1.82*eV,
+	  1.88*eV,
+	  1.94*eV,
+	  2.0*eV,
+	  2.07*eV,
+	  2.14*eV,
+	  2.21*eV,
+	  2.3*eV,
+	  2.38*eV,
+	  2.48*eV,
+	  2.58*eV,
+	  2.7*eV,
+	  2.82*eV,
+	  2.95*eV,
+	  3.1*eV,
+	  3.31*eV,
+	  3.54*eV,
+	  3.81*eV,
+	  4.13*eV,
+	  4.51*eV,
+	  4.96*eV
+	 };
+
+      // From Detector Elog 584
+      G4double reflectivity[nEntries] = 
+	{
+	  0.0669,
+	  0.0741,
+	  0.0708,
+	  0.0708,
+	  0.0708,
+	  0.0713,
+	  0.0718,
+	  0.0728,
+	  0.0735,
+	  0.0741,
+	  0.0749,
+	  0.0760,
+	  0.0776,
+	  0.0788,
+	  0.0805,
+	  0.0821,
+	  0.0835,
+	  0.0831,
+	  0.0679,
+	  0.0601,
+	  0.0605,
+	  0.0631,
+	  0.0635,
+	  0.0637
+	};
+	               
+        
+        G4MaterialPropertiesTable* table = new G4MaterialPropertiesTable() ;
+        table->AddProperty("REFLECTIVITY",          photonEnergy, reflectivity,    nEntries );
+        
+        tedlarReverse->SetMaterialPropertiesTable( table ) ;
+        
+        init = false;
+    }
+    
+    return tedlarReverse;
+}
+
+G4OpticalSurface* artg4Materials::Millipore()
+// Diffuse reflection based on reflectivity measurements made on Millipore paper
+{
+   static bool init = true;
+   static G4OpticalSurface *millipore = new G4OpticalSurface("Millipore");
+
+   if( init ){
+
+      // type of optical surface
+      millipore->SetType(dielectric_dielectric);
+      millipore->SetModel(unified);
+      millipore->SetFinish(groundbackpainted);
+      double facetAngleDistributionSigma = 0.07379; // based on slope calculations for PbF2 surface
+      millipore->SetSigmaAlpha(facetAngleDistributionSigma);
+
+      // Material Properties table
+
+      const G4int nEntries = 24 ;
+
+      G4double photonEnergy[ nEntries ] = 
+	{ 1.38*eV,
+	  1.55*eV,
+	  1.77*eV,
+	  1.82*eV,
+	  1.88*eV,
+	  1.94*eV,
+	  2.0*eV,
+	  2.07*eV,
+	  2.14*eV,
+	  2.21*eV,
+	  2.3*eV,
+	  2.38*eV,
+	  2.48*eV,
+	  2.58*eV,
+	  2.7*eV,
+	  2.82*eV,
+	  2.95*eV,
+	  3.1*eV,
+	  3.31*eV,
+	  3.54*eV,
+	  3.81*eV,
+	  4.13*eV,
+	  4.51*eV,
+	  4.96*eV
+	 };
+
+      // From Detector Elog 584
+      G4double reflectivity[nEntries] = 
+	{
+	  0.972,
+	  0.982,
+	  0.984,
+	  0.985,
+	  0.987,
+	  0.987,
+	  0.988,
+	  0.989,
+	  0.991,
+	  0.992,
+	  0.993,
+	  0.994,
+	  0.995,
+	  0.999,
+	  1,
+	  1,
+	  1,
+	  1,
+	  1,
+	  1,
+	  0.967,
+	  0.978,
+	  0.951,
+	  0.893
+	};
+
+      
+      // refractive index for air gap
+      G4double effectiveRefractiveIndex = 1.0;
+      G4double refractiveIndex[nEntries];
+      std::fill_n(refractiveIndex, nEntries, effectiveRefractiveIndex);
+
+      // xtal surface is faceted; all reflections are specular using surface normal from distribution      
+      G4double specularSpikeValue = 0.0;
+      G4double specularLobeValue = 1.0;
+      G4double backscatterValue = 0;
+      G4double specularSpike[nEntries];
+      G4double specularLobe[nEntries];
+      G4double backscatter[nEntries];
+
+      std::fill_n(specularSpike, nEntries, specularSpikeValue);
+      std::fill_n(specularLobe, nEntries, specularLobeValue);
+      std::fill_n(backscatter, nEntries, backscatterValue);
+
+      G4MaterialPropertiesTable* table = new G4MaterialPropertiesTable() ;
+      table->AddProperty("RINDEX",                photonEnergy, refractiveIndex, nEntries ) ;
+      table->AddProperty("SPECULARSPIKECONSTANT", photonEnergy, specularSpike,   nEntries );
+      table->AddProperty("SPECULARLOBECONSTANT",  photonEnergy, specularLobe,    nEntries );
+      table->AddProperty("BACKSCATTERCONSTANT",   photonEnergy, backscatter,     nEntries );
+      table->AddProperty("REFLECTIVITY",          photonEnergy, reflectivity,    nEntries );
+
+
+      millipore->SetMaterialPropertiesTable( table ) ;
+
+      init = false;
+   }
+  
+   return millipore;
+}
+
+G4OpticalSurface* artg4Materials::MilliporeReverse()
+// Optical surface for photons that would be entering the xtal
+{
+    static bool init = true;
+    static G4OpticalSurface *milliporeReverse = new G4OpticalSurface("MilliporeReverse");
+    
+    if( init ){
+        
+        // type of optical surface
+        milliporeReverse->SetType(dielectric_dielectric);
+        milliporeReverse->SetModel(unified);
+        milliporeReverse->SetFinish(groundfrontpainted);
+        
+        // Material Properties table
+        
+        const G4int nEntries = 24 ;
+        
+      G4double photonEnergy[ nEntries ] = 
+	{ 1.38*eV,
+	  1.55*eV,
+	  1.77*eV,
+	  1.82*eV,
+	  1.88*eV,
+	  1.94*eV,
+	  2.0*eV,
+	  2.07*eV,
+	  2.14*eV,
+	  2.21*eV,
+	  2.3*eV,
+	  2.38*eV,
+	  2.48*eV,
+	  2.58*eV,
+	  2.7*eV,
+	  2.82*eV,
+	  2.95*eV,
+	  3.1*eV,
+	  3.31*eV,
+	  3.54*eV,
+	  3.81*eV,
+	  4.13*eV,
+	  4.51*eV,
+	  4.96*eV
+	 };
+
+      // From Detector Elog 584
+      G4double reflectivity[nEntries] = 
+	{
+	  0.972,
+	  0.982,
+	  0.984,
+	  0.985,
+	  0.987,
+	  0.987,
+	  0.988,
+	  0.989,
+	  0.991,
+	  0.992,
+	  0.993,
+	  0.994,
+	  0.995,
+	  0.999,
+	  1,
+	  1,
+	  1,
+	  1,
+	  1,
+	  1,
+	  0.967,
+	  0.978,
+	  0.951,
+	  0.893
+	};	               
+        
+        G4MaterialPropertiesTable* table = new G4MaterialPropertiesTable() ;
+        table->AddProperty("REFLECTIVITY",          photonEnergy, reflectivity,    nEntries );
+        
+        milliporeReverse->SetMaterialPropertiesTable( table ) ;
+        
+        init = false;
+    }
+    
+    return milliporeReverse;
+}
+
 G4OpticalSurface* artg4Materials::Open()
+// Optical surface for unwrapped PbF2 surface
 // Specular lobe reflections at xtal surface (finish type = ground)
-// This is different from surface wrapping "None" because "None" makes  a perfectly smooth crystal surface
 {
   static bool init = true;
   static G4OpticalSurface *open = new G4OpticalSurface("Open");
@@ -851,6 +1439,121 @@ G4OpticalSurface* artg4Materials::Open()
   }
 
   return open;
+}
+
+G4OpticalSurface* artg4Materials::OpenReverse()
+// Same as "Open" -- surface is the same no matter which way the photons pass through
+{
+    static bool init = true;
+    static G4OpticalSurface *openReverse = new G4OpticalSurface("OpenReverse");
+    
+    if( init ){
+        //type of optical surface
+        openReverse->SetType(dielectric_dielectric);
+        openReverse->SetModel(unified);
+        openReverse->SetFinish(ground);
+        double facetAngleDistributionSigma = 0.07379; // based on slope calculations
+        openReverse->SetSigmaAlpha(facetAngleDistributionSigma);
+        
+        init = false;
+    }
+    
+    return openReverse;
+}
+
+G4OpticalSurface* artg4Materials::GroundGlass()
+// Rough surface for diffuser
+{
+    static bool init = true;
+    static G4OpticalSurface *groundGlass = new G4OpticalSurface("GroundGlass");
+    
+    if( init ){
+        //type of optical surface
+        groundGlass->SetType(dielectric_dielectric);
+        groundGlass->SetModel(unified);
+        groundGlass->SetFinish(ground);
+        double facetAngleDistributionSigma = 12 * deg;
+           // sigma_alpha value for ground glass from Janecek and Williams,
+           // IEEE Transactions on Nuclear Science 57, 964 (2010)
+        groundGlass->SetSigmaAlpha(facetAngleDistributionSigma);
+        
+        
+        // Material Properties table
+        
+        const G4int nEntries = 2 ;
+        G4double photonEnergy[ nEntries ] = { 1.0*eV, 6.0*eV };
+
+        // diffuse reflection probability is implicit:
+        //         diffuse = 1 - specularSpike - specularLobe - backscatter
+        G4double specularSpikeValue = 0.0;
+        G4double specularLobeValue = 1.0;
+        G4double backscatterValue = 0;
+        G4double specularSpike[nEntries];
+        G4double specularLobe[nEntries];
+        G4double backscatter[nEntries];
+        
+        std::fill_n(specularSpike, nEntries, specularSpikeValue);
+        std::fill_n(specularLobe, nEntries, specularLobeValue);
+        std::fill_n(backscatter, nEntries, backscatterValue);
+        
+        G4MaterialPropertiesTable* table = new G4MaterialPropertiesTable() ;
+        table->AddProperty("SPECULARSPIKECONSTANT", photonEnergy, specularSpike,   nEntries );
+        table->AddProperty("SPECULARLOBECONSTANT",  photonEnergy, specularLobe,    nEntries );
+        table->AddProperty("BACKSCATTERCONSTANT",   photonEnergy, backscatter,     nEntries );
+        
+        groundGlass->SetMaterialPropertiesTable( table ) ;
+
+        init = false;
+    }    
+    return groundGlass;
+}
+
+G4OpticalSurface* artg4Materials::EtchedGlass()
+// smooth surface for back of diffuser
+{
+    static bool init = true;
+    static G4OpticalSurface *etchedGlass = new G4OpticalSurface("EtchedGlass");
+    
+    if( init ){
+        //type of optical surface
+        etchedGlass->SetType(dielectric_dielectric);
+        etchedGlass->SetModel(unified);
+        etchedGlass->SetFinish(ground);
+        double facetAngleDistributionSigma = 4 * deg;
+          // sigma_alpha value for etched glass from Janecek and Williams,
+          // IEEE Transactions on Nuclear Science 57, 964 (2010)
+          // chose etched glass because similar to our measured PbF2 sigma_alpha
+        etchedGlass->SetSigmaAlpha(facetAngleDistributionSigma);
+        
+        
+        // Material Properties table
+        
+        const G4int nEntries = 2 ;
+        G4double photonEnergy[ nEntries ] = { 1.0*eV, 6.0*eV };
+        
+        // diffuse reflection probability is implicit:
+        //         diffuse = 1 - specularSpike - specularLobe - backscatter
+        G4double specularSpikeValue = 0.0;
+        G4double specularLobeValue = 1.0;
+        G4double backscatterValue = 0;
+        G4double specularSpike[nEntries];
+        G4double specularLobe[nEntries];
+        G4double backscatter[nEntries];
+        
+        std::fill_n(specularSpike, nEntries, specularSpikeValue);
+        std::fill_n(specularLobe, nEntries, specularLobeValue);
+        std::fill_n(backscatter, nEntries, backscatterValue);
+        
+        G4MaterialPropertiesTable* table = new G4MaterialPropertiesTable() ;
+        table->AddProperty("SPECULARSPIKECONSTANT", photonEnergy, specularSpike,   nEntries );
+        table->AddProperty("SPECULARLOBECONSTANT",  photonEnergy, specularLobe,    nEntries );
+        table->AddProperty("BACKSCATTERCONSTANT",   photonEnergy, backscatter,     nEntries );
+        
+        etchedGlass->SetMaterialPropertiesTable( table ) ;
+        
+        init = false;
+    }
+    return etchedGlass;
 }
 
 
@@ -904,14 +1607,26 @@ namespace{
     MAKE_MAP_T(Vacuum1),
     MAKE_MAP_T(PbF2),
     MAKE_MAP_T(Quartz),
+    MAKE_MAP_T(SiPMSurfaceResin),
   };
 
   opticalmap_t opticalmap_[] = {
     MAKE_MAP_T(PolishedMetal),
+    MAKE_MAP_T(PolishedMetalReverse),
     MAKE_MAP_T(Specular),
+    MAKE_MAP_T(SpecularReverse),
     MAKE_MAP_T(Diffuse),
+    MAKE_MAP_T(DiffuseReverse),
     MAKE_MAP_T(Black),
+    MAKE_MAP_T(BlackReverse),
+    MAKE_MAP_T(Tedlar),
+    MAKE_MAP_T(TedlarReverse),
+    MAKE_MAP_T(Millipore),
+    MAKE_MAP_T(MilliporeReverse),
     MAKE_MAP_T(Open),
+    MAKE_MAP_T(OpenReverse),
+    MAKE_MAP_T(GroundGlass),
+    MAKE_MAP_T(EtchedGlass),
   };
 }
 
