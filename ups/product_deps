@@ -19,7 +19,7 @@ defaultqual e4
 
 product          version
 geant4           v4_9_6_p02
-art              v1_08_09
+art              v1_08_10
 
 only_for_build  cetbuildtools v3_07_00
 
@@ -28,6 +28,6 @@ only_for_build  cetbuildtools v3_07_00
 # Make a table by adding columns before "notes". 
 #
 qualifier        art        geant4        notes
-e4:debug         e4:mu2e:debug   e4:debug      
-e4:opt           e4:mu2e:opt     e4:opt        
-e4:prof          e4:mu2e:prof    e4:prof       
+e4:debug         e4:debug   e4:debug      
+e4:opt           e4:opt     e4:opt        
+e4:prof          e4:prof    e4:prof       
