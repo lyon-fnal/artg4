@@ -30,8 +30,6 @@ namespace artg4 {
     virtual void initializePhysicsList() {};
   };
     
-}
-
-
+}//namespace artg4
 
 #endif

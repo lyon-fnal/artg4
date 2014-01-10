@@ -14,6 +14,7 @@
 // Includes
 #include "fhiclcpp/ParameterSet.h"
 #include "art/Framework/Services/Registry/ActivityRegistry.h"
+#include "art/Framework/Services/Registry/ServiceMacros.h"
 
 #include "Geant4/G4VUserPhysicsList.hh"
 
@@ -47,9 +48,12 @@ namespace artg4 {
     
     PhysicsListServiceBase* physicsListService_;
     
-  };
+  }; // class PhysicsListHolderService
   
-} // end namespace artg4
+}// end namespace artg4
 
-
+//using art::LEGACY;
+using artg4::PhysicsListHolderService;
+DECLARE_ART_SERVICE(PhysicsListHolderService, LEGACY)
+  
 #endif // PHYSICSLIST_HOLDER_SERVICE

@@ -21,5 +21,7 @@ namespace artg4 {
 
   };
 }
+using artg4::DummyService;
+DECLARE_ART_SERVICE(DummyService,LEGACY)
 
 #endif

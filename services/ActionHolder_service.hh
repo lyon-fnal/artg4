@@ -139,6 +139,9 @@ namespace artg4 {
     A* doGetAction(std::string name, std::map<std::string, A*>& actionMap);
 
   };
-}
+} //namespace artg4
+
+using artg4::ActionHolderService;
+DECLARE_ART_SERVICE(ActionHolderService, LEGACY)
 
 #endif // ACTION_HOLDER_HH

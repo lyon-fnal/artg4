@@ -1,5 +1,5 @@
 # Build the libraries
-art_make( LIBRARIES "${XERCESCLIB}" "${allG4Libs}" )
+art_make( SERVICE_LIBRARIES "${XERCESCLIB}" "${G4_LIB_LIST}" )
 
 # Copy the headers
 install_headers()

@@ -1,5 +1,5 @@
 # Build the libraries
-art_make( LIBRARIES "artg4_util" "${XERCESCLIB}" "${allG4Libs}")
+art_make(LIB_LIBRARIES "artg4_util" "${XERCESCLIB}" "${G4_LIB_LIST}")
 
 # Copy the headers
 install_headers()

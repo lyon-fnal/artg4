@@ -99,4 +99,7 @@ namespace artg4 {
   };
 }
 
+using artg4::ClockActionService;
+DECLARE_ART_SERVICE(ClockActionService,LEGACY)
+
 #endif

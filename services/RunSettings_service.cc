@@ -23,4 +23,5 @@ fhicl::ParameterSet artg4::RunSettingsService::getSettings(std::string const & s
 
 
 using artg4::RunSettingsService;
+
 DEFINE_ART_SERVICE(RunSettingsService)

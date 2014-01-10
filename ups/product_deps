@@ -5,7 +5,7 @@
 parent artg4 v0_0_1
 
 # The defaultqual should correspond to Art's default qualifier (e.g. a7)
-defaultqual e2
+defaultqual e4
 
 # These optional lines define where headers, libraries, and executables go and should
 # be used only if your product does not conform to the defaults.
@@ -18,16 +18,16 @@ defaultqual e2
 # Add the dependent product and version
 
 product          version
-geant4           v4_9_5_p01
-art              v1_02_04
+geant4           v4_9_6_p02
+art              v1_08_10
 
-only_for_build  cetbuildtools v2_03_03
-only_for_build  gm2softwaretools v201209_01
+only_for_build  cetbuildtools v3_07_03
+
 
 # We now define allowed qualifiers and the corresponding qualifiers for the depdencies.
 # Make a table by adding columns before "notes". 
 #
 qualifier        art        geant4        notes
-e2:debug         e2:debug   e2:debug      
-e2:opt           e2:opt     e2:opt        
-e2:prof          e2:prof    e2:prof       
+e4:debug         e4:debug   e4:debug      
+e4:opt           e4:opt     e4:opt        
+e4:prof          e4:prof    e4:prof       
