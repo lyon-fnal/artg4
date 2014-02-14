@@ -536,50 +536,63 @@ G4Material* artg4Materials::PbF2()
 
        // Order from low energy to high energy (required for Geant 4.9.5)
        G4double wavelengths[ nEntries ] =
-         { 1240.*nm,
+         { 950.*nm,
              800.*nm,
              600.*nm,
              400.*nm,
              350.*nm,
              300.*nm,
-             250.*nm,
-             200.*nm } ;
+             275.*nm,
+             250.*nm } ;
        
        // Transmission coefficients measured for 186mm long crystal
        G4double transmission[ nEntries ] =
-         { 0.88, // 1240 nm
-             0.82, // 800 nm
-             0.79, // 600 nm (RB add point by interpolation)
-             0.76, // 400 nm
-             0.74, // 350 nm
-             0.60, // 300 nm
-             0.,   // 250 nm
-             0. } ; // 200 nm
+         { 0.84, // 950 nm
+             0.83, // 800 nm
+             0.81, // 600 nm
+             0.75, // 400 nm
+             0.71, // 350 nm
+             0.48, // 300 nm
+             0.18,   // 275 nm
+             0. } ; // 250 nm
        
        // refractive index data from http://refractiveindex.info/?group=CRYSTALS&material=PbF2
        G4double refractiveIndex[ nEntries ] =
-         { 1.74, // 1240 nm
+         { 1.74, // 950 nm
              1.75, // 800 nm
              1.76, // 600 nm
              1.82, // 400 nm
              1.85, // 350 nm
              1.94, // 300 nm
-             2.02, // 250 nm
-             2.57 } ; // 200 nm
+             1.98, // 275 nm
+             2.02 } ; // 250 nm
 
+       
     G4double photonEnergy[ nEntries ] ;
+    // G4double rayleighLength[ nEntries ];
+    G4double transCorrectionFactor[ nEntries ] ;
     G4double absorptionLength[ nEntries ] ;
 
     for( int i = 0 ; i < nEntries ; ++i )
     {
        photonEnergy[ i ] = 0.001240 * MeV * nm / wavelengths[ i ] ;
-       absorptionLength[ i ] = -186.*mm / log( transmission[ i ] ) ;
+        // rayleighLength[ i ] = 1.*cm ;
+        
+        // correction for surface reflections:
+        // Transmission_internal = Transmission_total * (1+n)^4 / (4n)^2
+        // See simulation elog 217 https://muon.npl.washington.edu/elog/g2/Simulation/217
+        G4double n = refractiveIndex[ i ];
+        G4double sqrtCorrection = (1+n)*(1+n)/(4*n);
+        transCorrectionFactor[ i ] = sqrtCorrection*sqrtCorrection;
+        
+        absorptionLength[ i ] = -186.*mm / log( transmission[ i ]*transCorrectionFactor[ i ] ) ;
     }
 
     // Geant 4.9.5 Material properties table: photonEnergy must be in order
     G4MaterialPropertiesTable* table = new G4MaterialPropertiesTable() ;
     table->AddProperty( "RINDEX", photonEnergy, refractiveIndex, nEntries ) ;
     table->AddProperty( "ABSLENGTH", photonEnergy, absorptionLength, nEntries ) ;
+    // table->AddProperty( "RAYLEIGH", photonEnergy, rayleighLength, nEntries ) ;
 
     PbF2->SetMaterialPropertiesTable( table ) ;
 
