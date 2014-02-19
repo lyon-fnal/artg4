@@ -53,8 +53,10 @@ cet_report_compiler_flags()
 
 find_ups_product(cetbuildtools v3_07_00)
 find_ups_geant4( v4_9_6_p02 )
-find_ups_product(art v1_08_04)
 find_ups_product(xerces_c v3_1_1)
+find_ups_product(art v1_08_04)
+find_ups_product(fhiclcpp v2_17_12)
+find_ups_product(messagefacility v1_10_26)
 
 # Enable visualization using OpenGL in x windows
 add_definitions(-DG4_STORE_TRAJECTORY -DG4VERBOSE -DG4UI_USE -DG4VIS_USE -DG4UI_USE_TCSH -DG4INTY_USE_XT -DG4VIS_USE_OPENGLX -DG4VIS_USE_OPENGL)
