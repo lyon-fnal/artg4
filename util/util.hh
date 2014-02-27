@@ -34,17 +34,16 @@ namespace artg4 {
     return SDptr;
   }
 
-
-
-
-
   // Set visual attributes
   void setVisAtts(G4LogicalVolume* lv, bool display, const std::vector<double> & rgba);
   void setVisAtts(G4LogicalVolume* lv, bool display, const std::vector<double> & rgba, std::function<void (G4VisAttributes*)> func );
     
   // Put a number in a name
   std::string addNumberToName(const std::string& name, int number);
-  
+
+  // Find a file base path
+  // Look for environment variable. If it is not set, then look for $MRB_BUILDDIR and add package name
+  std::string basePath(const std::string& envVar, const std::string& pkgName);
 }
 
 #endif

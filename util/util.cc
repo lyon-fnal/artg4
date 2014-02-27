@@ -6,6 +6,9 @@
 #include <sstream>
 #include <iomanip>
 
+#include <cstdlib>
+#include  "cetlib/exception.h"
+
 // Set visual attributes
 void artg4::setVisAtts(G4LogicalVolume* lv, bool display, const std::vector<double> & rgba, std::function<void (G4VisAttributes*)> func) {
   
@@ -46,3 +49,24 @@ std::string artg4::addNumberToName(const std::string& name, int number) {
   
   return newName.str();
 }
+
+// find base path
+std::string artg4::basePath(const std::string& envVar, const std::string& pkgName) {
+  std::string path;
+  char * pathC = std::getenv( envVar.c_str() );
+  if ( pathC ) {
+     path = std::string(pathC);
+  }
+  else {
+      pathC = std::getenv( "MRB_BUILDDIR" );
+      if ( pathC ) {
+         path = std::string(pathC) + "/" + pkgName;
+      }
+      else {
+         throw cet::exception("NOBASEPATH") << "Need enviornment variable " << envVar << " or $MRB_BUILDDIR set to find path\n";
+      }
+ }
+
+ return path;
+}        
+
