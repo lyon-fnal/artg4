@@ -1,11 +1,5 @@
 // This file is the header for the @StackingActionBase@ class.
-
-// There is no implementation file, as it is intended only as a base class.
-
 // All action objects MUST inherit from this class.
-
-// When you create an action object, you have the option to overload the
-// following methods:
 
 // The usual method in @G4UserStackingAction@ is @ClassifyNewTrack@. Here, you instead 
 // supply a function for @killNewTrack@, which returns @true@ if the track should be killed
@@ -24,34 +18,31 @@
 
 #include "art/Framework/Services/Registry/ServiceHandle.h"
 #include "artg4/services/ActionHolder_service.hh"
+#include "Geant4/G4UserStackingAction.hh"
 
-
-// Declarations of types we use as input parameters
 class G4Track;
 
 
-// Everything goes in the Art G4 namespace
 namespace artg4 {
 
-  class StackingActionBase : public ActionBase {
-  public:
-    // Constructor. The derived class must call this constructor. It takes a 
-    // single string for the name of the action object.
-    StackingActionBase(std::string myName)
-      : ActionBase(myName)
-    {
-      art::ServiceHandle<artg4::ActionHolderService> actionHolder;
-      actionHolder->registerAction(this);
-    }
+    class StackingActionBase : public ActionBase {
+    public:
+        // Constructor. The derived class must call this constructor. It takes a 
+        // single string for the name of the action object.
 
-    // Destructor
-    virtual ~StackingActionBase(){}
+        StackingActionBase(std::string myName)
+        : ActionBase(myName) {
+            art::ServiceHandle<artg4::ActionHolderService> actionHolder;
+            actionHolder->registerAction(this);
+        }
 
-    // killNewTrack (see above)
-    virtual bool killNewTrack( const G4Track* ) { return false; }
+        // Destructor
+        virtual ~StackingActionBase();
 
-  };
+        // killNewTrack (see above)
+        virtual bool killNewTrack( const G4Track* ) { return false; }
+
+    };
 }
-
 
 #endif // STACKING_ACTION_BASE_HH

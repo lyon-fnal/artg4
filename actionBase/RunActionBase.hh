@@ -51,7 +51,7 @@ namespace artg4 {
 
 
     // Destructor
-    virtual ~RunActionBase(){}
+    virtual ~RunActionBase();
 
 
     // h3. The interesting methods. 

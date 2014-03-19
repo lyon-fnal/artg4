@@ -50,7 +50,7 @@ namespace artg4 {
 
 
     // Destructor
-    virtual ~TrackingActionBase(){}
+    virtual ~TrackingActionBase();
 
     // h3. The interesting methods. 
     // All of these are defined to do nothing by default. Users can override 
