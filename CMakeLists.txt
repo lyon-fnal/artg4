@@ -81,7 +81,7 @@ add_subdirectory( pluginActions )
 add_subdirectory( util )
 add_subdirectory( fcl )
 add_subdirectory( ups )
-#add_subdirectory( vis )
+
 
 # Packaging facility
 include(UseCPack)

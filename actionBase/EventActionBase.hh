@@ -51,7 +51,7 @@ namespace artg4 {
     }
 
     // Destructor
-    virtual ~EventActionBase(){}
+    virtual ~EventActionBase();
 
 
     // h3. The interesting methods. 

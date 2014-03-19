@@ -25,6 +25,10 @@ using std::string;
 using std::map;
 using std::pair;
 
+
+///////////////////
+using namespace std;
+/////////////////////
 // Message category
 static std::string msgctg = "ActionHolderService";
 
@@ -56,6 +60,7 @@ void artg4::ActionHolderService::doRegisterAction(A * const action,
     actionMap.insert(
                      pair<string, A *>( action->myName(), action )
                      );
+    
 
     // Now, check whether the name exists in the overall map of all the actions
     // If so, move on (don't throw an exception, since a single action may need
@@ -75,26 +80,33 @@ void artg4::ActionHolderService::doRegisterAction(A * const action,
 }
 
 void artg4::ActionHolderService::registerAction(RunActionBase * const action) {
-  doRegisterAction(action, runActionsMap_);
+  cerr<< "registering to   runActionsMap_"<<endl;
+doRegisterAction(action, runActionsMap_);
+  
 }
 
 void artg4::ActionHolderService::registerAction(EventActionBase * const action) {
+  cerr<< "registering to   eventActionsMap_"<<endl;
   doRegisterAction(action, eventActionsMap_);
 }
 
 void artg4::ActionHolderService::registerAction(TrackingActionBase * const action) {
+ cerr<< "registering to   trackingActionsMap_"<<endl;
   doRegisterAction(action, trackingActionsMap_);
 }
 
 void artg4::ActionHolderService::registerAction(SteppingActionBase * const action) {
+ cerr<< "registering to  steppingActionsMap_"<<endl;
   doRegisterAction(action, steppingActionsMap_);
 }
 
 void artg4::ActionHolderService::registerAction(StackingActionBase * const action) {
+ cerr<< "registering to  stackingActionsMap_"<<endl;
   doRegisterAction(action, stackingActionsMap_);
 }
 
 void artg4::ActionHolderService::registerAction(PrimaryGeneratorActionBase * const action) {
+ cerr<< "registering to  primaryGeneratorActionsMap_"<<endl;
   doRegisterAction(action, primaryGeneratorActionsMap_);
 }
 
@@ -200,7 +212,7 @@ void artg4::ActionHolderService::beginOfRunAction(const G4Run* theRun) {
 
 void artg4::ActionHolderService::endOfRunAction(const G4Run* theRun) {
 
-  // Loop voer the runActionsMap and call @endOfRunAction@ on each
+  // Loop over the runActionsMap and call @endOfRunAction@ on each
   for ( auto entry : runActionsMap_ ) {
     (entry.second)->endOfRunAction(theRun);
   }

@@ -42,7 +42,7 @@ namespace artg4 {
 
 
     // Destructor
-    virtual ~SteppingActionBase(){}
+    virtual ~SteppingActionBase();
 
     // h3. The interesting methods. 
     // All of these are defined to do nothing by default. Users can override 

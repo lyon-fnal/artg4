@@ -28,7 +28,7 @@ namespace artg4 {
     {}
 
     // Destructor
-    virtual ~ActionBase(){}
+    virtual ~ActionBase();
 
     // Accessor
     std::string myName() const {return myName_;}
