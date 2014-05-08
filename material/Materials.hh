@@ -70,6 +70,7 @@ namespace artg4Materials
   G4Material *MacorCeramic();      // quad standoffs/supports
   G4Material *Mylar();             // carbon, hydrogen, oxygen
   G4Material *NbTi();              // NSF(3/13): Fixed this @bug for the inflector superconductor (Nb:Ti = 1:1)
+  G4Material *NusilLS5257();       // Nusil LS 5257 optical fluid (coupling between PbF2 crystals and SiPMs)
   G4Material *PbSb();              // lead-antimony alloy
   G4Material *Vacuum();
   G4Material *Vacuum1();           // index of refraction = 1; needed for optical processes

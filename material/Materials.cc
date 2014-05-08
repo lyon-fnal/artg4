@@ -464,6 +464,55 @@ G4Material *artg4Materials::NbTi()
 }
 
 
+G4Material* artg4Materials::NusilLS5257()
+{
+    static bool init = true;
+    static G4Material *nusilLS5257;
+    
+    if( init ){
+        
+        G4NistManager* nistMan = G4NistManager::Instance();
+        std::vector<G4int> natoms;
+        std::vector<G4double> fractionMass;
+        std::vector<G4String> elements;
+        
+        // use same elemental composition and density as Bicron BC-630 optical grease
+        elements.push_back("C");     natoms.push_back(2);
+        elements.push_back("H");     natoms.push_back(6);
+        double density = 1.060*g/cm3;
+        
+        nusilLS5257 = nistMan->
+        ConstructNewMaterial("NusilLS5257", elements, natoms, density);
+        
+        // Material Properties table
+        const G4int nEntries = 6 ;
+        
+        // Order from low energy to high energy (required for Geant 4.9.5)
+        G4double wavelengths[ nEntries ] = { 950.*nm, 833.*nm, 589.*nm, 411.*nm, 300.*nm, 250.*nm };
+        G4double photonEnergy[ nEntries ] ;
+        for( int i = 0 ; i < nEntries ; ++i )
+        {
+            photonEnergy[ i ] = 0.001240 * MeV * nm / wavelengths[ i ] ;
+        }
+        
+        // Refractive index from Nusil LS 5257 data sheet
+        G4double refractiveIndex[ nEntries ] = { 1.552, 1.5550, 1.5677, 1.6015, 1.755, 2.126 };
+
+        // Not including any absorption for now; much more transparent than Bicron grease
+        
+        // Geant 4.9.5 Material properties table: photonEnergy must be in order
+        G4MaterialPropertiesTable* table = new G4MaterialPropertiesTable() ;
+        table->AddProperty( "RINDEX", photonEnergy, refractiveIndex, nEntries ) ;
+        
+        nusilLS5257->SetMaterialPropertiesTable( table ) ;
+        
+        init = false;
+    }
+    
+    return nusilLS5257;
+}
+
+
 G4Material* artg4Materials::PbSb()
 {
   static G4Material *PbSb = new G4Material( "PbSb", 11.19*g/cm3, 2 ); // NSF(3/13): density calculated from mass fractions below
@@ -1615,6 +1664,7 @@ namespace{
     MAKE_MAP_T(MacorCeramic),
     MAKE_MAP_T(Mylar),
     MAKE_MAP_T(NbTi),
+    MAKE_MAP_T(NusilLS5257),
     MAKE_MAP_T(PbSb),
     MAKE_MAP_T(Vacuum),
     MAKE_MAP_T(Vacuum1),
