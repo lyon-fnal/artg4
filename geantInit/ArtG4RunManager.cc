@@ -1,7 +1,7 @@
 //
 // Override the G4RunManager class so that the ArtG4 framework can drive
 // the event loop.
-////
+//
 // Original author Rob Kutschke
 //
 //
