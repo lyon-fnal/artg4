@@ -180,6 +180,18 @@ G4Material *artg4Materials::CO2()
   return CO2;
 }
 
+G4Material *artg4Materials::C2H4()
+{
+  static G4Material *C2H4 = G4NistManager::Instance()->FindOrBuildMaterial("G4_POLYETHYLENE");
+  return C2H4;
+}
+
+G4Material *artg4Materials::SiO2()
+{
+  static G4Material *SiO2 = G4NistManager::Instance()->FindOrBuildMaterial("G4_SILICON_DIOXIDE");
+  return SiO2;
+}
+
 G4Material *artg4Materials::Air()
 {
   static G4Material *Air = G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR");
@@ -214,6 +226,22 @@ G4Material *artg4Materials::Al6061() // inflector mandrel, quad upper/lower elec
     init = false;
   }    
   return Al6061;
+}
+
+G4Material *artg4Materials::FakeStrawElectronics(){
+  static G4Material *FakeStrawElectronics = new G4Material("FakeStrawElectronics", 0.508 *g/cm3,4);
+
+  static bool init = true;
+  if( init ){
+  FakeStrawElectronics->AddMaterial(artg4Materials::Ar(), 75.1*perCent);
+  FakeStrawElectronics->AddMaterial(artg4Materials::C(), 6.5*perCent);
+  FakeStrawElectronics->AddMaterial(artg4Materials::C2H4(), 6.4*perCent);
+  FakeStrawElectronics->AddMaterial(artg4Materials::SiO2(), 12.0*perCent);
+
+  init = false;
+  }
+  return FakeStrawElectronics;
+
 }
 
 G4Material *artg4Materials::ArCO2(){
